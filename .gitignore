@@ -56,7 +56,7 @@ buck-out/
 *.jsbundle
 
 # added by tim
-*/ios/GoogleService-Info.plist
-*/android/app/google-services.json
-*/app/utils/keys.js
+ios/GoogleService-Info.plist
+android/app/google-services.json
+app/utils/keys.js
 */ios/Pods/
