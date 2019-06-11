@@ -22,11 +22,18 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+  @Override
+  protected void attachBaseContext(Context base) {
+     super.attachBaseContext(base);
+     MultiDex.install(this);
+  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
