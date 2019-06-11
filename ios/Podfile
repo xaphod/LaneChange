@@ -1,0 +1,96 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+target 'Bike' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for Bike
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'CxxBridge', # Include this for RN >= 0.47
+    'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
+    'RCTText',
+    'RCTNetwork',
+    'RCTWebSocket', # Needed for debugging
+    'RCTAnimation', # Needed for FlatList and animations running on native UI thread
+    'RCTActionSheet',
+    'RCTGeolocation',
+    'RCTImage',
+    'RCTLinkingIOS',
+    'RCTNetwork',
+    'RCTSettings',
+    'RCTVibration',
+    'RCTWebSocket',
+    # Add any other subspecs you want to use in your project
+  ]
+  # Explicitly include Yoga if you are using RN >= 0.42.0
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+
+  # Third party deps podspec link
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => '../node_modules/react-native-maps' 
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+  pod 'Firebase/Core'
+  pod 'Firebase/Analytics'
+  pod 'Crashlytics'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Auth'
+  pod 'Firebase/RemoteConfig'
+  pod 'Firebase/Storage'
+
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
+  pod 'react-native-location', :path => '../node_modules/react-native-location'
+
+  pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+
+  target 'BikeTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'Bike-tvOS' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for Bike-tvOS
+
+  target 'Bike-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+
+      # The following is needed to ensure the "archive" step works in XCode.
+      # It removes React & Yoga from the Pods project, as it is already included in the main project.
+      # Without this, you'd see errors when you archive like:
+      # "Multiple commands produce ... libReact.a"
+      # "Multiple commands produce ... libyoga.a"
+
+      targets_to_ignore = %w(React yoga)
+      
+      if targets_to_ignore.include? target.name
+        target.remove_from_project
+      end
+
+    end
+  end
