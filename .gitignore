@@ -59,4 +59,4 @@ buck-out/
 ios/GoogleService-Info.plist
 android/app/google-services.json
 app/utils/keys.js
-*/ios/Pods/
+ios/Pods/
