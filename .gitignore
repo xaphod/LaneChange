@@ -58,5 +58,5 @@ buck-out/
 # added by tim
 */ios/GoogleService-Info.plist
 */android/app/google-services.json
-*/keys.js
+*/app/utils/keys.js
 */ios/Pods/
