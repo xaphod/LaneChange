@@ -28,20 +28,21 @@ const buildUrl = (toUnescaped, subjectUnescaped, bodyUnescaped, preferredIOSClie
   })();
 };
 
-const sendMail = (to, subject, body, preferredIOSClient) => {
+const sendMail = async (to, subject, body, preferredIOSClient) => {
   const url = buildUrl(to, subject, body, preferredIOSClient);
   console.log(`DEBUG sendMail(): url is ${url}`);
 
-  Linking.canOpenURL(url)
-    .then((retval) => {
-      console.log(`DEBUG sendMail() canOpenURL returned ${retval}`);
-      if (retval) {
-        Linking.openURL(url)
-          .catch((err) => {
-            console.log(`DEBUG sendMail() catch error: ${err}`);
-          });
-      }
+  const retval = await Linking.canOpenURL(url);
+  console.log(`DEBUG sendMail() canOpenURL returned ${retval}`);
+  if (!retval) {
+    return retval;
+  }
+  Linking.openURL(url)
+    .catch((err) => {
+      console.log(`DEBUG sendMail() catch error: ${err}`);
+      return false;
     });
+  return true;
 };
 
 /*
@@ -50,7 +51,8 @@ Android: always use multi-line mailto://
 iOS: user selects mail client: native or GMail, up front. If GMail, make body single line with spaces.
 */
 
-export const emailReport = (report, preferredIOSClient) => {
+// returns success: bool
+export const emailReport = async (report, preferredIOSClient) => {
   const { date, imageLink, notes } = report;
   let { address } = report;
   console.log('DEBUG emailReport, report:');
@@ -67,5 +69,6 @@ export const emailReport = (report, preferredIOSClient) => {
   }
 
   const body = `Mobility incident reported by LaneChange\n\nDate: ${date}\n\nAddress: ${address}\n\nPhoto: ${imageLink}${notesStr}`;
-  sendMail(emailToAddress, subject, body, preferredIOSClient);
+  const retval = await sendMail(emailToAddress, subject, body, preferredIOSClient);
+  return retval;
 };

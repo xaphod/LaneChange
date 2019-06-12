@@ -53,7 +53,6 @@ class CreateReport extends Component {
         <HeaderButtons.Item
           onPress={() => {
             navigation.state.params.submit();
-            navigation.popToTop();
           }}
           title="Submit"
         />
@@ -82,8 +81,7 @@ class CreateReport extends Component {
 
   cancel = () => {
     console.log('DEBUG createReport: cancelling');
-    this.props.cancelReport();
-    this.props.navigation.popToTop();
+    this.props.cancelReport(this.props.navigation);
   };
 
   submit = () => {
@@ -95,6 +93,7 @@ class CreateReport extends Component {
     const imageURIOnDisk = `file://${photoPath()}/${filename}`;
     const { notes, location } = this.state;
     const report = {
+      ...draftReport,
       date,
       imageURIOnDisk,
       notes,
@@ -107,7 +106,9 @@ class CreateReport extends Component {
       report.lat = location.latitude;
     }
 
-    this.props.submitReport(report);
+    // TODO: show some progress / waiting view
+
+    this.props.submitReport(report, this.props.navigation);
   };
 
   getLocation = async () => {
@@ -135,7 +136,29 @@ class CreateReport extends Component {
     // console.log('props:');
     // console.log(this.props);
     const { reports } = this.props;
-    const { draftReport } = reports;
+    const { draftReport, lastSubmit } = reports;
+    if (lastSubmit) {
+      const { success, report } = lastSubmit;
+      const { lastReportIDSeen } = this.state;
+      console.log(`DEBUG createReport render: lastReportIDSeen=${lastReportIDSeen}, report.id=${report.id}`);
+      if (!success && report.id !== lastReportIDSeen) {
+        // currently this means we could not open the email client
+        Alert.alert(
+          'Could not open an email',
+          'Please check that your device is configured to send email.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                this.setState({
+                  lastReportIDSeen: report.id,
+                });
+              },
+            },
+          ],
+        );
+      }
+    }
     if (!draftReport) {
       return (<SafeAreaView />);
     }
@@ -191,8 +214,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitReport: report => dispatch(submitReport(report)),
-  cancelReport: () => dispatch(cancelReport()),
+  submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
+  cancelReport: navigation => dispatch(cancelReport(navigation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateReport);

@@ -22,12 +22,8 @@ export const reverseGeocode = async (latitude, longitude) => {
 };
 
 export const getLocation = async () => {
-  RNLocation.configure({
-    // distanceFilter: 30.0,
-    // desiredAccuracy: {
-    //   android: 'lowPower',
-    // },
-  });
+  // RNLocation.configure({
+  // });
   const granted = await RNLocation.requestPermission({
     ios: 'whenInUse',
     android: {
