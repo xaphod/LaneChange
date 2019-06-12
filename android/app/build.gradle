@@ -93,6 +93,11 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+// Tim Carr June 11 2019: signing configured using
+// https://facebook.github.io/react-native/docs/signed-apk-android.html
+// and
+// https://pilloxa.gitlab.io/posts/safer-passwords-in-gradle/
+
 def getPassword(String currentUser, String keyChain) {
    def stdout = new ByteArrayOutputStream()
    def stderr = new ByteArrayOutputStream()

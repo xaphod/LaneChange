@@ -1,5 +1,6 @@
 import firebase from 'react-native-firebase';
 import UUIDGenerator from 'react-native-uuid-generator';
+import { reportsRefName } from 'app/utils/constants';
 
 const registerReport = (report, firebaseImageURI, resolve) => {
   // https://rnfirebase.io/docs/v5.x.x/firestore/transactions
@@ -21,7 +22,7 @@ const registerReport = (report, firebaseImageURI, resolve) => {
     city,
   } = report;
 
-  firebase.firestore().collection('reports').add({
+  firebase.firestore().collection(reportsRefName).add({
     date,
     notes,
     address,

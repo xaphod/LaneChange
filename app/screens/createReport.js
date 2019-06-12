@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, Alert, Image, SafeAreaView, TextInput, TouchableOpacity }  from 'react-native';
-import RNLocation from 'react-native-location';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux';
 import RNFS from 'react-native-fs';
 import { HeaderButtons, HeaderButton } from 'react-navigation-header-buttons';
 import { photoPath, city } from 'app/utils/constants';
 import { submitReport, cancelReport } from 'app/actions/reports';
-import reverseGeocode from 'app/utils/location';
+import { getLocation } from 'app/utils/location';
 
 const styles = StyleSheet.create({
   container: {
@@ -104,70 +103,31 @@ class CreateReport extends Component {
 
     if (location) {
       report.address = location.address;
-      report.lon = location.lon;
-      report.lat = location.lat;
+      report.lon = location.longitude;
+      report.lat = location.latitude;
     }
 
     this.props.submitReport(report);
   };
 
   getLocation = async () => {
-    RNLocation.configure({
-      distanceFilter: 15.0,
-    });
-    const granted = await RNLocation.requestPermission({
-      ios: 'whenInUse',
-      android: {
-        detail: 'fine',
-      },
-    });
-    if (!granted) {
-      console.log('DEBUG createReport: location permission NOT GRANTED');
-      return;
-    }
-
-    const latestLocation = await RNLocation.getLatestLocation({ timeout: 5000 });
-    /* Example location returned
-    {
-      speed: -1,
-      longitude: -0.1337,
-      latitude: 51.50998,
-      accuracy: 5,
-      heading: -1,
-      altitude: 0,
-      altitudeAccuracy: -1
-      floor: 0
-      timestamp: 1446007304457.029
-    }
-    */
-    // TODO: test, potentially throw away if bad timestamp, or accuracy etc
-
+    const location = await getLocation();
     this.setState({
-      location: {
-        lon: latestLocation.longitude,
-        lat: latestLocation.latitude,
-      },
-    });
-
-    const address = await reverseGeocode(latestLocation.latitude, latestLocation.longitude);
-    this.setState((state) => {
-      if (state.location.lon === latestLocation.longitude && state.location.lat === latestLocation.latitude) {
-        return {
-          location: {
-            lon: state.location.lon,
-            lat: state.location.lat,
-            address,
-          },
-        };
+      location,
+    }, () => {
+      if (!location) {
+        const bodyStr = Platform.select({
+          ios: 'Please ensure this app has access to your location, and that Location Services are turned on.',
+          android: 'Please ensure that Location is turned on with high accuracy enabled.',
+        });
+        Alert.alert(
+          'Could not get location',
+          bodyStr,
+          [
+            { text: 'OK' },
+          ],
+        );
       }
-
-      console.log('DEBUG createReport: NOT updating state as the lat/lon does not match anymore');
-      return {
-        location: {
-          lon: state.location.lon,
-          lat: state.location.lat,
-        },
-      };
     });
   };
 
@@ -211,7 +171,7 @@ class CreateReport extends Component {
           </View>
           <View style={styles.section}>
             {!!this.state.location &&
-              <Text>lat: {this.state.location.lat} lon: {this.state.location.lon} address: {this.state.location.address}</Text>
+              <Text>lat: {this.state.location.latitude} lon: {this.state.location.longitude} address: {this.state.location.address}</Text>
             }
             {!this.state.location &&
               <TouchableOpacity onPress={() => { this.getLocation() }}>
