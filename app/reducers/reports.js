@@ -25,7 +25,7 @@ export default () => {
       case Actions.ACTION_TYPE_SUBMIT_REPORT:
       {
         let { draftReport } = state;
-        if (action.success) {
+        if (!action.error) {
           console.log('DEBUG reports reducer, submit: navigation.popToTop()');
           const { navigation } = action;
           draftReport = null;
@@ -36,7 +36,7 @@ export default () => {
           ...state,
           draftReport,
           lastSubmit: {
-            success: action.success,
+            error: action.error,
             report: action.report,
           },
         };
@@ -50,6 +50,7 @@ export default () => {
         return {
           ...state,
           draftReport: null,
+          lastSubmit: null,
         };
       }
 

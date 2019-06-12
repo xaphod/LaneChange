@@ -60,6 +60,49 @@ class CreateReport extends Component {
     ),
   });
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { reports } = nextProps;
+    const { lastSubmit } = reports;
+    if (!lastSubmit) {
+      return {
+        ...prevState,
+        submitting: null,
+      };
+    }
+
+    const { error, report } = lastSubmit;
+    const { lastReportIDAlerted, submitting } = prevState;
+    console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, lastReportIDAlerted=${lastReportIDAlerted}, error is`);
+    console.log(error);
+
+    if (error && report.id !== lastReportIDAlerted) {
+      if (submitting) {
+        return {
+          ...prevState,
+          submitting: null,
+        };
+      }
+      Alert.alert(
+        'Uh oh',
+        error.message,
+        [
+          {
+            text: 'OK',
+          },
+        ],
+      );
+
+      return {
+        ...prevState,
+        lastReportIDAlerted: report.id,
+      };
+    }
+    return {
+      ...prevState,
+      submitting: null,
+    };
+}
+
   constructor(props) {
     super(props);
     this.state = {
@@ -107,8 +150,12 @@ class CreateReport extends Component {
     }
 
     // TODO: show some progress / waiting view
-
-    this.props.submitReport(report, this.props.navigation);
+    this.setState({
+      lastReportIDAlerted: null,
+      submitting: true,
+    }, () => {
+      this.props.submitReport(report, this.props.navigation);
+    });
   };
 
   getLocation = async () => {
@@ -136,29 +183,7 @@ class CreateReport extends Component {
     // console.log('props:');
     // console.log(this.props);
     const { reports } = this.props;
-    const { draftReport, lastSubmit } = reports;
-    if (lastSubmit) {
-      const { success, report } = lastSubmit;
-      const { lastReportIDSeen } = this.state;
-      console.log(`DEBUG createReport render: lastReportIDSeen=${lastReportIDSeen}, report.id=${report.id}`);
-      if (!success && report.id !== lastReportIDSeen) {
-        // currently this means we could not open the email client
-        Alert.alert(
-          'Could not open an email',
-          'Please check that your device is configured to send email.',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                this.setState({
-                  lastReportIDSeen: report.id,
-                });
-              },
-            },
-          ],
-        );
-      }
-    }
+    const { draftReport } = reports;
     if (!draftReport) {
       return (<SafeAreaView />);
     }

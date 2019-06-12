@@ -71,7 +71,7 @@ class Home extends Component {
     this.setState({
       takingPhoto: false,
     });
-};
+  };
 
   render() {
     return (
