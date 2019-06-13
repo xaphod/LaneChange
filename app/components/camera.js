@@ -35,12 +35,19 @@ export default class Camera extends Component {
       quality: 0.8,
       // pauseAfterCapture: true,
     };
-    const photo = await camera.takePictureAsync(options);
+    let photo = null;
+    try {
+      photo = await camera.takePictureAsync(options);
+    } catch (e) {
+      console.log('DEBUG camera: takePicture ERROR:');
+      console.log(e);
+      onPhotoTaken(undefined, new Error(`Could not take a photo. Error: ${e.message}`));
+      return;
+    }
     const { uri } = photo;
-
     if (!uri) {
       console.log('DEBUG camera: takePicture has no URI, failed');
-      onPhotoTaken(null);
+      onPhotoTaken(undefined, new Error('Could not take a photo. Please check that this app has permission to use the camera, and that he device has enough space to take a photo.'));
       return;
     }
 
@@ -52,7 +59,7 @@ export default class Camera extends Component {
     await RNFS.mkdir(photoPath(), { NSURLIsExcludedFromBackupKey: true })
       .catch((err) => {
         console.log(`DEBUG camera: mkdir error: ${err}`);
-        onPhotoTaken(null);
+        onPhotoTaken(undefined, new Error('Could not take a photo: could not create a folder for the photos.'));
         failed = true;
       });
     if (failed) { return; }
@@ -61,7 +68,7 @@ export default class Camera extends Component {
     await RNFS.moveFile(uri, destPath)
       .catch((err) => {
         console.log(`DEBUG camera: move error: ${err}`);
-        onPhotoTaken(null);
+        onPhotoTaken(undefined, new Error('Could not take a photo: could not move the photo into its folder.'));
         failed = true;
       });
     if (failed) { return; }
@@ -70,7 +77,7 @@ export default class Camera extends Component {
       .catch((err) => {
         console.log('DEBUG camera: resize ERROR:');
         console.log(err);
-        onPhotoTaken(null);
+        onPhotoTaken(undefined, new Error('Could not take a photo: there was an error resizing the photo.'));
         failed = true;
       });
     if (failed) { return; }
@@ -80,7 +87,7 @@ export default class Camera extends Component {
       .catch((err) => {
         console.log('DEBUG camera: move2 ERROR:');
         console.log(err);
-        onPhotoTaken(null);
+        onPhotoTaken(undefined, new Error('Could not take a photo: could not move the resized photo into its folder.'));
         failed = true;
       });
     if (failed) { return; }
@@ -117,7 +124,20 @@ export default class Camera extends Component {
             return (
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                 {children}
-                <TouchableOpacity onPress={() => this.takePicture(camera)} style={styles.capture}>
+                <TouchableOpacity
+                  onPress={
+                    () => {
+                      this.takePicture(camera)
+                        .catch((e) => { // unhandled/unknown error case
+                          const { onPhotoTaken } = this.props;
+                          if (onPhotoTaken && e.message) {
+                            onPhotoTaken(undefined, new Error(`Could not take a photo. Error: ${e.message}`));
+                          }
+                        });
+                    }
+                  }
+                  style={styles.capture}
+                >
                   <Text style={{ fontSize: 14 }}> Take a photo </Text>
                 </TouchableOpacity>
               </View>

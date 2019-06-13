@@ -32,17 +32,17 @@ const sendMail = async (to, subject, body, preferredIOSClient) => {
   const url = buildUrl(to, subject, body, preferredIOSClient);
   console.log(`DEBUG sendMail(): url is ${url}`);
 
-  const retval = await Linking.canOpenURL(url);
+  let retval = await Linking.canOpenURL(url);
   console.log(`DEBUG sendMail() canOpenURL returned ${retval}`);
   if (!retval) {
     return retval;
   }
-  Linking.openURL(url)
+  await Linking.openURL(url)
     .catch((err) => {
       console.log(`DEBUG sendMail() catch error: ${err}`);
-      return false;
+      retval = false;
     });
-  return true;
+  return retval;
 };
 
 /*
@@ -69,6 +69,13 @@ export const emailReport = async (report, preferredIOSClient) => {
   }
 
   const body = `Mobility incident reported by LaneChange\n\nDate: ${date}\n\nAddress: ${address}\n\nPhoto: ${imageLink}${notesStr}`;
-  const retval = await sendMail(emailToAddress, subject, body, preferredIOSClient);
+  let retval = true;
+  retval = await sendMail(emailToAddress, subject, body, preferredIOSClient)
+    .catch((e) => {
+      console.log('DEBUG emailReport: sendMail ERROR');
+      console.log(e);
+      retval = false;
+    });
+  console.log(`DEBUG emailReport returning ${retval}`);
   return retval;
 };

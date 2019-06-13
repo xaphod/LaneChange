@@ -7,6 +7,7 @@ import { HeaderButtons, HeaderButton } from 'react-navigation-header-buttons';
 import { photoPath, city } from 'app/utils/constants';
 import { submitReport, cancelReport } from 'app/actions/reports';
 import { getLocation } from 'app/utils/location';
+import { IOSPreferredMailClient } from 'app/utils/mail';
 
 const styles = StyleSheet.create({
   container: {
@@ -179,12 +180,14 @@ class CreateReport extends Component {
     }
 
     // TODO: show some progress / waiting view
+    // TODO: user picks preferred
+    const preferredIOSClient = IOSPreferredMailClient.GMAIL;
 
     this.setState({
       lastReportIDAlerted: null,
       submitting: true,
     }, () => {
-      this.props.submitReport(report, this.props.navigation);
+      this.props.submitReport(report, this.props.navigation, preferredIOSClient);
     });
   };
 
@@ -248,7 +251,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
+  submitReport: (report, navigation, preferredIOSClient) => dispatch(submitReport(report, navigation, preferredIOSClient)),
   cancelReport: navigation => dispatch(cancelReport(navigation)),
 });
 

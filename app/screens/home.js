@@ -49,9 +49,20 @@ class Home extends Component {
     });
   };
 
-  onPhotoTaken = (photo) => {
-    if (!photo) {
-      // TODO: some sort of error display to user
+  onPhotoTaken = (photo, error) => {
+    if (error) {
+      const { message } = error;
+      if (message) {
+        Alert.alert(
+          'Uh oh',
+          message,
+          [
+            {
+              text: 'OK',
+            },
+          ],
+        );
+      }
       this.setState({
         takingPhoto: false,
       });

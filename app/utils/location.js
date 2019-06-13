@@ -7,7 +7,11 @@ export const reverseGeocode = async (latitude, longitude) => {
       throw e;
     });
 
-  const json = await response.json();
+  const json = await response.json()
+    .catch((e) => {
+      throw e;
+    });
+
   console.log(`DEBUG reverseGeocode:`);
   console.log(json);
   const { results } = json;
@@ -35,7 +39,7 @@ export const getLocation = async () => {
         buttonNegative: 'No thanks',
       },
     },
-  });
+  }).catch(() => {});
   if (!granted) {
     console.log('DEBUG getLocation: location permission NOT GRANTED');
     return null;
@@ -70,7 +74,12 @@ export const getLocation = async () => {
 
   console.log('DEBUG getLocation:doing reverse geocode of location:');
   console.log(latestLocation);
-  const address = await reverseGeocode(latestLocation.latitude, latestLocation.longitude);
+  const address = await reverseGeocode(latestLocation.latitude, latestLocation.longitude)
+    .catch((e) => {
+      console.log('Location.js reverseGeocode ERROR:');
+      console.log(e);
+    });
+
   return {
     address,
     ...latestLocation,
