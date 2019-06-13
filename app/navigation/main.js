@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import * as Screens from 'app/screens';
 
 // const staticContentNavigationOptions = ({ navigation }) => {
@@ -7,7 +7,7 @@ import * as Screens from 'app/screens';
 //   return { ...header };
 // };
 
-const stack = createStackNavigator({
+export default mainNavigator = initialRouteName => createStackNavigator({
   // real screens
   Start: {
     screen: Screens.Start,
@@ -25,8 +25,6 @@ const stack = createStackNavigator({
     screen: Screens.Menu,
   },
 }, {
-  initialRouteName: 'Start',
+  initialRouteName,
   // mode: 'modal',
 });
-
-export default createAppContainer(stack);
