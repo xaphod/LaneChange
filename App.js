@@ -12,6 +12,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import storage from 'redux-persist/lib/storage';
 import Nav from 'app/navigation/nav';
 import createReportsReducer from 'app/reducers/reports';
+import createUIReducer from 'app/reducers/ui';
 import firebase from 'react-native-firebase';
 
 const persistConfig = {
@@ -21,6 +22,7 @@ const persistConfig = {
 
 const appReducer = combineReducers({
   reports: createReportsReducer(),
+  ui: createUIReducer(),
 });
 
 const persistedReducer = persistReducer(persistConfig, appReducer);

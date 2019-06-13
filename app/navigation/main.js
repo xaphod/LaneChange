@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import Home from 'app/screens/home';
-import CreateReport from 'app/screens/createReport';
+import * as Screens from 'app/screens';
 
 // const staticContentNavigationOptions = ({ navigation }) => {
 //   const header = getHeader(navigation, '', 'HomePicker');
@@ -10,14 +9,23 @@ import CreateReport from 'app/screens/createReport';
 
 const stack = createStackNavigator({
   // real screens
-  Home: {
-    screen: Home,
+  Start: {
+    screen: Screens.Start,
   },
-  CreateReport: {
-    screen: CreateReport,
+  Report: {
+    screen: Screens.Report,
+  },
+  Notes: {
+    screen: Screens.Notes,
+  },
+  HowItWorks: {
+    screen: Screens.HowItWorks,
+  },
+  Menu: {
+    screen: Screens.Menu,
   },
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'Start',
   // mode: 'modal',
 });
 

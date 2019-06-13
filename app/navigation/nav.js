@@ -1,7 +1,7 @@
 import React from 'react';
 // import { BackHandler } from 'react-native';
 
-import RootNavigation from './root';
+import MainNavigation from './main';
 
 export default class Nav extends React.Component {
   // componentDidMount() {
@@ -22,7 +22,7 @@ export default class Nav extends React.Component {
 
   render() {
     return (
-      <RootNavigation />
+      <MainNavigation />
     );
   }
 }
