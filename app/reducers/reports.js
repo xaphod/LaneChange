@@ -26,10 +26,9 @@ export default () => {
       {
         let { draftReport } = state;
         if (!action.error) {
-          console.log('DEBUG reports reducer, submit: navigation.popToTop()');
-          const { navigation } = action;
           draftReport = null;
-          navigation.popToTop();
+          // const { navigation } = action;
+          // navigation.popToTop();
         }
 
         return {
@@ -44,9 +43,8 @@ export default () => {
 
       case Actions.ACTION_TYPE_CANCEL_REPORT:
       {
-        console.log('DEBUG reports reducer, cancel: navigation.popToTop()');
-        const { navigation } = action;
-        navigation.popToTop();
+        // const { navigation } = action;
+        // navigation.popToTop();
         return {
           ...state,
           draftReport: null,

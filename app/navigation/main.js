@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import * as Screens from 'app/screens';
+import { headerNavigationOptions } from 'app/navigation/headerStyle';
 
 // const staticContentNavigationOptions = ({ navigation }) => {
 //   const header = getHeader(navigation, '', 'HomePicker');
@@ -27,4 +28,7 @@ export default mainNavigator = initialRouteName => createStackNavigator({
 }, {
   initialRouteName,
   // mode: 'modal',
+  defaultNavigationOptions: {
+    ...headerNavigationOptions,
+  },
 });
