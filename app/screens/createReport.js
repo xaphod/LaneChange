@@ -75,7 +75,7 @@ class CreateReport extends Component {
     console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, lastReportIDAlerted=${lastReportIDAlerted}, error is`);
     console.log(error);
 
-    if (error && report.id !== lastReportIDAlerted) {
+    if (error && error.message && report.id !== lastReportIDAlerted) {
       if (submitting) {
         return {
           ...prevState,
