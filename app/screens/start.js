@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView}  from 'react-native';
 import { connect } from 'react-redux';
+import { navigateToReport } from 'app/actions/ui';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +16,9 @@ class Start extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Hello world</Text>
+        <Button onPress={ () => {
+          this.props.navigateToReport(this.props.navigation);
+        }} title="button" />
       </SafeAreaView>
     );
   }
@@ -27,6 +30,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  navigateToReport: navigation => dispatch(navigateToReport(navigation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Start);

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#ffffff',
   },
 });
 
@@ -15,7 +15,7 @@ class Report extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-
+        <Text>Reports screen</Text>
       </SafeAreaView>
     );
   }
