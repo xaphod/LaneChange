@@ -5,9 +5,14 @@ import { connect } from 'react-redux';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#019864',
   },
 });
+
+const logo = require('app/assets/img/logo.png');
+const cameraIconTranslucent = require('app/assets/img/cameraIconTranslucent.png');
+const emailIconTranslucent = require('app/assets/img/emailIconTranslucent.png');
+const sendIconTranslucent = require('app/assets/img/sendIconTranslucent.png');
 
 class HowItWorks extends Component {
   static navigationOptions = () => ({ header: null });

@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView}  from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image}  from 'react-native';
 import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#019864',
   },
 });
+
+// Note to Marlon: oh hey there. when you `require` a .png file directly (*exactly* as below) react native will magick-in the @2x or @3x as required.
+const logoShadow = require('app/assets/img/logoShadow.png');
 
 class Start extends Component {
   static navigationOptions = () => ({ header: null });
@@ -16,6 +19,7 @@ class Start extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        <Image source={logoShadow} />
         <Button onPress={ () => {
           this.props.navigateToReport(this.props.navigation);
         }} title="button" />

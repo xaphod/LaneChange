@@ -9,6 +9,8 @@ const styles = StyleSheet.create({
   },
 });
 
+const backArrowIcon = require('app/assets/img/backArrowIcon.png');
+
 class Notes extends Component {
   static navigationOptions = () => ({ header: null });
 
