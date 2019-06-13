@@ -10,14 +10,15 @@ export const IOSPreferredMailClient = {
 const buildUrl = (toUnescaped, subjectUnescaped, bodyUnescaped, preferredIOSClient) => {
   const to = encodeURIComponent(toUnescaped);
   const subject = encodeURIComponent(subjectUnescaped);
-  const body = encodeURIComponent(bodyUnescaped);
-
-  // TODO: update body to be a single line for iOS + GMAIL case
+  let body = encodeURIComponent(bodyUnescaped);
+  const bodyNoNewLinesUnescaped = bodyUnescaped.replace(/\n/g, ' . . . ');
+  console.log(`DEBUG mail buildURL(): preferredIOSClient is ${preferredIOSClient}`);
 
   return Platform.select({
     ios: () => {
       switch (preferredIOSClient) {
         case IOSPreferredMailClient.GMAIL:
+          body = encodeURIComponent(bodyNoNewLinesUnescaped);
           return `googlegmail:///co?subject=${subject}&body=${body}&to=${to}`;
         case IOSPreferredMailClient.NATIVE:
         default:
