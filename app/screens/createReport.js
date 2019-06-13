@@ -75,7 +75,11 @@ class CreateReport extends Component {
     console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, lastReportIDAlerted=${lastReportIDAlerted}, error is`);
     console.log(error);
 
-    if (error && error.message && report.id !== lastReportIDAlerted) {
+    if (
+      error &&
+      error.message &&
+      report.id !== lastReportIDAlerted
+    ) {
       if (submitting) {
         return {
           ...prevState,
@@ -101,7 +105,7 @@ class CreateReport extends Component {
       ...prevState,
       submitting: null,
     };
-}
+  }
 
   constructor(props) {
     super(props);
@@ -121,6 +125,31 @@ class CreateReport extends Component {
       cancel: this.cancel,
     });
   }
+
+  getLocation = async () => {
+    const location = await getLocation()
+      .catch((e) => {
+        console.log('createReport getLocation error:');
+        console.log(e);
+      });
+    this.setState({
+      location,
+    }, () => {
+      if (!location) {
+        const bodyStr = Platform.select({
+          ios: 'Please ensure this app has access to your location, and that Location Services are turned on. Please also check your internet connection.',
+          android: 'Please ensure that Location is turned on with high accuracy enabled. Please also check your internet connection.',
+        });
+        Alert.alert(
+          'Could not get location',
+          bodyStr,
+          [
+            { text: 'OK' },
+          ],
+        );
+      }
+    });
+  };
 
   cancel = () => {
     console.log('DEBUG createReport: cancelling');
@@ -150,32 +179,12 @@ class CreateReport extends Component {
     }
 
     // TODO: show some progress / waiting view
+
     this.setState({
       lastReportIDAlerted: null,
       submitting: true,
     }, () => {
       this.props.submitReport(report, this.props.navigation);
-    });
-  };
-
-  getLocation = async () => {
-    const location = await getLocation();
-    this.setState({
-      location,
-    }, () => {
-      if (!location) {
-        const bodyStr = Platform.select({
-          ios: 'Please ensure this app has access to your location, and that Location Services are turned on.',
-          android: 'Please ensure that Location is turned on with high accuracy enabled.',
-        });
-        Alert.alert(
-          'Could not get location',
-          bodyStr,
-          [
-            { text: 'OK' },
-          ],
-        );
-      }
     });
   };
 
@@ -222,7 +231,7 @@ class CreateReport extends Component {
               <Text>lat: {this.state.location.latitude} lon: {this.state.location.longitude} address: {this.state.location.address}</Text>
             }
             {!this.state.location &&
-              <TouchableOpacity onPress={() => { this.getLocation() }}>
+              <TouchableOpacity onPress={() => { this.getLocation(); }}>
                 <Text>Get location</Text>
               </TouchableOpacity>
             }
