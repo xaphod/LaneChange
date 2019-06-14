@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity}  from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { submitReport, cancelReport } from 'app/actions/reports';
 
@@ -9,9 +9,72 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   headerButton: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
     height: 30,
     justifyContent: 'center',
+  },
+  camera: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: '#f20000',
+  },
+  shutterButton: {
+    marginBottom: 20,
+  },
+  text: {
+    fontSize: 16,
+  },
+  report: {
+    height: 245,
+    backgroundColor: '#f7f7f7',
+  },
+  reportMeta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 55,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderColor: '#E8E8E8',
+    borderBottomWidth: 1,
+  },
+  emailButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 70,
+    backgroundColor: '#fff',
+    borderColor: '#019864',
+    borderWidth: 1,
+    borderRadius: 6,
+  },
+  buttonText: {
+    color: '#019864',
+    fontSize: 16,
+  },
+  addNoteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 20,
+    height: 60,
+    backgroundColor: '#fff',
+    borderColor: '#F0F0F0',
+    borderWidth: 1,
+    borderRadius: 6,
+  },
+  addNoteButtonText: {
+    fontSize: 14,
+    color: '#019864',
+    paddingLeft: 20,
+  },
+  addNoteChevron: {
+    fontSize: 14,
+    color: '#B9B9B9',
+    marginLeft: 'auto',
+  },
+  reportActions: {
+    padding: 20,
   },
 });
 
@@ -86,12 +149,33 @@ class Report extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Reports screen</Text>
-        <Image source={shutterButton} />
-        <Button
-          title="Add Notes"
-          onPress={() => this.props.navigation.navigate('Notes')}
-        />
+        <View style={styles.camera}>
+          <Image source={shutterButton} style={styles.shutterButton} />
+        </View>
+        <View style={styles.report}>
+          <View style={styles.reportMeta}>
+            <Text style={styles.text}>Tue, June 11, 2019</Text>
+            <Text style={styles.text}>10:28 am</Text>
+          </View>
+          <View style={styles.reportActions}>
+
+            <TouchableOpacity
+              style={styles.addNoteButton}
+              onPress={() => this.props.navigation.navigate('Notes')}
+            >
+              <Image source={notesIcon} />
+              <Text style={styles.addNoteButtonText}>Add Note</Text>
+              <Text style={styles.addNoteChevron}>&gt;</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.emailButton}
+              onPress={() => alert('Email Report')}
+            >
+              <Text style={styles.buttonText}>Email Report</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </SafeAreaView>
     );
   }

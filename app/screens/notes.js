@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity}  from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 
@@ -50,7 +50,7 @@ class Notes extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-
+        <Text>Notes!</Text>
       </SafeAreaView>
     );
   }
