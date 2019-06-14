@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { submitReport, cancelReport } from 'app/actions/reports';
+import DefaultButton from 'app/components/button';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,19 +39,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#E8E8E8',
     borderBottomWidth: 1,
-  },
-  emailButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 70,
-    backgroundColor: '#fff',
-    borderColor: '#019864',
-    borderWidth: 1,
-    borderRadius: 6,
-  },
-  buttonText: {
-    color: '#019864',
-    fontSize: 16,
   },
   addNoteButton: {
     flexDirection: 'row',
@@ -158,7 +146,6 @@ class Report extends Component {
             <Text style={styles.text}>10:28 am</Text>
           </View>
           <View style={styles.reportActions}>
-
             <TouchableOpacity
               style={styles.addNoteButton}
               onPress={() => this.props.navigation.navigate('Notes')}
@@ -167,13 +154,10 @@ class Report extends Component {
               <Text style={styles.addNoteButtonText}>Add Note</Text>
               <Text style={styles.addNoteChevron}>&gt;</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.emailButton}
-              onPress={() => alert('Email Report')}
-            >
-              <Text style={styles.buttonText}>Email Report</Text>
-            </TouchableOpacity>
+            <DefaultButton
+              title="Create Email"
+              onPress={() => { }}
+            />
           </View>
         </View>
       </SafeAreaView>

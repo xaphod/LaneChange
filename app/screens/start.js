@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image}  from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 
@@ -20,7 +20,7 @@ class Start extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <Image source={logoShadow} />
-        <Button onPress={ () => {
+        <Button onPress={() => {
           this.props.navigateToReport(this.props.navigation);
         }} title="button" />
       </SafeAreaView>
