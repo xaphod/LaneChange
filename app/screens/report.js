@@ -80,7 +80,7 @@ class Report extends Component {
   }
 
   morePressed = () => {
-    // TODO: implement
+    this.props.navigation.navigate('Menu');
   }
 
   render() {
