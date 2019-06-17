@@ -23,6 +23,18 @@ export default () => {
           inProgress: undefined,
         };
 
+      case Actions.ACTION_TYPE_SET_NOTES:
+      {
+        const { draftReport } = state;
+        return {
+          ...state,
+          draftReport: {
+            ...draftReport,
+            notes: action.notes,
+          },
+        };
+      }
+
       case Actions.ACTION_TYPE_SUBMIT_PROGRESS:
       {
         return {

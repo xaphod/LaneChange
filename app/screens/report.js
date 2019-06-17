@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { submitReport, cancelReport, createReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
-import { photoPath, city } from 'app/utils/constants';
+import { photoPath } from 'app/utils/constants';
 
 const styles = StyleSheet.create({
   container: {

@@ -5,3 +5,4 @@ export const ACTION_TYPE_CANCEL_REPORT = 'cancelReport';
 export const ACTION_TYPE_EMAIL_REPORT = 'emailReport';
 export const ACTION_TYPE_EMAIL_PROGRESS = 'emailProgress';
 export const ACTION_TYPE_NAVIGATE_TO_REPORT = 'navigateToReport';
+export const ACTION_TYPE_SET_NOTES = 'setNotes';

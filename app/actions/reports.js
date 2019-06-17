@@ -73,3 +73,8 @@ export const cancelReport = navigation => ({
   type: Actions.ACTION_TYPE_CANCEL_REPORT,
   navigation,
 });
+
+export const setNotes = notes => ({
+  type: Actions.ACTION_TYPE_SET_NOTES,
+  notes,
+});
