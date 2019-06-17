@@ -1,6 +1,6 @@
 import * as Actions from 'app/actions';
-import { emailReport } from 'app/utils/mail';
 import uploadReport from 'app/utils/firebase';
+import { openEmail, IOSPreferredMailClient } from 'app/utils/mail';
 
 export const createReport = (date, photo) => ({
   type: Actions.ACTION_TYPE_CREATE_REPORT,
@@ -8,27 +8,60 @@ export const createReport = (date, photo) => ({
   date,
 });
 
-export const submitReport = (reportIn, navigation, preferredIOSClient) => async (dispatch) => {
+export const submitReport = (reportIn, navigation) => async (dispatch) => {
   const report = reportIn;
-  let error = null;
+  let error;
 
   try {
-    // TODO: should not upload if redux.reports.lastSubmit has docRef and is same id as this report
+    dispatch({
+      type: Actions.ACTION_TYPE_SUBMIT_PROGRESS,
+      report,
+      progress: 0,
+    });
 
-    const imageLink = await uploadReport(report);
-    console.log(`DEBUG submitReport: uploadReport successful. imageLink: ${imageLink}`);
-    report.imageLink = imageLink;
-
-    const emailSuccess = await emailReport(report, preferredIOSClient); // does not throw, just returns false
-    if (!emailSuccess) {
-      error = new Error('Could not open the created email. Please check that your device is configured to send email.');
-    }
+    const { firebaseImageURI, docRef } = await uploadReport(report, (progress) => {
+      dispatch({
+        type: Actions.ACTION_TYPE_SUBMIT_PROGRESS,
+        report,
+        progress,
+      });
+    });
+    console.log(`DEBUG submitReport: uploadReport successful. imageLink: ${firebaseImageURI}`);
+    report.imageLink = firebaseImageURI;
+    report.docRef = docRef;
   } catch (e) {
-    console.log(`DEBUG submitReport: uploadReport ERROR: ${e}`);
+    console.log(`DEBUG submitReport: ERROR: ${e}`);
     error = e;
   } finally {
     dispatch({
       type: Actions.ACTION_TYPE_SUBMIT_REPORT,
+      report,
+      error,
+      navigation,
+    });
+  }
+};
+
+export const emailReport = (report, navigation, preferredIOSClient) => async (dispatch) => {
+  let error;
+
+  try {
+    console.log('DEBUG emailReport action start');
+    dispatch({
+      type: Actions.ACTION_TYPE_EMAIL_PROGRESS,
+      report,
+      progress: 0,
+    });
+    const emailSuccess = await openEmail(report, preferredIOSClient); // does not throw, just returns false
+    if (!emailSuccess) {
+      error = new Error('Could not open the created email. Please check that your device is configured to send email.');
+    }
+  } catch (e) {
+    console.log(`DEBUG emailReport: ERROR: ${e}`);
+    error = e;
+  } finally {
+    dispatch({
+      type: Actions.ACTION_TYPE_EMAIL_REPORT,
       report,
       error,
       navigation,

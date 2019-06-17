@@ -20,24 +20,69 @@ export default () => {
             date: action.date,
             id,
           },
+          inProgress: undefined,
         };
+
+      case Actions.ACTION_TYPE_SUBMIT_PROGRESS:
+      {
+        return {
+          ...state,
+          inProgress: {
+            type: 'submit',
+            percent: action.progress,
+          },
+        };
+      }
 
       case Actions.ACTION_TYPE_SUBMIT_REPORT:
       {
-        let { draftReport } = state;
-        if (!action.error) {
-          draftReport = null;
-          // const { navigation } = action;
-          // navigation.popToTop();
-        }
-
         return {
           ...state,
-          draftReport,
           lastSubmit: {
             error: action.error,
             report: action.report,
           },
+          inProgress: undefined,
+        };
+      }
+
+      case Actions.ACTION_TYPE_EMAIL_PROGRESS:
+      {
+        return {
+          ...state,
+          inProgress: {
+            type: 'email',
+            percent: action.progress,
+          },
+        };
+      }
+
+      case Actions.ACTION_TYPE_EMAIL_REPORT:
+      {
+        const { lastSubmit } = state;
+        if (!action.error && lastSubmit) {
+          // const { navigation } = action;
+          // navigation.popToTop();
+
+          return {
+            ...state,
+            draftReport: undefined,
+            lastSubmit: {
+              ...lastSubmit,
+              report: action.report,
+              didEmail: true,
+            },
+            inProgress: undefined,
+          };
+        }
+        return {
+          ...state,
+          lastSubmit: {
+            ...lastSubmit,
+            report: action.report,
+            error: action.error,
+          },
+          inProgress: undefined,
         };
       }
 
@@ -47,8 +92,9 @@ export default () => {
         // navigation.popToTop();
         return {
           ...state,
-          draftReport: null,
-          lastSubmit: null,
+          draftReport: undefined,
+          lastSubmit: undefined,
+          inProgress: undefined,
         };
       }
 

@@ -39,7 +39,7 @@ class Home extends Component {
     const { draftReport } = reports;
     const { navigation } = this.props;
     if (draftReport && navigation) {
-      navigation.navigate('CreateReport');
+      navigation.navigate('Report');
     }
   };
 

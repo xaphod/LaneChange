@@ -37,8 +37,7 @@ const registerReport = (report, firebaseImageURI) => {
     });
 };
 
-export default uploadReport = (reportIn) => {
-  const report = reportIn;
+export default uploadReport = (report, progressCallback) => {
   const {
     date,
     imageURIOnDisk,
@@ -64,6 +63,9 @@ export default uploadReport = (reportIn) => {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('DEBUG firebase/uploadReport: Upload is ' + progress + '% done');
+        if (progress) {
+          progressCallback(progress);
+        }
       }, (error) => {
         // A full list of error codes is available at
         // https://firebase.google.com/docs/storage/web/handle-errors
@@ -78,9 +80,9 @@ export default uploadReport = (reportIn) => {
             console.log(`DEBUG firebase/uploadReport: upload done, url=${firebaseImageURI}`);
             registerReport(report, firebaseImageURI, resolve, reject)
               .then((docRef) => {
-                console.log(`DEBUG firebase/uploadReport: register done, ref=${docRef}`);
-                report.docRef = docRef;
-                resolve(firebaseImageURI);
+                const { id } = docRef;
+                console.log(`DEBUG firebase/uploadReport: register done, ref id=${id}`);
+                resolve({ firebaseImageURI, docRef: id });
               })
               .catch((error) => {
                 console.log('DEBUG firebase/registerReport: ERROR:');

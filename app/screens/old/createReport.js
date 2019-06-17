@@ -5,9 +5,12 @@ import { connect } from 'react-redux';
 import RNFS from 'react-native-fs';
 import { HeaderButtons, HeaderButton } from 'react-navigation-header-buttons';
 import { photoPath, city } from 'app/utils/constants';
-import { submitReport, cancelReport } from 'app/actions/reports';
+import { submitReport, cancelReport, emailReport } from 'app/actions/reports';
 import { getLocation } from 'app/utils/location';
 import { IOSPreferredMailClient } from 'app/utils/mail';
+
+// TODO: user picks preferred
+const preferredIOSClient = IOSPreferredMailClient.GMAIL;
 
 const styles = StyleSheet.create({
   container: {
@@ -62,31 +65,29 @@ class CreateReport extends Component {
   });
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { didError } = prevState;
     const { reports } = nextProps;
-    const { lastSubmit } = reports;
-    if (!lastSubmit) {
+    const { lastSubmit, draftReport, inProgress } = reports;
+    if (inProgress || !lastSubmit || !lastSubmit.report) {
       return {
         ...prevState,
-        submitting: null,
       };
     }
+    const { report, error, didEmail } = lastSubmit;
+    const newState = prevState;
 
-    const { error, report } = lastSubmit;
-    const { lastReportIDAlerted, submitting } = prevState;
-    console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, lastReportIDAlerted=${lastReportIDAlerted}, error is`);
+    console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, didError=${didError}, error is`);
     console.log(error);
 
     if (
+      draftReport &&
+      draftReport.id &&
+      lastSubmit.id &&
+      lastSubmit.id === draftReport.id &&
       error &&
       error.message &&
-      report.id !== lastReportIDAlerted
+      !didError
     ) {
-      if (submitting) {
-        return {
-          ...prevState,
-          submitting: null,
-        };
-      }
       Alert.alert(
         'Uh oh',
         error.message,
@@ -96,23 +97,24 @@ class CreateReport extends Component {
           },
         ],
       );
-
-      return {
-        ...prevState,
-        lastReportIDAlerted: report.id,
-      };
+      newState.didError = true;
+    } else if (
+      report.docRef &&
+      !didEmail
+    ) {
+      console.log('DEBUG getDerivedStateFromProps: firing email action');
+      nextProps.emailReport(lastSubmit.report, nextProps.navigation, preferredIOSClient);
     }
+
     return {
-      ...prevState,
-      submitting: null,
+      ...newState,
     };
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      notes: null,
-      location: null,
+      didError: false,
     };
 
     this.getLocation = this.getLocation.bind(this);
@@ -158,9 +160,30 @@ class CreateReport extends Component {
   };
 
   submit = () => {
-    console.log('DEBUG createReport: submitting');
     const { reports } = this.props;
-    const { draftReport } = reports;
+    const { draftReport, lastSubmit, inProgress } = reports;
+
+    if (inProgress && inProgress.type) {
+      console.log('DEBUG createReport: submit DEBOUNCE');
+      return;
+    }
+
+    if (
+      lastSubmit &&
+      lastSubmit.report &&
+      lastSubmit.report.id &&
+      draftReport &&
+      draftReport.id &&
+      lastSubmit.report.id == draftReport.id &&
+      lastSubmit.report.docRef
+    ) {
+      console.log('DEBUG createReport: seems this report has already been uploaded/submitted. Doing email...');
+      console.log(this.props);
+      this.props.emailReport(lastSubmit.report, this.props.navigation, preferredIOSClient);
+      return;
+    }
+
+    console.log('DEBUG createReport: submitting');
     const { photo, date } = draftReport;
     const { filename } = photo;
     const imageURIOnDisk = `file://${photoPath()}/${filename}`;
@@ -180,14 +203,11 @@ class CreateReport extends Component {
     }
 
     // TODO: show some progress / waiting view
-    // TODO: user picks preferred
-    const preferredIOSClient = IOSPreferredMailClient.GMAIL;
 
     this.setState({
-      lastReportIDAlerted: null,
-      submitting: true,
+      didError: undefined,
     }, () => {
-      this.props.submitReport(report, this.props.navigation, preferredIOSClient);
+      this.props.submitReport(report, this.props.navigation);
     });
   };
 
@@ -251,8 +271,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitReport: (report, navigation, preferredIOSClient) => dispatch(submitReport(report, navigation, preferredIOSClient)),
+  submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
   cancelReport: navigation => dispatch(cancelReport(navigation)),
+  emailReport: (report, navigation, preferredIOSClient) => dispatch(emailReport(report, navigation, preferredIOSClient)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateReport);
