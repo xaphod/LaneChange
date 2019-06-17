@@ -37,7 +37,8 @@ const registerReport = (report, firebaseImageURI) => {
     });
 };
 
-export default uploadReport = (report) => {
+export default uploadReport = (reportIn) => {
+  const report = reportIn;
   const {
     date,
     imageURIOnDisk,
@@ -76,7 +77,9 @@ export default uploadReport = (report) => {
           .then((firebaseImageURI) => {
             console.log(`DEBUG firebase/uploadReport: upload done, url=${firebaseImageURI}`);
             registerReport(report, firebaseImageURI, resolve, reject)
-              .then(() => {
+              .then((docRef) => {
+                console.log(`DEBUG firebase/uploadReport: register done, ref=${docRef}`);
+                report.docRef = docRef;
                 resolve(firebaseImageURI);
               })
               .catch((error) => {

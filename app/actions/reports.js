@@ -13,8 +13,10 @@ export const submitReport = (reportIn, navigation, preferredIOSClient) => async 
   let error = null;
 
   try {
+    // TODO: should not upload if redux.reports.lastSubmit has docRef and is same id as this report
+
     const imageLink = await uploadReport(report);
-    console.log(`DEBUG submitReport: uploadReport yielded imageLink: ${imageLink}`);
+    console.log(`DEBUG submitReport: uploadReport successful. imageLink: ${imageLink}`);
     report.imageLink = imageLink;
 
     const emailSuccess = await emailReport(report, preferredIOSClient); // does not throw, just returns false
