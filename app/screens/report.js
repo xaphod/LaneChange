@@ -194,6 +194,11 @@ class Report extends Component {
       }
     }
 
+    let controlsDisabled = false;
+    if (!draftReport) {
+      controlsDisabled = true;
+    }
+
     return (
       <SafeAreaView style={styles.container}>
         {!!imageURIOnDisk && (
@@ -220,14 +225,20 @@ class Report extends Component {
             <TouchableOpacity
               style={styles.addNoteButton}
               onPress={() => this.props.navigation.navigate('Notes')}
+              disabled={controlsDisabled}
             >
-              <Image source={notesIcon} />
-              <Text style={styles.addNoteButtonText}>Add Note</Text>
+              <Image source={notesIcon} opacity={controlsDisabled ? 0.2 : 1.0} />
+              <Text
+                style={controlsDisabled ? { ...styles.addNoteButtonText, color: '#dddddd' } : styles.addNoteButtonText}
+              >
+                Add Note
+              </Text>
               <Text style={styles.addNoteChevron}>&gt;</Text>
             </TouchableOpacity>
             <DefaultButton
               title="Create Email"
               onPress={() => { }}
+              disabled={controlsDisabled}
             />
           </View>
         </View>
