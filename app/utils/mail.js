@@ -53,7 +53,7 @@ iOS: user selects mail client: native or GMail, up front. If GMail, make body si
 */
 
 // returns success: bool
-export const emailReport = async (report, preferredIOSClient) => {
+export const openEmail = async (report, preferredIOSClient) => {
   const { date, imageLink, notes } = report;
   let { address } = report;
   console.log('DEBUG emailReport, report:');
