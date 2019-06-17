@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { submitReport, cancelReport } from 'app/actions/reports';
+import { submitReport, cancelReport, createReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
+import Camera from 'app/components/camera';
+import { photoPath, city } from 'app/utils/constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,8 +22,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     backgroundColor: '#f20000',
   },
-  shutterButton: {
-    marginBottom: 20,
+  image: {
+    flex: 1,
   },
   text: {
     fontSize: 16,
@@ -66,7 +68,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Note to Marlon: oh hey there. when you `require` a .png file directly (*exactly* as below) react native will magick-in the @2x or @3x as required.
 const shutterButton = require('app/assets/img/shutterButton.png');
 const notesIcon = require('app/assets/img/notesIcon.png');
 const trashIcon = require('app/assets/img/trashIcon.png');
@@ -134,12 +135,75 @@ class Report extends Component {
     this.props.navigation.navigate('Menu');
   }
 
+  onTakingPhoto = () => {
+    this.setState({
+      takingPhoto: true,
+    });
+  };
+
+  onPhotoTaken = (photo, error) => {
+    if (error) {
+      const { message } = error;
+      if (message) {
+        Alert.alert(
+          'Uh oh',
+          message,
+          [
+            {
+              text: 'OK',
+            },
+          ],
+        );
+      }
+      this.setState({
+        takingPhoto: false,
+      });
+      return;
+    }
+
+    // width: returns the image's width (taking image orientation into account)
+    // height: returns the image's height (taking image orientation into account)
+    // uri: (string) the path to the image saved on your app's cache directory.
+    // base64: (string?) the base64 representation of the image if required.
+    // exif: returns an exif map of the image if required.
+    // pictureOrientation: (number) the orientation of the picture
+    // deviceOrientation: (number) the orientation of the device
+    this.props.createReport(Date(), photo);
+    this.setState({
+      takingPhoto: undefined,
+    });
+  };
+
   render() {
+    const shutter = (<Image source={shutterButton} />);
+    const { takingPhoto } = this.state;
+    // TODO: use takingPhoto to show a wait animation
+    const { reports } = this.props;
+    const { draftReport } = reports;
+    let imageURIOnDisk;
+    if (draftReport && draftReport.photo) {
+      const { photo, date } = draftReport;
+      const { filename } = photo;
+      imageURIOnDisk = `file://${photoPath()}/${filename}`;
+    }
+
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.camera}>
-          <Image source={shutterButton} style={styles.shutterButton} />
-        </View>
+        {!!imageURIOnDisk && (
+          <Image
+            style={styles.image}
+            resizeMode="contain"
+            source={{ uri: imageURIOnDisk }}
+          />
+        )}
+        {!imageURIOnDisk && (
+          <Camera
+            style={styles.camera}
+            shutter={shutter}
+            onTakingPhoto={this.onTakingPhoto}
+            onPhotoTaken={this.onPhotoTaken}
+          />
+        )}
         <View style={styles.report}>
           <View style={styles.reportMeta}>
             <Text style={styles.text}>Tue, June 11, 2019</Text>
@@ -173,6 +237,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   cancelReport: navigation => dispatch(cancelReport(navigation)),
   submitReport: (report, navigation, preferredIOSClient) => dispatch(submitReport(report, navigation, preferredIOSClient)),
+  createReport: (date, photo) => dispatch(createReport(date, photo)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

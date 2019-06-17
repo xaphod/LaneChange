@@ -138,7 +138,7 @@ export default class Camera extends Component {
                   }
                   style={styles.capture}
                 >
-                  <Text style={{ fontSize: 14 }}> Take a photo </Text>
+                  {this.props.shutter}
                 </TouchableOpacity>
               </View>
             );
@@ -162,10 +162,6 @@ const styles = StyleSheet.create({
   },
   capture: {
     flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    padding: 15,
-    paddingHorizontal: 20,
     alignSelf: 'center',
     margin: 20,
   },
