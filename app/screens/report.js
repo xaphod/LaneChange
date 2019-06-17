@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { submitReport, cancelReport, createReport } from 'app/actions/reports';
+import { submitReport, cancelReport, createReport, emailReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
-import { photoPath } from 'app/utils/constants';
+import { photoPath, city } from 'app/utils/constants';
+import { IOSPreferredMailClient } from 'app/utils/mail';
+
+// TODO: user picks preferred
+const preferredIOSClient = IOSPreferredMailClient.GMAIL;
 
 const styles = StyleSheet.create({
   container: {
@@ -98,13 +102,64 @@ class Report extends Component {
     ),
   });
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { didError } = prevState;
+    const { reports } = nextProps;
+    const { lastSubmit, draftReport, inProgress } = reports;
+    if (inProgress || !lastSubmit || !lastSubmit.report) {
+      return {
+        ...prevState,
+      };
+    }
+    const { report, error, didEmail } = lastSubmit;
+    const newState = prevState;
+
+    console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, didError=${didError}, error is`);
+    console.log(error);
+
+    if (
+      draftReport &&
+      draftReport.id &&
+      lastSubmit.id &&
+      lastSubmit.id === draftReport.id &&
+      error &&
+      error.message &&
+      !didError
+    ) {
+      Alert.alert(
+        'Uh oh',
+        error.message,
+        [
+          {
+            text: 'OK',
+          },
+        ],
+      );
+      newState.didError = true;
+    } else if (
+      report.docRef &&
+      !didEmail
+    ) {
+      console.log('DEBUG getDerivedStateFromProps: firing email action');
+      nextProps.emailReport(lastSubmit.report, nextProps.navigation, preferredIOSClient);
+    }
+
+    return {
+      ...newState,
+    };
+  }
+
   constructor(props) {
     super(props);
     this.state = {
+      didError: false,
     };
 
     this.trashPressed = this.trashPressed.bind(this);
     this.morePressed = this.morePressed.bind(this);
+    this.createEmailPressed = this.createEmailPressed.bind(this);
+    this.onTakingPhoto = this.onTakingPhoto.bind(this);
+    this.onPhotoTaken = this.onPhotoTaken.bind(this);
   }
 
   componentDidMount() {
@@ -174,6 +229,60 @@ class Report extends Component {
     });
   };
 
+  createEmailPressed = () => {
+    const { reports } = this.props;
+    const { draftReport, lastSubmit, inProgress } = reports;
+
+    if (inProgress && inProgress.type) {
+      console.log('DEBUG createEmailPressed: DEBOUNCE');
+      return;
+    }
+
+    if (
+      lastSubmit &&
+      lastSubmit.report &&
+      lastSubmit.report.id &&
+      draftReport &&
+      draftReport.id &&
+      lastSubmit.report.id == draftReport.id &&
+      lastSubmit.report.docRef
+    ) {
+      console.log('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
+      console.log(this.props);
+      this.props.emailReport(lastSubmit.report, this.props.navigation, preferredIOSClient);
+      return;
+    }
+
+    console.log('DEBUG createEmailPressed: submitting');
+    const {
+      photo,
+      location,
+    } = draftReport;
+    const { filename } = photo;
+    const imageURIOnDisk = `file://${photoPath()}/${filename}`;
+    const report = {
+      ...draftReport,
+      photo: undefined,
+      location: undefined,
+      imageURIOnDisk,
+      city,
+    };
+
+    if (location) {
+      report.address = location.address;
+      report.lon = location.longitude;
+      report.lat = location.latitude;
+    }
+
+    // TODO: show some progress / waiting view
+
+    this.setState({
+      didError: undefined,
+    }, () => {
+      this.props.submitReport(report, this.props.navigation);
+    });
+  };
+
   render() {
     const shutter = (<Image source={shutterButton} />);
     const { takingPhoto } = this.state;
@@ -237,7 +346,7 @@ class Report extends Component {
             </TouchableOpacity>
             <DefaultButton
               title="Create Email"
-              onPress={() => { }}
+              onPress={() => this.createEmailPressed()}
               disabled={controlsDisabled}
             />
           </View>
@@ -254,8 +363,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   cancelReport: navigation => dispatch(cancelReport(navigation)),
-  submitReport: (report, navigation, preferredIOSClient) => dispatch(submitReport(report, navigation, preferredIOSClient)),
+  submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
+  emailReport: (report, navigation, preferredIOSClient) => dispatch(emailReport(report, navigation, preferredIOSClient)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);
