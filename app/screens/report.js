@@ -181,10 +181,17 @@ class Report extends Component {
     const { reports } = this.props;
     const { draftReport } = reports;
     let imageURIOnDisk;
+    let dayText;
+    let timeText;
     if (draftReport && draftReport.photo) {
       const { photo, date } = draftReport;
       const { filename } = photo;
       imageURIOnDisk = `file://${photoPath()}/${filename}`;
+      if (date) {
+        const dateObj = new Date(date);
+        dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
+        timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+      }
     }
 
     return (
@@ -206,8 +213,8 @@ class Report extends Component {
         )}
         <View style={styles.report}>
           <View style={styles.reportMeta}>
-            <Text style={styles.text}>Tue, June 11, 2019</Text>
-            <Text style={styles.text}>10:28 am</Text>
+            <Text style={styles.text}>{dayText}</Text>
+            <Text style={styles.text}>{timeText}</Text>
           </View>
           <View style={styles.reportActions}>
             <TouchableOpacity
