@@ -130,9 +130,16 @@ class Report extends Component {
     const { didError } = prevState;
     const { reports } = nextProps;
     const { lastSubmit, draftReport, inProgress } = reports;
-    if (inProgress || !lastSubmit || !lastSubmit.report) {
+    if (inProgress) {
       return {
         ...prevState,
+        showLoading: true,
+      };
+    }
+    if (!lastSubmit || !lastSubmit.report) {
+      return {
+        ...prevState,
+        showLoading: undefined,
       };
     }
     const { report, error, didEmail } = lastSubmit;
@@ -170,6 +177,7 @@ class Report extends Component {
 
     return {
       ...newState,
+      showLoading: undefined,
     };
   }
 
@@ -231,6 +239,7 @@ class Report extends Component {
   }
 
   onTakingPhoto = () => {
+    // TODO: got here. need to make a camera reducer and move this to redux so loading shows on cam again.
     this.setState({
       showLoading: true,
     });
@@ -314,8 +323,6 @@ class Report extends Component {
       report.lon = location.longitude;
       report.lat = location.latitude;
     }
-
-    // TODO: show some progress / waiting view
 
     this.setState({
       didError: undefined,
