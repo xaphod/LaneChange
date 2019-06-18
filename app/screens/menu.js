@@ -5,9 +5,20 @@ import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
 
 const styles = StyleSheet.create({
+  wrap: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f7f7f7',
+    paddingTop: 20,
+  },
+  version: {
+    alignItems: 'center',
+  },
+  versionText: {
+    fontSize: 12,
+    color: '#000',
   },
   headerButton: headerButtonStyle,
 });
@@ -50,22 +61,40 @@ class Menu extends Component {
   }
 
   render() {
+
+    const { navigation } = this.props;
+
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.wrap}>
         <ScrollView style={styles.container}>
           <MenuItem
-            onPress={() => this.props.navigation.navigate('HowItWorks')}
+            onPress={() => navigation.navigate('')}
+            title="Why It Matters"
+            icon={notesIcon}
+          />
+          <MenuItem
+            onPress={() => navigation.navigate('HowItWorks')}
             title="How It Works"
+            icon={notesIcon}
+          />
+          <MenuItem
+            onPress={() => navigation.navigate('')}
+            title="FAQ"
+            icon={notesIcon}
             last
           />
           <MenuItem
-            onPress={() => this.props.navigation.navigate('HowItWorks')}
-            title="How It Works"
+            onPress={() => navigation.navigate('')}
+            title="Terms & Conditions"
           />
           <MenuItem
-            onPress={() => this.props.navigation.navigate('HowItWorks')}
-            title="How It Works"
+            onPress={() => navigation.navigate('')}
+            title="Privacy Policy"
+            last
           />
+          <View style={styles.version}>
+            <Text style={styles.versionText}>LaneChange v1.0.0</Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
