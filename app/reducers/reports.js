@@ -12,6 +12,7 @@ export default () => {
     switch (action.type) {
       case Actions.ACTION_TYPE_CREATE_REPORT:
         id += 1;
+        console.log(`DEBUG Creating Report with ID=${id}`);
         return {
           ...state,
           id,

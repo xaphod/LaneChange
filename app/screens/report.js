@@ -217,8 +217,6 @@ class Report extends Component {
   onTakingPhoto = () => {
     this.setState({
       takingPhoto: true,
-    }, () => {
-      this.getLocation();
     });
   };
 
@@ -250,6 +248,7 @@ class Report extends Component {
     // pictureOrientation: (number) the orientation of the picture
     // deviceOrientation: (number) the orientation of the device
     this.props.createReport(Date(), photo);
+    this.getLocation();
     this.setState({
       takingPhoto: undefined,
     });
@@ -337,8 +336,12 @@ class Report extends Component {
         dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
         timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
       }
-      if (location && location.address) {
-        locationText = location.address;
+      if (location) {
+        if (location.addressShort) {
+          locationText = location.addressShort;
+        } else if (location.address) {
+          locationText = location.address;
+        }
       }
     }
 
