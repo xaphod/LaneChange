@@ -38,3 +38,5 @@ export const openSource = async () => {
   const url = 'https://github.com/xaphod/LaneChange';
   await tryUrl(url);
 };
+
+export const disabledColor = '#dddddd';

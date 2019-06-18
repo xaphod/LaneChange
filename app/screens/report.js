@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
-import { photoPath, city } from 'app/utils/constants';
+import { photoPath, city, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
 
@@ -397,7 +397,7 @@ class Report extends Component {
             >
               <Image source={notesIcon} opacity={controlsDisabled ? 0.2 : 1.0} />
               <Text
-                style={controlsDisabled ? { ...styles.addNoteButtonText, color: '#dddddd' } : styles.addNoteButtonText}
+                style={controlsDisabled ? { ...styles.addNoteButtonText, color: disabledColor } : styles.addNoteButtonText}
               >
                 {notesText}
               </Text>
