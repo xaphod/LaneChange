@@ -176,6 +176,8 @@ class Report extends Component {
     super(props);
     this.state = {
       didError: false,
+      counter: 0,
+      timer: null,
     };
 
     this.trashPressed = this.trashPressed.bind(this);
@@ -184,12 +186,25 @@ class Report extends Component {
     this.onTakingPhoto = this.onTakingPhoto.bind(this);
     this.onPhotoTaken = this.onPhotoTaken.bind(this);
     this.getLocation = this.getLocation.bind(this);
+    this.tick = this.tick.bind(this);
   }
 
   componentDidMount() {
     this.props.navigation.setParams({
       trashPressed: this.trashPressed,
       morePressed: this.morePressed,
+    });
+    const timer = setInterval(this.tick, 2000);
+    this.setState({ timer });
+  }
+
+  componentWillUnmount() {
+    this.clearInterval(this.state.timer);
+  }
+
+  tick() {
+    this.setState({
+      counter: this.state.counter + 1,
     });
   }
 
@@ -324,18 +339,20 @@ class Report extends Component {
     const { reports } = this.props;
     const { draftReport } = reports;
     let imageURIOnDisk;
-    let dayText;
-    let timeText;
     let locationText;
     let notesText = 'Add Note';
+    let dateObj;
+    let dateStyle = {
+      ...styles.text,
+      color: disabledColor,
+    };
     if (draftReport && draftReport.photo) {
       const { photo, date, location, notes } = draftReport;
       const { filename } = photo;
       imageURIOnDisk = `file://${photoPath()}/${filename}`;
       if (date) {
-        const dateObj = new Date(date);
-        dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
-        timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+        dateStyle = styles.text;
+        dateObj = new Date(date);
       }
       if (location) {
         if (location.addressShort) {
@@ -352,6 +369,13 @@ class Report extends Component {
         }
       }
     }
+
+    if (!dateObj) {
+      dateObj = new Date();
+    }
+
+    const dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
+    const timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
 
     let controlsDisabled = false;
     if (!draftReport) {
@@ -386,8 +410,8 @@ class Report extends Component {
         )}
         <View style={styles.report}>
           <View style={styles.reportMeta}>
-            <Text style={styles.text}>{dayText}</Text>
-            <Text style={styles.text}>{timeText}</Text>
+            <Text style={dateStyle}>{dayText}</Text>
+            <Text style={dateStyle}>{timeText}</Text>
           </View>
           <View style={styles.reportActions}>
             <TouchableOpacity
