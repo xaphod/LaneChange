@@ -16,15 +16,15 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
   },
-  menuItemChevron: {
-    fontSize: 14,
-    color: '#B9B9B9',
+  chevronIcon: {
     marginLeft: 'auto',
   },
   menuItemLast: {
     marginBottom: 20,
   }
 });
+
+const chevronIcon = require('app/assets/img/chevronIcon.png');
 
 export default class MenuItem extends Component {
   render() {
@@ -36,18 +36,24 @@ export default class MenuItem extends Component {
         ...styles.menuItemLast,
       };
     }
+
+    const { icon } = this.props;
+    const { title } = this.props;
+    const { onPress } = this.props;
+
     return (
       <TouchableOpacity
         style={menuItemStyle}
         onPress={() => {
-          this.props.onPress();
+          onPress();
         }}
       >
-        {!!this.props.icon &&
-          <Image source={this.props.icon} style={styles.menuItemIcon} />
+        {!!icon && (
+          <Image source={icon} style={styles.menuItemIcon} />
+        )
         }
-        <Text style={styles.menuItemText}>{this.props.title}</Text>
-        <Text style={styles.menuItemChevron}>&gt;</Text>
+        <Text style={styles.menuItemText}>{title}</Text>
+        <Image source={chevronIcon} style={styles.chevronIcon} />
       </TouchableOpacity>
     );
   }

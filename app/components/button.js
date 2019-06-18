@@ -32,7 +32,7 @@ export default class DefaultButton extends Component {
     return (
       <TouchableOpacity
         style={buttonStyle}
-        onPress={() => this.props.onPress}
+        onPress={() => this.props.onPress()}
       >
         {!!this.props.children &&
           { ...this.props.children }
