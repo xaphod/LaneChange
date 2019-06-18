@@ -17,27 +17,39 @@ const styles = StyleSheet.create({
     color: '#019864',
     fontSize: 16,
   },
+  buttonStyleDisabled: {
+    borderColor: '#dddddd',
+  },
 });
 
 export default class DefaultButton extends Component {
   render() {
-    let buttonStyle = styles.button;
+    let buttonStyleEnabled = styles.button;
     const { solid } = this.props;
     if (!solid) {
-      buttonStyle = {
-        ...buttonStyle,
+      buttonStyleEnabled = {
+        ...buttonStyleEnabled,
         ...styles.buttonOutline,
       };
     }
+    let buttonStyleDisabled = buttonStyleEnabled;
+    buttonStyleDisabled = {
+      ...buttonStyleDisabled,
+      ...styles.buttonStyleDisabled,
+    }
+
+    const controlsDisabled = this.props.disabled;
+
     return (
       <TouchableOpacity
-        style={buttonStyle}
+        style={controlsDisabled ? buttonStyleDisabled : buttonStyleEnabled}
         onPress={() => this.props.onPress()}
+        disabled={controlsDisabled}
       >
         {!!this.props.children &&
           { ...this.props.children }
         }
-        <Text style={styles.buttonText}>{this.props.title}</Text>
+        <Text style={controlsDisabled ? { ...styles.buttonText, color: '#dddddd' } : styles.buttonText}>{this.props.title}</Text>
       </TouchableOpacity>
     );
   }
