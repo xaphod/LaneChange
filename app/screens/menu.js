@@ -3,22 +3,29 @@ import { Platform, StyleSheet, Text, View, ScrollView, Button, Alert, Linking, I
 import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
+import { openTerms, openPrivacy, openSolodigitalis, openSource } from 'app/utils/constants';
 
 const styles = StyleSheet.create({
   wrap: {
     flex: 1,
+    backgroundColor: '#f7f7f7',
+  },
+  scrollview: {
+    backgroundColor: '#f7f7f7',
   },
   container: {
     flex: 1,
     backgroundColor: '#f7f7f7',
     paddingTop: 20,
+    paddingBottom: 20,
   },
   version: {
     alignItems: 'center',
   },
   versionText: {
     fontSize: 12,
-    color: '#000',
+    lineHeight: 20,
+    color: '#979797',
   },
   headerButton: headerButtonStyle,
 });
@@ -61,39 +68,52 @@ class Menu extends Component {
   }
 
   render() {
-
     const { navigation } = this.props;
 
     return (
       <SafeAreaView style={styles.wrap}>
-        <ScrollView style={styles.container}>
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Why It Matters"
-            icon={notesIcon}
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('HowItWorks')}
-            title="How It Works"
-            icon={notesIcon}
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="FAQ"
-            icon={notesIcon}
-            last
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Terms & Conditions"
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Privacy Policy"
-            last
-          />
-          <View style={styles.version}>
-            <Text style={styles.versionText}>LaneChange v1.0.0</Text>
+        <ScrollView style={styles.scrollview}>
+          <View style={styles.container}>
+            <MenuItem
+              onPress={() => navigation.navigate('')}
+              title="Why It Matters"
+              icon={notesIcon}
+            />
+            <MenuItem
+              onPress={() => navigation.navigate('HowItWorks')}
+              title="How It Works"
+              icon={notesIcon}
+            />
+            <MenuItem
+              onPress={() => navigation.navigate('')}
+              title="FAQ"
+              icon={notesIcon}
+              last
+            />
+
+            <MenuItem
+              onPress={() => openTerms()}
+              title="Terms & Conditions"
+            />
+            <MenuItem
+              onPress={() => openPrivacy()}
+              title="Privacy Policy"
+              last
+            />
+
+            <MenuItem
+              onPress={() => openSolodigitalis()}
+              title="Developer Info"
+            />
+            <MenuItem
+              onPress={() => openSource()}
+              title="Open source on GitHub"
+              last
+            />
+            <View style={styles.version}>
+              <Text style={styles.versionText}>LaneChange v1.0.0</Text>
+              <Text style={styles.versionText}>Developed by Solodigitalis</Text>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
