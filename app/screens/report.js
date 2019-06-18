@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image,  TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
