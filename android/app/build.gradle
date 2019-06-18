@@ -173,6 +173,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-linear-gradient')
     implementation project(':react-native-image-resizer')
     implementation project(':react-native-uuid-generator')
     implementation project(':react-native-location')

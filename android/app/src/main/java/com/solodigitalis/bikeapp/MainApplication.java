@@ -3,6 +3,7 @@ package com.solodigitalis.bikeapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.BV.LinearGradient.LinearGradientPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
 import com.github.reactnativecommunity.location.RNLocationPackage;
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new LinearGradientPackage(),
             new ImageResizerPackage(),
             new RNUUIDGeneratorPackage(),
             new RNLocationPackage(),

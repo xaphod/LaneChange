@@ -6,6 +6,8 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.3):
     - BoringSSL-GRPC/Interface (= 0.0.3)
   - BoringSSL-GRPC/Interface (0.0.3)
+  - BVLinearGradient (2.5.4):
+    - React
   - Crashlytics (3.13.1):
     - Fabric (~> 1.10.1)
   - DoubleConversion (1.1.6)
@@ -237,6 +239,7 @@ PODS:
   - yoga (0.59.8.React)
 
 DEPENDENCIES:
+  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - Crashlytics
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Firebase/Analytics
@@ -300,6 +303,8 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
+  BVLinearGradient:
+    :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   Folly:
@@ -330,6 +335,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
+  BVLinearGradient: 8cbc5155c978f2e43098818c91d206d07aae6d30
   Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Fabric: f6f21452846788bb44595d73e9909d79d328e617
@@ -366,6 +372,6 @@ SPEC CHECKSUMS:
   RNScreens: 720a9e6968beb73e8196239801e887d8401f86ed
   yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
 
-PODFILE CHECKSUM: 5eaeedeabc37d0f016045c7cf99cb71c2b832834
+PODFILE CHECKSUM: 457637d0904e4dc7344aaeaad7e691f5ee4c46a2
 
 COCOAPODS: 1.7.1

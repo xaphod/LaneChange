@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image,  TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
 import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
@@ -26,9 +27,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: '#f20000',
-  },
-  image: {
-    flex: 1,
   },
   text: {
     fontSize: 16,
@@ -70,6 +68,30 @@ const styles = StyleSheet.create({
   },
   reportActions: {
     padding: 20,
+  },
+  gradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  photoContainer: {
+    flex: 1,
+  },
+  photo: {
+    flex: 1,
+  },
+  locationContainer: {
+    bottom: 14,
+  },
+  locationText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
@@ -305,14 +327,18 @@ class Report extends Component {
     let imageURIOnDisk;
     let dayText;
     let timeText;
+    let locationText;
     if (draftReport && draftReport.photo) {
-      const { photo, date } = draftReport;
+      const { photo, date, location } = draftReport;
       const { filename } = photo;
       imageURIOnDisk = `file://${photoPath()}/${filename}`;
       if (date) {
         const dateObj = new Date(date);
         dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
         timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+      }
+      if (location && location.address) {
+        locationText = location.address;
       }
     }
 
@@ -324,11 +350,20 @@ class Report extends Component {
     return (
       <SafeAreaView style={styles.container}>
         {!!imageURIOnDisk && (
-          <Image
-            style={styles.image}
-            resizeMode="contain"
-            source={{ uri: imageURIOnDisk }}
-          />
+          <View style={styles.photoContainer}>
+            <Image
+              style={styles.photo}
+              resizeMode="contain"
+              source={{ uri: imageURIOnDisk }}
+            />
+            {!!locationText && (
+              <LinearGradient colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)']} style={styles.gradient}>
+                <View style={styles.locationContainer}>
+                  <Text style={styles.locationText}>{locationText}</Text>
+                </View>
+              </LinearGradient>
+            )}
+          </View>
         )}
         {!imageURIOnDisk && (
           <Camera
