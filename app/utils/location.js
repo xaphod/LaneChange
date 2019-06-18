@@ -34,7 +34,7 @@ export const getLocation = async () => {
       detail: 'fine',
       rationale: {
         title: 'Add the location to your report',
-        message: 'Please allow the app to add your current location to the report.',
+        message: 'PLEASE READ: Your location must be added to the report for it to be usable. If you do not allow the app access to your location then you must manually enter the location of the photo. The app only accesses your location at the moment you take a photo for a report.',
         buttonPositive: 'Add Location',
         buttonNegative: 'No thanks',
       },

@@ -74,7 +74,7 @@ export const cancelReport = navigation => ({
   navigation,
 });
 
-export const setNotes = notes => ({
-  type: Actions.ACTION_TYPE_SET_NOTES,
-  notes,
+export const expandInDraftReport = expand => ({
+  type: Actions.ACTION_TYPE_EXPAND_IN_DRAFTREPORT,
+  expand,
 });

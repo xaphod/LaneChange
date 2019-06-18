@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { submitReport, cancelReport, createReport, emailReport } from 'app/actions/reports';
+import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
 import { photoPath, city } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
+import { getLocation } from 'app/utils/location';
 
 // TODO: user picks preferred
 const preferredIOSClient = IOSPreferredMailClient.GMAIL;
@@ -160,6 +161,7 @@ class Report extends Component {
     this.createEmailPressed = this.createEmailPressed.bind(this);
     this.onTakingPhoto = this.onTakingPhoto.bind(this);
     this.onPhotoTaken = this.onPhotoTaken.bind(this);
+    this.getLocation = this.getLocation.bind(this);
   }
 
   componentDidMount() {
@@ -193,6 +195,8 @@ class Report extends Component {
   onTakingPhoto = () => {
     this.setState({
       takingPhoto: true,
+    }, () => {
+      this.getLocation();
     });
   };
 
@@ -283,6 +287,15 @@ class Report extends Component {
     });
   };
 
+  getLocation = async () => {
+    const location = await getLocation()
+      .catch((e) => {
+        console.log('DEBUG getLocation error:');
+        console.log(e);
+      });
+    this.props.expandInDraftReport({ location });
+  };
+
   render() {
     const shutter = (<Image source={shutterButton} />);
     const { takingPhoto } = this.state;
@@ -366,6 +379,7 @@ const mapDispatchToProps = dispatch => ({
   submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
   emailReport: (report, navigation, preferredIOSClient) => dispatch(emailReport(report, navigation, preferredIOSClient)),
+  expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

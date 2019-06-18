@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, TextInput, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
-import { setNotes } from 'app/actions/reports';
+import { expandInDraftReport } from 'app/actions/reports';
 import { photoPath } from 'app/utils/constants';
 
 const styles = StyleSheet.create({
@@ -109,7 +109,7 @@ class Notes extends Component {
 
         <TextInput
           style={styles.textInput}
-          onChangeText={notes => this.props.setNotes(notes)}
+          onChangeText={notes => this.props.expandInDraftReport({ notes })}
           value={notes}
           multiline
           textAlignVertical="top"
@@ -127,7 +127,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setNotes: notes => dispatch(setNotes(notes)),
+  expandInDraftReport: notes => dispatch(expandInDraftReport(notes)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notes);
