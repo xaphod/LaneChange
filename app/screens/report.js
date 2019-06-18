@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
+import LoadingView from 'app/components/loadingview';
 import { photoPath, city, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
@@ -199,7 +200,7 @@ class Report extends Component {
   }
 
   componentWillUnmount() {
-    this.clearInterval(this.state.timer);
+    clearInterval(this.state.timer);
   }
 
   tick() {
@@ -231,7 +232,7 @@ class Report extends Component {
 
   onTakingPhoto = () => {
     this.setState({
-      takingPhoto: true,
+      showLoading: true,
     });
   };
 
@@ -250,7 +251,7 @@ class Report extends Component {
         );
       }
       this.setState({
-        takingPhoto: false,
+        showLoading: undefined,
       });
       return;
     }
@@ -265,7 +266,7 @@ class Report extends Component {
     this.props.createReport(Date(), photo);
     this.getLocation();
     this.setState({
-      takingPhoto: undefined,
+      showLoading: undefined,
     });
   };
 
@@ -333,9 +334,7 @@ class Report extends Component {
   };
 
   render() {
-    const shutter = (<Image source={shutterButton} />);
-    const { takingPhoto } = this.state;
-    // TODO: use takingPhoto to show a wait animation
+    const { showLoading } = this.state;
     const { reports } = this.props;
     const { draftReport } = reports;
     let imageURIOnDisk;
@@ -381,6 +380,8 @@ class Report extends Component {
     if (!draftReport) {
       controlsDisabled = true;
     }
+
+    const shutter = showLoading ? (<View />) : (<Image source={shutterButton} />);
 
     return (
       <SafeAreaView style={styles.container}>
@@ -434,6 +435,9 @@ class Report extends Component {
             />
           </View>
         </View>
+        {!!showLoading && (
+          <LoadingView />
+        )}
       </SafeAreaView>
     );
   }
