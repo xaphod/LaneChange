@@ -327,8 +327,9 @@ class Report extends Component {
     let dayText;
     let timeText;
     let locationText;
+    let notesText = 'Add Note';
     if (draftReport && draftReport.photo) {
-      const { photo, date, location } = draftReport;
+      const { photo, date, location, notes } = draftReport;
       const { filename } = photo;
       imageURIOnDisk = `file://${photoPath()}/${filename}`;
       if (date) {
@@ -341,6 +342,13 @@ class Report extends Component {
           locationText = location.addressShort;
         } else if (location.address) {
           locationText = location.address;
+        }
+      }
+      if (notes) {
+        const [firstLine, secondLine, ...rest] = notes.split('\n');
+        notesText = firstLine;
+        if (secondLine) {
+          notesText += '\u2026';
         }
       }
     }
@@ -391,7 +399,7 @@ class Report extends Component {
               <Text
                 style={controlsDisabled ? { ...styles.addNoteButtonText, color: '#dddddd' } : styles.addNoteButtonText}
               >
-                Add Note
+                {notesText}
               </Text>
               <Text style={styles.addNoteChevron}>&gt;</Text>
             </TouchableOpacity>
