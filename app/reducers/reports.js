@@ -117,6 +117,27 @@ export default () => {
           iOSMailClient: action.iOSMailClient,
         };
 
+      case Actions.ACTION_TYPE_DELETE_PROGRESS:
+        return {
+          ...state,
+          inProgress: {
+            type: 'delete',
+          },
+        };
+
+      case Actions.ACTION_TYPE_DELETE_COMPLETE:
+        return {
+          ...state,
+          inProgress: undefined,
+          deleteAllData: true,
+        };
+
+      case Actions.ACTION_TYPE_DELETE_CLEAR:
+        return {
+          ...state,
+          deleteAllData: undefined,
+        };
+
       default:
         return state;
     }

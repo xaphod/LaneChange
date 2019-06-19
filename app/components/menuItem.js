@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   menuItemLast: {
     marginBottom: 20,
-  }
+  },
 });
 
 const chevronIcon = require('app/assets/img/chevronIcon.png');
@@ -52,7 +52,7 @@ export default class MenuItem extends Component {
           <Image source={icon} style={styles.menuItemIcon} />
         )
         }
-        <Text style={styles.menuItemText}>{title}</Text>
+        <Text style={{ ...styles.menuItemText, ...this.props.textProps }}>{title}</Text>
         <Image source={chevronIcon} style={styles.chevronIcon} />
       </TouchableOpacity>
     );

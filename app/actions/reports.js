@@ -129,3 +129,21 @@ export const submitReport = (reportIn, navigation) => async (dispatch) => {
     }
   }
 };
+
+export const deleteAllData = () => async (dispatch) => {
+  dispatch({
+    type: Actions.ACTION_TYPE_DELETE_PROGRESS,
+  });
+
+  setTimeout(() => {
+
+  dispatch({
+    type: Actions.ACTION_TYPE_DELETE_COMPLETE,
+  })
+
+  }, 1500);
+};
+
+export const deleteClear = () => ({
+  type: Actions.ACTION_TYPE_DELETE_CLEAR,
+});
