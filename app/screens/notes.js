@@ -114,6 +114,7 @@ class Notes extends Component {
           multiline
           textAlignVertical="top"
           placeholder="Describe the situation..."
+          autoFocus
         />
 
       </SafeAreaView>

@@ -355,7 +355,9 @@ class Report extends Component {
       if (notes) {
         const [firstLine, secondLine, ...rest] = notes.split('\n');
         notesText = firstLine;
-        if (secondLine) {
+        if (firstLine.length > 20) {
+          notesText = firstLine.substring(0, 20) + '\u2026';
+        } else if (secondLine !== undefined) {
           notesText += '\u2026';
         }
       }
