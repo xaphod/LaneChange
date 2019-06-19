@@ -140,7 +140,7 @@ class Report extends Component {
         showLoading: undefined,
       };
     }
-    const { report, error } = lastSubmit;
+    const { error } = lastSubmit;
     const newState = prevState;
 
     if (
@@ -281,8 +281,12 @@ class Report extends Component {
       lastSubmit.report.docRef
     ) {
       console.log('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
-      console.log(this.props);
-      this.props.emailReport(lastSubmit.report, this.props.navigation);
+
+      this.setState({
+        didError: undefined,
+      }, () => {
+        this.props.emailReport(lastSubmit.report, this.props.navigation);
+      });
       return;
     }
 

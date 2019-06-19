@@ -6,6 +6,7 @@ import MenuItem from 'app/components/menuItem';
 import { openTerms, openPrivacy, openSolodigitalis, openSource } from 'app/utils/constants';
 import { deleteAllData, deleteClear } from 'app/actions/reports';
 import LoadingView from 'app/components/loadingview';
+import { deletePhotosFromDisk } from 'app/utils/filesystem';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -58,11 +59,13 @@ class Menu extends Component {
 
     this.backPressed = this.backPressed.bind(this);
     this.deleteUserData = this.deleteUserData.bind(this);
+    this.deletePhotos = this.deletePhotos.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { reports } = nextProps;
-    if (reports && reports.inProgress) {
+    const { inProgress } = prevState;
+    if (inProgress || (reports && reports.inProgress)) {
       return {
         ...prevState,
         showLoading: true,
@@ -130,6 +133,33 @@ class Menu extends Component {
     );
   }
 
+  deletePhotos = async () => {
+    Alert.alert(
+      'Delete local copies of photos?',
+      'This will delete the local copies of the photos you have taken. The photos will still be available via the reports you have sent.',
+      [
+        {
+          text: 'Delete photos',
+          onPress: () => {
+            this.setState({
+              inProgress: true,
+            }, async () => {
+              await deletePhotosFromDisk();
+              this.setState({
+                inProgress: undefined,
+              });
+            });
+          },
+          style: 'destructive',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+    );
+  }
+
   render() {
     const { navigation } = this.props;
     const { showLoading } = this.state;
@@ -175,6 +205,10 @@ class Menu extends Component {
               last
             />
 
+            <MenuItem
+              onPress={() => this.deletePhotos()}
+              title="Delete local photos..."
+            />
             <MenuItem
               onPress={() => this.deleteUserData()}
               title="Delete my data..."

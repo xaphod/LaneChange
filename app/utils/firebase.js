@@ -123,7 +123,16 @@ export const deleteUserData = async () => {
     });
 
   snapshot.forEach((doc) => {
-    console.log(`DEBUG deleting doc=${doc.id}`);
+    const { image } = doc.data();
+    if (image) {
+      const photoRef = firebase.storage().refFromURL(image);
+      if (photoRef) {
+        photoRef.delete()
+          .catch((e) => {
+            throw e;
+          });
+      }
+    }
     doc.ref.delete()
       .catch((e) => {
         throw e;
@@ -135,5 +144,13 @@ export const deleteUserData = async () => {
       throw e;
     });
 
-  // TODO: log in anonyomously again
+  // signInAnonymously called by handler in App.js
+};
+
+export const signInAnonymously = () => {
+  console.log('DEBUG signInAnonymously()');
+  firebase.auth().signInAnonymously()
+    .catch((err) => {
+      console.log(`DEBUG App.js: ERROR signing in anonymously: ${err}`);
+    });
 };

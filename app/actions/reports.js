@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import * as Actions from 'app/actions';
 import { uploadReport, deleteUserData } from 'app/utils/firebase';
 import { openEmail, IOSPreferredMailClient } from 'app/utils/mail';
+import { deletePhotosFromDisk } from 'app/utils/filesystem';
 
 export const createReport = (date, photo) => ({
   type: Actions.ACTION_TYPE_CREATE_REPORT,
@@ -130,13 +131,13 @@ export const submitReport = (reportIn, navigation) => async (dispatch) => {
 
 export const deleteAllData = () => async (dispatch) => {
   dispatch({
-    type: Actions.ACTION_TYPE_DELETE_PROGRESS,
-  });
-  dispatch({
     type: Actions.ACTION_TYPE_CANCEL_REPORT,
   });
+  dispatch({
+    type: Actions.ACTION_TYPE_DELETE_PROGRESS,
+  });
 
-  // TODO: delete local filesystem data
+  await deletePhotosFromDisk();
 
   let error;
   await deleteUserData()
