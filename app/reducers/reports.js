@@ -111,6 +111,12 @@ export default () => {
         };
       }
 
+      case Actions.ACTION_TYPE_CHOSE_IOS_MAIL_CLIENT:
+        return {
+          ...state,
+          iOSMailClient: action.iOSMailClient,
+        };
+
       default:
         return state;
     }

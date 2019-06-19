@@ -9,9 +9,7 @@ import LoadingView from 'app/components/loadingview';
 import { photoPath, city, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
-
-// TODO: user picks preferred
-const preferredIOSClient = IOSPreferredMailClient.GMAIL;
+import { photoProgress, photoTaken } from 'app/actions/camera';
 
 const styles = StyleSheet.create({
   container: {
@@ -128,9 +126,9 @@ class Report extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { didError } = prevState;
-    const { reports } = nextProps;
-    const { lastSubmit, draftReport, inProgress } = reports;
-    if (inProgress) {
+    const { reports, camera } = nextProps;
+    const { lastSubmit, draftReport } = reports;
+    if ((reports && reports.inProgress) || (camera && camera.inProgress)) {
       return {
         ...prevState,
         showLoading: true,
@@ -142,7 +140,7 @@ class Report extends Component {
         showLoading: undefined,
       };
     }
-    const { report, error, didEmail } = lastSubmit;
+    const { report, error } = lastSubmit;
     const newState = prevState;
 
     console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, didError=${didError}, error is`);
@@ -167,12 +165,6 @@ class Report extends Component {
         ],
       );
       newState.didError = true;
-    } else if (
-      report.docRef &&
-      !didEmail
-    ) {
-      console.log('DEBUG getDerivedStateFromProps: firing email action');
-      nextProps.emailReport(lastSubmit.report, nextProps.navigation, preferredIOSClient);
     }
 
     return {
@@ -239,10 +231,7 @@ class Report extends Component {
   }
 
   onTakingPhoto = () => {
-    // TODO: got here. need to make a camera reducer and move this to redux so loading shows on cam again.
-    this.setState({
-      showLoading: true,
-    });
+    this.props.photoProgress();
   };
 
   onPhotoTaken = (photo, error) => {
@@ -259,9 +248,7 @@ class Report extends Component {
           ],
         );
       }
-      this.setState({
-        showLoading: undefined,
-      });
+      this.props.photoTaken();
       return;
     }
 
@@ -274,9 +261,7 @@ class Report extends Component {
     // deviceOrientation: (number) the orientation of the device
     this.props.createReport(Date(), photo);
     this.getLocation();
-    this.setState({
-      showLoading: undefined,
-    });
+    this.props.photoTaken();
   };
 
   createEmailPressed = () => {
@@ -299,7 +284,7 @@ class Report extends Component {
     ) {
       console.log('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
       console.log(this.props);
-      this.props.emailReport(lastSubmit.report, this.props.navigation, preferredIOSClient);
+      this.props.emailReport(lastSubmit.report, this.props.navigation);
       return;
     }
 
@@ -453,14 +438,17 @@ class Report extends Component {
 const mapStateToProps = state => ({
   reports: state.reports,
   ui: state.ui,
+  camera: state.camera,
 });
 
 const mapDispatchToProps = dispatch => ({
   cancelReport: navigation => dispatch(cancelReport(navigation)),
   submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
-  emailReport: (report, navigation, preferredIOSClient) => dispatch(emailReport(report, navigation, preferredIOSClient)),
+  emailReport: (report, navigation) => dispatch(emailReport(report, navigation)),
   expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
+  photoProgress: () => dispatch(photoProgress()),
+  photoTaken: photo => dispatch(photoTaken(photo)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

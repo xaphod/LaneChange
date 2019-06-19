@@ -13,6 +13,7 @@ import storage from 'redux-persist/lib/storage';
 import Nav from 'app/navigation/nav';
 import createReportsReducer from 'app/reducers/reports';
 import createUIReducer from 'app/reducers/ui';
+import createCameraReducer from 'app/reducers/camera';
 import firebase from 'react-native-firebase';
 
 const persistConfig = {
@@ -23,6 +24,7 @@ const persistConfig = {
 const appReducer = combineReducers({
   reports: createReportsReducer(),
   ui: createUIReducer(),
+  camera: createCameraReducer(),
 });
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
