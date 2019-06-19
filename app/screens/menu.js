@@ -18,13 +18,23 @@ const styles = StyleSheet.create({
   },
   versionText: {
     fontSize: 12,
-    color: '#000',
+    color: '#9b9b9b',
+  },
+  solodigitalisButton: {
+    marginTop: 5,
+  },
+  solodigitalisButtonText: {
+    fontSize: 12,
+    color: '#019864',
   },
   headerButton: headerButtonStyle,
 });
 
 const backArrowIcon = require('app/assets/img/backArrowIcon.png');
-const notesIcon = require('app/assets/img/notesIcon.png');
+const cycleIcon = require('app/assets/img/CycleHam.png');
+const faqIcon = require('app/assets/img/FAQ.png');
+const howIcon = require('app/assets/img/How.png');
+const whyIcon = require('app/assets/img/Why.png');
 
 class Menu extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -70,17 +80,22 @@ class Menu extends Component {
           <MenuItem
             onPress={() => navigation.navigate('')}
             title="Why It Matters"
-            icon={notesIcon}
+            icon={whyIcon}
           />
           <MenuItem
             onPress={() => navigation.navigate('HowItWorks')}
             title="How It Works"
-            icon={notesIcon}
+            icon={howIcon}
+          />
+          <MenuItem
+            onPress={() => navigation.navigate('')}
+            title="About Cycle Hamilton"
+            icon={cycleIcon}
           />
           <MenuItem
             onPress={() => navigation.navigate('')}
             title="FAQ"
-            icon={notesIcon}
+            icon={faqIcon}
             last
           />
           <MenuItem
@@ -92,8 +107,23 @@ class Menu extends Component {
             title="Privacy Policy"
             last
           />
+          <MenuItem
+            onPress={() => navigation.navigate('')}
+            title="Developer Info"
+          />
+          <MenuItem
+            onPress={() => navigation.navigate('')}
+            title="Open Source Repo"
+            last
+          />
           <View style={styles.version}>
             <Text style={styles.versionText}>LaneChange v1.0.0</Text>
+            <TouchableOpacity
+              style={styles.solodigitalisButton}
+              onPress={() => this.props.navigation.navigate('')}
+            >
+              <Text style={styles.solodigitalisButtonText}>Developed by Solidigitalis</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>

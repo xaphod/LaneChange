@@ -10,9 +10,10 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     backgroundColor: '#fff',
   },
-  menuItemIcon: {},
+  menuItemIcon: {
+    marginRight: 20,
+  },
   menuItemText: {
-    marginLeft: 20,
     color: '#000',
     fontSize: 16,
   },
