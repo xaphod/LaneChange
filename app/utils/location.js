@@ -1,6 +1,12 @@
 import RNLocation from 'react-native-location';
 import { googleMapsAPIKey } from 'app/utils/keys';
 
+const getAddressComponent = (address_components, componentName) => {
+  return address_components.find(
+    component => component.types && component.types.find(type => type === componentName)
+  );
+};
+
 export const reverseGeocode = async (latitude, longitude) => {
   const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${googleMapsAPIKey}`)
     .catch((e) => {
@@ -18,11 +24,33 @@ export const reverseGeocode = async (latitude, longitude) => {
   const firstResult = results.find(() => true);
   if (!firstResult) {
     console.log('DEBUG reverseGeocode: no results');
-    return null;
+    return undefined;
   }
-  const { formatted_address } = firstResult;
-  console.log(`DEBUG reverseGeocode chosen adddress: ${formatted_address}`);
-  return formatted_address;
+  const { formatted_address, address_components } = firstResult;
+  let streetNumber, route, locality;
+  if (address_components) {
+    let component;
+    component = getAddressComponent(address_components, 'street_number');
+    if (component && component.short_name) {
+      streetNumber = component.short_name;
+    }
+    component = getAddressComponent(address_components, 'route');
+    if (component && component.short_name) {
+      route = component.short_name;
+    }
+    component = getAddressComponent(address_components, 'locality');
+    if (component && component.short_name) {
+      locality = component.short_name;
+    }
+  }
+  const result = { address: formatted_address };
+  if (streetNumber && route && locality) {
+    result.addressShort = `${streetNumber} ${route}, ${locality}`;
+  }
+
+  console.log('DEBUG reverseGeocode result:');
+  console.log(result);
+  return result;
 };
 
 export const getLocation = async () => {
@@ -42,19 +70,19 @@ export const getLocation = async () => {
   }).catch(() => {});
   if (!granted) {
     console.log('DEBUG getLocation: location permission NOT GRANTED');
-    return null;
+    return undefined;
   }
 
   const latestLocation = await RNLocation.getLatestLocation({ timeout: 1500 })
     .catch((e) => {
       console.log('DEBUG getLocation: ERROR getting location:');
       console.log(e);
-      return null;
+      return undefined;
     });
 
   if (!latestLocation || !latestLocation.longitude || !latestLocation.latitude) {
     console.log('DEBUG getLocation: NO location found');
-    return null;
+    return undefined;
   }
 
   /* Example location returned
@@ -80,8 +108,14 @@ export const getLocation = async () => {
       console.log(e);
     });
 
+  if (address) {
+    return {
+      ...latestLocation,
+      ...address,
+    };
+  }
+
   return {
-    address,
     ...latestLocation,
   };
 };

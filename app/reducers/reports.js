@@ -12,6 +12,7 @@ export default () => {
     switch (action.type) {
       case Actions.ACTION_TYPE_CREATE_REPORT:
         id += 1;
+        console.log(`DEBUG Creating Report with ID=${id}`);
         return {
           ...state,
           id,
@@ -100,8 +101,6 @@ export default () => {
 
       case Actions.ACTION_TYPE_CANCEL_REPORT:
       {
-        // const { navigation } = action;
-        // navigation.popToTop();
         return {
           ...state,
           draftReport: undefined,
@@ -109,6 +108,34 @@ export default () => {
           inProgress: undefined,
         };
       }
+
+      case Actions.ACTION_TYPE_CHOSE_IOS_MAIL_CLIENT:
+        return {
+          ...state,
+          iOSMailClient: action.iOSMailClient,
+        };
+
+      case Actions.ACTION_TYPE_DELETE_PROGRESS:
+        return {
+          ...state,
+          inProgress: {
+            type: 'delete',
+          },
+        };
+
+      case Actions.ACTION_TYPE_DELETE_COMPLETE:
+        return {
+          ...state,
+          inProgress: undefined,
+          deleteAllData: true,
+          deleteAllDataError: action.error,
+        };
+
+      case Actions.ACTION_TYPE_DELETE_CLEAR:
+        return {
+          ...state,
+          deleteAllData: undefined,
+        };
 
       default:
         return state;

@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "^16.8.3",
     "react-native": "^0.59.8",
+    "react-native-action-sheet": "^2.2.0",
     "react-native-camera": "^2.9.0",
     "react-native-firebase": "^5.4.2",
     "react-native-fs": "^2.13.3",

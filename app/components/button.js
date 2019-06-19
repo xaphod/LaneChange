@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, TouchableOpacity } from 'react-native';
+import { disabledColor } from 'app/utils/constants';
 
 const styles = StyleSheet.create({
   button: {
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonStyleDisabled: {
-    borderColor: '#dddddd',
+    borderColor: disabledColor,
   },
 });
 
@@ -49,7 +50,7 @@ export default class DefaultButton extends Component {
         {!!this.props.children &&
           { ...this.props.children }
         }
-        <Text style={controlsDisabled ? { ...styles.buttonText, color: '#dddddd' } : styles.buttonText}>{this.props.title}</Text>
+        <Text style={controlsDisabled ? { ...styles.buttonText, color: disabledColor } : styles.buttonText}>{this.props.title}</Text>
       </TouchableOpacity>
     );
   }

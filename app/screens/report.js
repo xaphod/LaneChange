@@ -5,12 +5,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
-import { photoPath, city } from 'app/utils/constants';
+import LoadingView from 'app/components/loadingview';
+import { photoPath, city, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
-
-// TODO: user picks preferred
-const preferredIOSClient = IOSPreferredMailClient.GMAIL;
+import { photoProgress, photoTaken } from 'app/actions/camera';
 
 const styles = StyleSheet.create({
   container: {
@@ -127,24 +126,29 @@ class Report extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { didError } = prevState;
-    const { reports } = nextProps;
-    const { lastSubmit, draftReport, inProgress } = reports;
-    if (inProgress || !lastSubmit || !lastSubmit.report) {
+    const { reports, camera } = nextProps;
+    const { lastSubmit, draftReport } = reports;
+    if ((reports && reports.inProgress) || (camera && camera.inProgress)) {
       return {
         ...prevState,
+        showLoading: true,
       };
     }
-    const { report, error, didEmail } = lastSubmit;
+    if (!lastSubmit || !lastSubmit.report) {
+      return {
+        ...prevState,
+        showLoading: undefined,
+      };
+    }
+    const { error } = lastSubmit;
     const newState = prevState;
-
-    console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, didError=${didError}, error is`);
-    console.log(error);
 
     if (
       draftReport &&
       draftReport.id &&
-      lastSubmit.id &&
-      lastSubmit.id === draftReport.id &&
+      lastSubmit.report &&
+      lastSubmit.report.id &&
+      lastSubmit.report.id === draftReport.id &&
       error &&
       error.message &&
       !didError
@@ -159,16 +163,11 @@ class Report extends Component {
         ],
       );
       newState.didError = true;
-    } else if (
-      report.docRef &&
-      !didEmail
-    ) {
-      console.log('DEBUG getDerivedStateFromProps: firing email action');
-      nextProps.emailReport(lastSubmit.report, nextProps.navigation, preferredIOSClient);
     }
 
     return {
       ...newState,
+      showLoading: undefined,
     };
   }
 
@@ -176,6 +175,8 @@ class Report extends Component {
     super(props);
     this.state = {
       didError: false,
+      counter: 0,
+      timer: null,
     };
 
     this.trashPressed = this.trashPressed.bind(this);
@@ -184,12 +185,25 @@ class Report extends Component {
     this.onTakingPhoto = this.onTakingPhoto.bind(this);
     this.onPhotoTaken = this.onPhotoTaken.bind(this);
     this.getLocation = this.getLocation.bind(this);
+    this.tick = this.tick.bind(this);
   }
 
   componentDidMount() {
     this.props.navigation.setParams({
       trashPressed: this.trashPressed,
       morePressed: this.morePressed,
+    });
+    const timer = setInterval(this.tick, 2000);
+    this.setState({ timer });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+  }
+
+  tick() {
+    this.setState({
+      counter: this.state.counter + 1,
     });
   }
 
@@ -215,11 +229,7 @@ class Report extends Component {
   }
 
   onTakingPhoto = () => {
-    this.setState({
-      takingPhoto: true,
-    }, () => {
-      this.getLocation();
-    });
+    this.props.photoProgress();
   };
 
   onPhotoTaken = (photo, error) => {
@@ -236,9 +246,7 @@ class Report extends Component {
           ],
         );
       }
-      this.setState({
-        takingPhoto: false,
-      });
+      this.props.photoTaken();
       return;
     }
 
@@ -250,9 +258,8 @@ class Report extends Component {
     // pictureOrientation: (number) the orientation of the picture
     // deviceOrientation: (number) the orientation of the device
     this.props.createReport(Date(), photo);
-    this.setState({
-      takingPhoto: undefined,
-    });
+    this.getLocation();
+    this.props.photoTaken();
   };
 
   createEmailPressed = () => {
@@ -274,8 +281,12 @@ class Report extends Component {
       lastSubmit.report.docRef
     ) {
       console.log('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
-      console.log(this.props);
-      this.props.emailReport(lastSubmit.report, this.props.navigation, preferredIOSClient);
+
+      this.setState({
+        didError: undefined,
+      }, () => {
+        this.props.emailReport(lastSubmit.report, this.props.navigation);
+      });
       return;
     }
 
@@ -300,8 +311,6 @@ class Report extends Component {
       report.lat = location.latitude;
     }
 
-    // TODO: show some progress / waiting view
-
     this.setState({
       didError: undefined,
     }, () => {
@@ -319,33 +328,56 @@ class Report extends Component {
   };
 
   render() {
-    const shutter = (<Image source={shutterButton} />);
-    const { takingPhoto } = this.state;
-    // TODO: use takingPhoto to show a wait animation
+    const { showLoading } = this.state;
     const { reports } = this.props;
     const { draftReport } = reports;
     let imageURIOnDisk;
-    let dayText;
-    let timeText;
     let locationText;
+    let notesText = 'Add Note';
+    let dateObj;
+    let dateStyle = {
+      ...styles.text,
+      color: disabledColor,
+    };
     if (draftReport && draftReport.photo) {
-      const { photo, date, location } = draftReport;
+      const { photo, date, location, notes } = draftReport;
       const { filename } = photo;
       imageURIOnDisk = `file://${photoPath()}/${filename}`;
       if (date) {
-        const dateObj = new Date(date);
-        dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
-        timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
+        dateStyle = styles.text;
+        dateObj = new Date(date);
       }
-      if (location && location.address) {
-        locationText = location.address;
+      if (location) {
+        if (location.addressShort) {
+          locationText = location.addressShort;
+        } else if (location.address) {
+          locationText = location.address;
+        }
+      }
+      if (notes) {
+        const [firstLine, secondLine, ...rest] = notes.split('\n');
+        notesText = firstLine;
+        if (firstLine.length > 20) {
+          notesText = firstLine.substring(0, 20) + '\u2026';
+        } else if (secondLine !== undefined) {
+          notesText += '\u2026';
+        }
       }
     }
+
+    if (!dateObj) {
+      dateObj = new Date();
+    }
+
+    const dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
+    const timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
 
     let controlsDisabled = false;
     if (!draftReport) {
       controlsDisabled = true;
     }
+
+    const shutter = showLoading ? (<View />) : (<Image source={shutterButton} />);
 
     return (
       <SafeAreaView style={styles.container}>
@@ -375,8 +407,8 @@ class Report extends Component {
         )}
         <View style={styles.report}>
           <View style={styles.reportMeta}>
-            <Text style={styles.text}>{dayText}</Text>
-            <Text style={styles.text}>{timeText}</Text>
+            <Text style={dateStyle}>{dayText}</Text>
+            <Text style={dateStyle}>{timeText}</Text>
           </View>
           <View style={styles.reportActions}>
             <TouchableOpacity
@@ -386,9 +418,9 @@ class Report extends Component {
             >
               <Image source={notesIcon} opacity={controlsDisabled ? 0.2 : 1.0} />
               <Text
-                style={controlsDisabled ? { ...styles.addNoteButtonText, color: '#dddddd' } : styles.addNoteButtonText}
+                style={controlsDisabled ? { ...styles.addNoteButtonText, color: disabledColor } : styles.addNoteButtonText}
               >
-                Add Note
+                {notesText}
               </Text>
               <Text style={styles.addNoteChevron}>&gt;</Text>
             </TouchableOpacity>
@@ -399,6 +431,9 @@ class Report extends Component {
             />
           </View>
         </View>
+        {!!showLoading && (
+          <LoadingView />
+        )}
       </SafeAreaView>
     );
   }
@@ -407,14 +442,17 @@ class Report extends Component {
 const mapStateToProps = state => ({
   reports: state.reports,
   ui: state.ui,
+  camera: state.camera,
 });
 
 const mapDispatchToProps = dispatch => ({
   cancelReport: navigation => dispatch(cancelReport(navigation)),
   submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
-  emailReport: (report, navigation, preferredIOSClient) => dispatch(emailReport(report, navigation, preferredIOSClient)),
+  emailReport: (report, navigation) => dispatch(emailReport(report, navigation)),
   expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
+  photoProgress: () => dispatch(photoProgress()),
+  photoTaken: photo => dispatch(photoTaken(photo)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

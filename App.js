@@ -13,7 +13,9 @@ import storage from 'redux-persist/lib/storage';
 import Nav from 'app/navigation/nav';
 import createReportsReducer from 'app/reducers/reports';
 import createUIReducer from 'app/reducers/ui';
+import createCameraReducer from 'app/reducers/camera';
 import firebase from 'react-native-firebase';
+import { signInAnonymously } from 'app/utils/firebase';
 
 const persistConfig = {
   key: 'root',
@@ -23,6 +25,7 @@ const persistConfig = {
 const appReducer = combineReducers({
   reports: createReportsReducer(),
   ui: createUIReducer(),
+  camera: createCameraReducer(),
 });
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
@@ -48,16 +51,11 @@ export default function App() {
       } else {
         console.log(`DEBUG App.js: signed in to an actual account as: ${user.uid}`);
       }
+    } else {
+      console.log('DEBUG App.js: no user, calling signInAnonymously()');
+      signInAnonymously();
     }
   });
-
-  if (!firebase.auth().currentUser) {
-    console.log('DEBUG App.js: calling signInAnonymously');
-    firebase.auth().signInAnonymously()
-      .catch((err) => {
-        console.log(`DEBUG App.js: ERROR signing in anonymously: ${err}`);
-      });
-  }
 
   return (
     <Provider store={store}>
