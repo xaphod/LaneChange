@@ -1,7 +1,7 @@
 import ActionSheet from 'react-native-action-sheet';
 import { Platform } from 'react-native';
 import * as Actions from 'app/actions';
-import uploadReport from 'app/utils/firebase';
+import { uploadReport, deleteUserData } from 'app/utils/firebase';
 import { openEmail, IOSPreferredMailClient } from 'app/utils/mail';
 
 export const createReport = (date, photo) => ({
@@ -104,11 +104,9 @@ export const submitReport = (reportIn, navigation) => async (dispatch) => {
     });
 
     const { firebaseImageURI, docRef } = await uploadReport(report, (progress) => {
-      dispatch({
-        type: Actions.ACTION_TYPE_SUBMIT_PROGRESS,
-        report,
-        progress,
-      });
+      // warning, this can fire multiple times AFTER final error has occurred
+    }).catch((e) => {
+      throw e;
     });
     console.log(`DEBUG submitReport: uploadReport successful. imageLink: ${firebaseImageURI}`);
     report.imageLink = firebaseImageURI;
@@ -134,14 +132,24 @@ export const deleteAllData = () => async (dispatch) => {
   dispatch({
     type: Actions.ACTION_TYPE_DELETE_PROGRESS,
   });
+  dispatch({
+    type: Actions.ACTION_TYPE_CANCEL_REPORT,
+  });
 
-  setTimeout(() => {
+  // TODO: delete local filesystem data
+
+  let error;
+  await deleteUserData()
+    .catch((e) => {
+      console.log('DEBUG deleteAllData: caught error:');
+      console.log(e);
+      error = e;
+    });
 
   dispatch({
     type: Actions.ACTION_TYPE_DELETE_COMPLETE,
-  })
-
-  }, 1500);
+    error,
+  });
 };
 
 export const deleteClear = () => ({

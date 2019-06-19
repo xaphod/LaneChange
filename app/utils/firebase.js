@@ -7,7 +7,7 @@ const registerReport = (report, firebaseImageURI) => {
   // firebase.firestore().runTransaction(async (transaction) => {
   // });
 
-  let user = null;
+  let user;
   const userObject = firebase.auth().currentUser;
   if (userObject) {
     user = userObject.uid;
@@ -37,7 +37,7 @@ const registerReport = (report, firebaseImageURI) => {
     });
 };
 
-export default uploadReport = (report, progressCallback) => {
+export const uploadReport = (report, progressCallback) => {
   const {
     date,
     imageURIOnDisk,
@@ -57,6 +57,12 @@ export default uploadReport = (report, progressCallback) => {
         contentType: 'image/jpeg',
       });
 
+      uploadTask.catch((error) => {
+        console.log('DEBUG firebase/uploadReport: ERROR:');
+        console.log(error);
+        reject(error);
+      });
+
       // https://firebase.google.com/docs/storage/web/upload-files
       uploadTask.on('state_changed', (snapshot) => {
         // Observe state change events such as progress, pause, and resume
@@ -74,6 +80,7 @@ export default uploadReport = (report, progressCallback) => {
         reject(error);
       }, () => {
         // completed successfully
+        console.log('DEBUG firebase/uploadReport: complete...');
         firebaseImageRef
           .getDownloadURL()
           .then((firebaseImageURI) => {
@@ -98,4 +105,35 @@ export default uploadReport = (report, progressCallback) => {
       });
     });
   });
+};
+
+export const deleteUserData = async () => {
+  const userObject = firebase.auth().currentUser;
+  if (!userObject) {
+    throw new Error('No user is logged in.');
+  }
+  const { uid } = userObject;
+  console.log(`DEBUG deleteUserData for uid=${uid}`);
+
+  const reportsRef = firebase.firestore().collection(reportsRefName);
+  const reportsQuery = reportsRef.where('user', '==', uid);
+  const snapshot = await reportsQuery.get()
+    .catch((e) => {
+      throw e;
+    });
+
+  snapshot.forEach((doc) => {
+    console.log(`DEBUG deleting doc=${doc.id}`);
+    doc.ref.delete()
+      .catch((e) => {
+        throw e;
+      });
+  });
+
+  userObject.delete()
+    .catch((e) => {
+      throw e;
+    });
+
+  // TODO: log in anonyomously again
 };

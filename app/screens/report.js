@@ -143,14 +143,12 @@ class Report extends Component {
     const { report, error } = lastSubmit;
     const newState = prevState;
 
-    console.log(`createReport getDerivedStateFromProps - report.id=${report.id}, didError=${didError}, error is`);
-    console.log(error);
-
     if (
       draftReport &&
       draftReport.id &&
-      lastSubmit.id &&
-      lastSubmit.id === draftReport.id &&
+      lastSubmit.report &&
+      lastSubmit.report.id &&
+      lastSubmit.report.id === draftReport.id &&
       error &&
       error.message &&
       !didError

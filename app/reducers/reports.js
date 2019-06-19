@@ -101,8 +101,6 @@ export default () => {
 
       case Actions.ACTION_TYPE_CANCEL_REPORT:
       {
-        // const { navigation } = action;
-        // navigation.popToTop();
         return {
           ...state,
           draftReport: undefined,
@@ -130,6 +128,7 @@ export default () => {
           ...state,
           inProgress: undefined,
           deleteAllData: true,
+          deleteAllDataError: action.error,
         };
 
       case Actions.ACTION_TYPE_DELETE_CLEAR:

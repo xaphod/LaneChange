@@ -72,15 +72,28 @@ class Menu extends Component {
 
     if (reports && reports.deleteAllData) {
       nextProps.deleteClear();
-      Alert.alert(
-        'All data deleted',
-        'All of your data on this device and in the Cloud was deleted.',
-        [
-          {
-            text: 'OK',
-          },
-        ],
-      );
+      const { deleteAllDataError } = reports;
+      if (deleteAllDataError) {
+        Alert.alert(
+          'Error deleting data',
+          deleteAllDataError.message,
+          [
+            {
+              text: 'OK',
+            },
+          ],
+        );
+      } else {
+        Alert.alert(
+          'All data deleted',
+          'All of your data on this device and in the Cloud was deleted.',
+          [
+            {
+              text: 'OK',
+            },
+          ],
+        );
+      }
     }
 
     return {
@@ -105,7 +118,7 @@ class Menu extends Component {
       'WARNING, READ CAREFULLY: You are about to permanently and irrevocably delete all of your LaneChange data, on this device and stored in the Cloud. This includes photos, report notes, locations, and more -- which means that any emails you sent via LaneChange will contain dead links. Are you really sure you want to do this?',
       [
         {
-          text: 'Delete my data',
+          text: '💣 NUKE FROM ORBIT 💥',
           onPress: () => this.props.deleteUserData(),
           style: 'destructive',
         },
@@ -164,7 +177,7 @@ class Menu extends Component {
 
             <MenuItem
               onPress={() => this.deleteUserData()}
-              title="Delete my data"
+              title="Delete my data..."
               textProps={{ color: 'red' }}
               last
             />
