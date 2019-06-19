@@ -176,72 +176,27 @@ class Menu extends Component {
 
     return (
       <SafeAreaView style={styles.wrap}>
-<<<<<<< HEAD
-        <ScrollView style={styles.container}>
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Why It Matters"
-            icon={whyIcon}
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('HowItWorks')}
-            title="How It Works"
-            icon={howIcon}
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="About Cycle Hamilton"
-            icon={cycleIcon}
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="FAQ"
-            icon={faqIcon}
-            last
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Terms & Conditions"
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Privacy Policy"
-            last
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Developer Info"
-          />
-          <MenuItem
-            onPress={() => navigation.navigate('')}
-            title="Open Source Repo"
-            last
-          />
-          <View style={styles.version}>
-            <Text style={styles.versionText}>LaneChange v1.0.0</Text>
-            <TouchableOpacity
-              style={styles.solodigitalisButton}
-              onPress={() => this.props.navigation.navigate('')}
-            >
-              <Text style={styles.solodigitalisButtonText}>Developed by Solidigitalis</Text>
-            </TouchableOpacity>
-=======
         <ScrollView style={styles.scrollview}>
           <View style={styles.container}>
             <MenuItem
               onPress={() => navigation.navigate('')}
               title="Why It Matters"
-              icon={notesIcon}
+              icon={whyIcon}
             />
             <MenuItem
               onPress={() => navigation.navigate('HowItWorks')}
               title="How It Works"
-              icon={notesIcon}
+              icon={howIcon}
+            />
+            <MenuItem
+              onPress={() => navigation.navigate('')}
+              title="About Cycle Hamilton"
+              icon={cycleIcon}
             />
             <MenuItem
               onPress={() => navigation.navigate('')}
               title="FAQ"
-              icon={notesIcon}
+              icon={faqIcon}
               last
             />
 
@@ -280,7 +235,6 @@ class Menu extends Component {
               <Text style={styles.versionText}>LaneChange v1.0.0</Text>
               <Text style={styles.versionText}>Developed by Solodigitalis in #hamont</Text>
             </View>
->>>>>>> master
           </View>
         </ScrollView>
         {!!showLoading && (
