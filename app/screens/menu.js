@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, ScrollView, Button, Alert, Linking, I
 import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
-import { openTerms, openPrivacy, openSolodigitalis, openSource } from 'app/utils/constants';
+import { openTerms, openPrivacy, openSolodigitalis, openSource, openCycleHamilton } from 'app/utils/constants';
 import { deleteAllData, deleteClear } from 'app/actions/reports';
 import LoadingView from 'app/components/loadingview';
 import { deletePhotosFromDisk } from 'app/utils/filesystem';
@@ -178,25 +178,25 @@ class Menu extends Component {
       <SafeAreaView style={styles.wrap}>
         <ScrollView style={styles.scrollview}>
           <View style={styles.container}>
-            <MenuItem
+            {/* <MenuItem
               onPress={() => navigation.navigate('')}
               title="Why It Matters"
               icon={whyIcon}
-            />
+            /> */}
             <MenuItem
               onPress={() => navigation.navigate('HowItWorks')}
               title="How It Works"
               icon={howIcon}
             />
-            <MenuItem
-              onPress={() => navigation.navigate('')}
-              title="About Cycle Hamilton"
-              icon={cycleIcon}
-            />
-            <MenuItem
+            {/* <MenuItem
               onPress={() => navigation.navigate('')}
               title="FAQ"
               icon={faqIcon}
+            /> */}
+            <MenuItem
+              onPress={() => openCycleHamilton()}
+              title="About Cycle Hamilton"
+              icon={cycleIcon}
               last
             />
 

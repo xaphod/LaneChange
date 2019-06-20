@@ -39,4 +39,9 @@ export const openSource = async () => {
   await tryUrl(url);
 };
 
+export const openCycleHamilton = async () => {
+  const url = 'https://cyclehamont.ca';
+  await tryUrl(url);
+};
+
 export const disabledColor = '#dddddd';
