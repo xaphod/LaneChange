@@ -11,14 +11,11 @@ export default () => {
         action.navigation.navigate('Report');
         return {
           ...state,
-          startScreenShown: false,
+          startScreenShown: true,
         };
 
       default:
-        return {
-          ...state,
-          startScreenShown: false,
-        };
+        return state;
     }
   };
 };
