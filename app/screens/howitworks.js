@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button, Alert, Linking, Image, SafeAreaView } from 'react-native';
+import { Platform, StyleSheet, Text, View, Button, Alert, Linking, Image, SafeAreaView, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
+import { navigateToReport } from 'app/actions/ui';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const styles = StyleSheet.create({
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
   },
   stepWrap: {
-    paddingHorizontal: 30,
+    marginHorizontal: 30,
     paddingTop: 20,
   },
   step: {
@@ -36,6 +37,10 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 30,
     marginTop: 5,
+  },
+  stepTextWrap: {
+    flex: 1,
+    flexGrow: 1,
   },
   stepHeader: {
     fontSize: 24,
@@ -59,41 +64,43 @@ class HowItWorks extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.logoWrap}>
-          <Image source={logo} style={styles.logo} />
-        </View>
-        <View style={styles.stepWrap}>
-          <View style={styles.step}>
-            <Image source={cameraIconTranslucent} style={styles.icon} />
-            <View style={styles.stepTextWrap}>
-              <Text style={styles.stepHeader}>Take a Photo</Text>
-              <Text style={styles.stepText}>Use your location & add a note</Text>
+        <ScrollView>
+          <View style={styles.logoWrap}>
+            <Image source={logo} style={styles.logo} />
+          </View>
+          <View style={styles.stepWrap}>
+            <View style={styles.step}>
+              <Image source={cameraIconTranslucent} style={styles.icon} />
+              <View style={styles.stepTextWrap}>
+                <Text style={styles.stepHeader}>Take a Photo</Text>
+                <Text style={styles.stepText}>Use your location & add a note</Text>
+              </View>
+            </View>
+            <View style={styles.step}>
+              <Image source={emailIconTranslucent} style={styles.icon} />
+              <View style={styles.stepTextWrap}>
+                <Text style={styles.stepHeader}>Create an Email</Text>
+                <Text style={styles.stepText}>This will open your email app</Text>
+              </View>
+            </View>
+            <View style={styles.stepLast}>
+              <Image source={sendIconTranslucent} style={styles.icon} />
+              <View style={styles.stepTextWrap}>
+                <Text style={styles.stepHeader}>Send to City Hall</Text>
+                <Text style={styles.stepText}>Let me know bike lanes are for bikes Nullam quis risus eget urna mollis ornare vel eu leo.</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.step}>
-            <Image source={emailIconTranslucent} style={styles.icon} />
-            <View style={styles.stepTextWrap}>
-              <Text style={styles.stepHeader}>Create an Email</Text>
-              <Text style={styles.stepText}>This will open your email app</Text>
-            </View>
+          <View style={styles.reportButton}>
+            <DefaultButton
+              title="Create a Report"
+              onPress={() => {
+                this.props.navigateToReport(this.props.navigation);
+              }}
+              solid
+            />
           </View>
-          <View style={styles.stepLast}>
-            <Image source={sendIconTranslucent} style={styles.icon} />
-            <View style={styles.stepTextWrap}>
-              <Text style={styles.stepHeader}>Send to City Hall</Text>
-              <Text style={styles.stepText}>Let me know bike lanes are for bikes</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.reportButton}>
-          <DefaultButton
-            title="Create a Report"
-            onPress={() => {
-              this.props.navigateToReport(this.props.navigation);
-            }}
-            solid
-          />
-        </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -105,6 +112,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  navigateToReport: navigation => dispatch(navigateToReport(navigation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HowItWorks);

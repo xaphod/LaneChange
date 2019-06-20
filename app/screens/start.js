@@ -11,29 +11,31 @@ const styles = StyleSheet.create({
   },
   bottom: {
     marginTop: 'auto',
-    paddingHorizontal: 20,
+    padding: 20,
   },
   reportButton: {
     marginTop: 10,
   },
   introText: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
+    lineHeight: 38,
     color: '#fff',
     textAlign: 'center',
     paddingHorizontal: 40,
-    paddingTop: 240,
+    paddingTop: 200,
     zIndex: 2,
   },
   logo: {
     position: 'absolute',
-    top: 100,
-    left: -50,
+    top: 60,
+    left: '50%',
+    marginLeft: -271,
     zIndex: 1,
   },
   links: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     padding: 20,
   },
   linkButton: {
@@ -69,12 +71,12 @@ class Start extends Component {
               <Text style={styles.linkButton}>How it Works</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.linkButton}
               onPress={() => this.props.navigation.navigate('WhyItMatters')}
             >
               <Text style={styles.linkButton}>Why it Matters</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
           </View>
           <View style={styles.reportButton}>
