@@ -55,9 +55,7 @@ export const shareText = () => {
   return `I'm making our city safer with LaneChange! Grab the free app here: ${appUrl}`;
 };
 
-export const defaultCities = [
-  {
-    name: 'Hamilton',
-    email: 'mobility@hamilton.ca',
-  },
-];
+export const defaultCity = {
+  name: 'Hamilton',
+  email: 'mobility@hamilton.ca',
+};

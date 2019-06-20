@@ -10,7 +10,7 @@ import { photoPath, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
 import { photoProgress, photoTaken } from 'app/actions/camera';
-import { city } from 'app/utils/cities';
+import { cityName } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   container: {
@@ -319,7 +319,7 @@ class Report extends Component {
       photo: undefined,
       location: undefined,
       imageURIOnDisk,
-      city: city(),
+      city: cityName(),
     };
 
     if (location) {
