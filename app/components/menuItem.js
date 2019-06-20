@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
   menuItemLast: {
     marginBottom: 20,
   },
+  selected: {
+    backgroundColor: '#019864',
+  },
 });
 
 const chevronIcon = require('app/assets/img/chevronIcon.png');
@@ -30,12 +33,26 @@ const chevronIcon = require('app/assets/img/chevronIcon.png');
 export default class MenuItem extends Component {
   render() {
     let menuItemStyle = styles.menuItem;
-    const { last } = this.props;
+    const { last, selected } = this.props;
     if (last) {
       menuItemStyle = {
         ...menuItemStyle,
         ...styles.menuItemLast,
       };
+    }
+
+    if (selected) {
+      menuItemStyle = {
+        ...menuItemStyle,
+        ...styles.selected,
+      };
+    }
+
+    let textStyle;
+    if (selected) {
+      textStyle = { ...styles.menuItemText, color: '#fff', ...this.props.textProps };
+    } else {
+      textStyle = { ...styles.menuItemText, ...this.props.textProps };
     }
 
     const { icon } = this.props;
@@ -53,7 +70,7 @@ export default class MenuItem extends Component {
           <Image source={icon} style={styles.menuItemIcon} />
         )
         }
-        <Text style={{ ...styles.menuItemText, ...this.props.textProps }}>{title}</Text>
+        <Text style={textStyle}>{title}</Text>
         <Image source={chevronIcon} style={styles.chevronIcon} />
       </TouchableOpacity>
     );

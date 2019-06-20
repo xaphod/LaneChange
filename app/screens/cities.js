@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
 import LoadingView from 'app/components/loadingview';
-import { listCities } from 'app/utils/cities';
+import { listCities, getChosenCity } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -70,6 +70,7 @@ class Cities extends Component {
   render() {
     const { showLoading } = this.state;
     const cityObjects = listCities();
+    const chosenCity = getChosenCity();
     const cities = cityObjects.map((city, index) => {
       const { name } = city;
       const retval = (
@@ -81,6 +82,9 @@ class Cities extends Component {
           }}
         />
       );
+      if (city.name === chosenCity.name) {
+        return React.cloneElement(retval, { selected: true });
+      }
       if (cityObjects.length - 1 === index) {
         return React.cloneElement(retval, { last: true });
       }

@@ -40,12 +40,12 @@ export const retrieveCities = async () => {
 
   try {
     const storedChosenCity = await AsyncStorage.getItem(chosenCityKey);
-    if (storedChosenCity && chosenCity === defaultCity) {
+    if (storedChosenCity && chosenCity.name === defaultCity.name) { // only overwrite if default
       console.log('DEBUG populateCities: loaded stored chosen city:');
       console.log(storedChosenCity);
       chosenCity = storedChosenCity;
     }
-    
+
     cities = await getCities();
     retrievedCities = true;
     console.log('DEBUG populateCities: retrieved cities:');
@@ -60,3 +60,4 @@ export const retrieveCities = async () => {
 
 export const listCities = () => cities;
 
+export const getChosenCity = () => chosenCity;
