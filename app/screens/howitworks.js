@@ -3,7 +3,6 @@ import { Platform, StyleSheet, Text, View, Button, Alert, Linking, Image, SafeAr
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
 import { navigateToReport } from 'app/actions/ui';
-import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +86,7 @@ class HowItWorks extends Component {
               <Image source={sendIconTranslucent} style={styles.icon} />
               <View style={styles.stepTextWrap}>
                 <Text style={styles.stepHeader}>Send to City Hall</Text>
-                <Text style={styles.stepText}>Let me know bike lanes are for bikes Nullam quis risus eget urna mollis ornare vel eu leo.</Text>
+                <Text style={styles.stepText}>Report your mobility incident by just tapping Send</Text>
               </View>
             </View>
           </View>

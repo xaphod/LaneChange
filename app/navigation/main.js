@@ -25,6 +25,9 @@ export default mainNavigator = initialRouteName => createStackNavigator({
   Menu: {
     screen: Screens.Menu,
   },
+  Done: {
+    screen: Screens.Done,
+  },
 }, {
   initialRouteName,
   // mode: 'modal',

@@ -3,6 +3,7 @@ import HowItWorks from './howitworks';
 import Menu from './menu';
 import Notes from './notes';
 import Report from './report';
+import Done from './done';
 
 export {
   Start,
@@ -10,4 +11,5 @@ export {
   Menu,
   Notes,
   Report,
+  Done,
 };

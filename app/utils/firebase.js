@@ -24,7 +24,7 @@ const registerReport = (report, firebaseImageURI) => {
 
   return firebase
     .firestore()
-    .collection(reportsRefName)
+    .collection(reportsRefName())
     .add({
       date,
       notes,
@@ -115,7 +115,7 @@ export const deleteUserData = async () => {
   const { uid } = userObject;
   console.log(`DEBUG deleteUserData for uid=${uid}`);
 
-  const reportsRef = firebase.firestore().collection(reportsRefName);
+  const reportsRef = firebase.firestore().collection(reportsRefName());
   const reportsQuery = reportsRef.where('user', '==', uid);
   const snapshot = await reportsQuery.get()
     .catch((e) => {

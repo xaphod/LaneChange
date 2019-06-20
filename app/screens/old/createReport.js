@@ -193,7 +193,7 @@ class CreateReport extends Component {
       date,
       imageURIOnDisk,
       notes,
-      city,
+      city: city(),
     };
 
     if (location) {
