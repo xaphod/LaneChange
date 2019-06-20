@@ -36,15 +36,13 @@ const emailReportContinued = async (dispatch, report, navigation, iOSMailClient)
   }
 };
 
-export const emailReport = (report, navigation) => async (dispatch, getState) => {
+export const emailReport = (report, navigation, iOSMailClient) => async (dispatch) => {
   console.log('DEBUG emailReport action start');
   if (Platform.OS !== 'ios') {
     emailReportContinued(dispatch, report, navigation);
     return;
   }
 
-  const { reports } = getState();
-  let { iOSMailClient } = reports;
   if (iOSMailClient) {
     emailReportContinued(dispatch, report, navigation, iOSMailClient);
     return;
@@ -93,7 +91,7 @@ export const expandInDraftReport = expand => ({
   expand,
 });
 
-export const submitReport = (reportIn, navigation) => async (dispatch) => {
+export const submitReport = (reportIn, navigation, iOSMailClient) => async (dispatch) => {
   const report = reportIn;
   let error;
 
@@ -124,7 +122,7 @@ export const submitReport = (reportIn, navigation) => async (dispatch) => {
     });
 
     if (!error && report.docRef) {
-      dispatch(emailReport(report, navigation));
+      dispatch(emailReport(report, navigation, iOSMailClient));
     }
   }
 };

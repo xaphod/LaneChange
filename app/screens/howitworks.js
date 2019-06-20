@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, Image, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
-import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 const styles = StyleSheet.create({
   container: {

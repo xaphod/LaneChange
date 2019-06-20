@@ -143,10 +143,10 @@ class Report extends Component {
     const { error } = lastSubmit;
     const newState = prevState;
 
+    // ERROR CASE
     if (
       draftReport &&
       draftReport.id &&
-      lastSubmit.report &&
       lastSubmit.report.id &&
       lastSubmit.report.id === draftReport.id &&
       error &&
@@ -163,6 +163,22 @@ class Report extends Component {
         ],
       );
       newState.didError = true;
+    }
+    // DONE CASE
+    else if (
+      lastSubmit.report.id &&
+      lastSubmit.didEmail &&
+      draftReport &&
+      draftReport.id &&
+      draftReport.id === lastSubmit.report.id &&
+      (
+        !prevState.doneForID ||
+        prevState.doneForID !== lastSubmit.report.id
+      )
+    ) {
+      newState.doneForID = lastSubmit.report.id;
+      nextProps.cancelReport();
+      nextProps.navigation.navigate('Done');
     }
 
     return {
@@ -285,7 +301,7 @@ class Report extends Component {
       this.setState({
         didError: undefined,
       }, () => {
-        this.props.emailReport(lastSubmit.report, this.props.navigation);
+        this.props.emailReport(lastSubmit.report, this.props.navigation, reports.iOSMailClient);
       });
       return;
     }
@@ -314,7 +330,7 @@ class Report extends Component {
     this.setState({
       didError: undefined,
     }, () => {
-      this.props.submitReport(report, this.props.navigation);
+      this.props.submitReport(report, this.props.navigation, reports.iOSMailClient);
     });
   };
 
@@ -447,9 +463,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   cancelReport: navigation => dispatch(cancelReport(navigation)),
-  submitReport: (report, navigation) => dispatch(submitReport(report, navigation)),
+  submitReport: (report, navigation, iOSMailClient) => dispatch(submitReport(report, navigation, iOSMailClient)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
-  emailReport: (report, navigation) => dispatch(emailReport(report, navigation)),
+  emailReport: (report, navigation, iOSMailClient) => dispatch(emailReport(report, navigation, iOSMailClient)),
   expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
   photoProgress: () => dispatch(photoProgress()),
   photoTaken: photo => dispatch(photoTaken(photo)),

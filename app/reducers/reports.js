@@ -73,30 +73,21 @@ export default () => {
       case Actions.ACTION_TYPE_EMAIL_REPORT:
       {
         const { lastSubmit } = state;
-        if (!action.error && lastSubmit) {
-          // const { navigation } = action;
-          // navigation.popToTop();
-
-          return {
-            ...state,
-            draftReport: undefined,
-            lastSubmit: {
-              ...lastSubmit,
-              report: action.report,
-              didEmail: true,
-            },
-            inProgress: undefined,
-          };
-        }
-        return {
+        const retval = {
           ...state,
           lastSubmit: {
             ...lastSubmit,
             report: action.report,
-            error: action.error,
           },
           inProgress: undefined,
         };
+
+        if (!action.error && lastSubmit) {
+          retval.lastSubmit.didEmail = true;
+          return retval;
+        }
+        retval.lastSubmit.error = action.error;
+        return retval;
       }
 
       case Actions.ACTION_TYPE_CANCEL_REPORT:
@@ -104,7 +95,6 @@ export default () => {
         return {
           ...state,
           draftReport: undefined,
-          lastSubmit: undefined,
           inProgress: undefined,
         };
       }

@@ -31,7 +31,7 @@ const appReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, appReducer);
 
 // https://github.com/jhen0409/react-native-debugger/issues/280
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = compose; // window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const createStoreWithMiddleware = composeEnhancers(
   applyMiddleware(thunk),
 )(createStore);
