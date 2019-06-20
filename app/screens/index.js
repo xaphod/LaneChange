@@ -4,6 +4,7 @@ import Menu from './menu';
 import Notes from './notes';
 import Report from './report';
 import Done from './done';
+import Cities from './cities';
 
 export {
   Start,
@@ -12,4 +13,5 @@ export {
   Notes,
   Report,
   Done,
+  Cities,
 };

@@ -114,7 +114,6 @@ class Menu extends Component {
     this.backPressed = this.backPressed.bind(this);
     this.deleteUserData = this.deleteUserData.bind(this);
     this.deletePhotos = this.deletePhotos.bind(this);
-    this.changeCity = this.changeCity.bind(this);
   }
 
   componentDidMount() {
@@ -172,14 +171,10 @@ class Menu extends Component {
     );
   }
 
-  changeCity = () => {
-
-  };
-
   render() {
     const { navigation } = this.props;
     const { showLoading } = this.state;
-    const changeCityTitle = `Change city (${cityName()})`;
+    const changeCityTitle = `Change city (${cityName()})...`;
 
     return (
       <SafeAreaView style={styles.wrap}>
@@ -208,7 +203,7 @@ class Menu extends Component {
             />
 
             <MenuItem
-              onPress={() => this.changeCity()}
+              onPress={() => this.props.navigation.navigate('Cities')}
               title={changeCityTitle}
             />
             <MenuItem
