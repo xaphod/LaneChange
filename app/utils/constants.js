@@ -60,6 +60,6 @@ export const openCycleHamilton = async () => {
 export const disabledColor = '#dddddd';
 
 export const shareText = () => {
-  const appUrl = 'https://github.com/xaphod/LaneChange'; // TODO: real URL for app!
+  const appUrl = 'https://solodigitalis.com/lanechange';
   return `I'm making our city safer with LaneChange! Grab the free app here: ${appUrl}`;
 };
