@@ -6,10 +6,11 @@ import { submitReport, cancelReport, createReport, emailReport, expandInDraftRep
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
 import LoadingView from 'app/components/loadingview';
-import { photoPath, city, disabledColor } from 'app/utils/constants';
+import { photoPath, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
 import { photoProgress, photoTaken } from 'app/actions/camera';
+import { city } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   container: {

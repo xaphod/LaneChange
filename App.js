@@ -16,6 +16,7 @@ import createUIReducer from 'app/reducers/ui';
 import createCameraReducer from 'app/reducers/camera';
 import firebase from 'react-native-firebase';
 import { signInAnonymously } from 'app/utils/firebase';
+import { populateCities } from 'app/utils/cities';
 
 const persistConfig = {
   key: 'root',
@@ -51,6 +52,7 @@ export default function App() {
       } else {
         console.log(`DEBUG App.js: signed in to an actual account as: ${user.uid}`);
       }
+      populateCities();
     } else {
       console.log('DEBUG App.js: no user, calling signInAnonymously()');
       signInAnonymously();

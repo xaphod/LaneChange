@@ -4,10 +4,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { connect } from 'react-redux';
 import RNFS from 'react-native-fs';
 import { HeaderButtons, HeaderButton } from 'react-navigation-header-buttons';
-import { photoPath, city } from 'app/utils/constants';
+import { photoPath } from 'app/utils/constants';
 import { submitReport, cancelReport, emailReport } from 'app/actions/reports';
 import { getLocation } from 'app/utils/location';
 import { IOSPreferredMailClient } from 'app/utils/mail';
+import { city } from 'app/utils/cities';
 
 // TODO: user picks preferred
 const preferredIOSClient = IOSPreferredMailClient.GMAIL;

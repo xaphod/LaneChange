@@ -1,6 +1,6 @@
 import firebase from 'react-native-firebase';
 import UUIDGenerator from 'react-native-uuid-generator';
-import { reportsRefName } from 'app/utils/constants';
+import { reportsRefName, defaultCities } from 'app/utils/constants';
 
 const registerReport = (report, firebaseImageURI) => {
   // https://rnfirebase.io/docs/v5.x.x/firestore/transactions
@@ -153,4 +153,28 @@ export const signInAnonymously = () => {
     .catch((err) => {
       console.log(`DEBUG App.js: ERROR signing in anonymously: ${err}`);
     });
+};
+
+export const cities = async () => {
+  try {
+    const snapshot = await firebase
+      .firestore()
+      .collection('cities')
+      .get();
+
+    const cities = snapshot.docs.map((cityObj) => {
+      const { name, email } = cityObj.data();
+      const city = {
+        name,
+        email,
+      };
+      return city;
+    });
+
+    return cities;
+  } catch (e) {
+    console.log('ERROR in firebase/cities:');
+    console.log(e);
+  }
+  return defaultCities;
 };

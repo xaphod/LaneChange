@@ -7,6 +7,7 @@ import { openTerms, openPrivacy, openSolodigitalis, openSource, openCycleHamilto
 import { deleteAllData, deleteClear } from 'app/actions/reports';
 import LoadingView from 'app/components/loadingview';
 import { deletePhotosFromDisk } from 'app/utils/filesystem';
+import { city } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -62,16 +63,6 @@ class Menu extends Component {
     headerRight: undefined,
   });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-
-    this.backPressed = this.backPressed.bind(this);
-    this.deleteUserData = this.deleteUserData.bind(this);
-    this.deletePhotos = this.deletePhotos.bind(this);
-  }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const { reports } = nextProps;
     const { inProgress } = prevState;
@@ -113,6 +104,17 @@ class Menu extends Component {
       ...newState,
       showLoading: undefined,
     };
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+
+    this.backPressed = this.backPressed.bind(this);
+    this.deleteUserData = this.deleteUserData.bind(this);
+    this.deletePhotos = this.deletePhotos.bind(this);
+    this.changeCity = this.changeCity.bind(this);
   }
 
   componentDidMount() {
@@ -170,9 +172,14 @@ class Menu extends Component {
     );
   }
 
+  changeCity = () => {
+
+  };
+
   render() {
     const { navigation } = this.props;
     const { showLoading } = this.state;
+    const changeCityTitle = `Change city (${city()})`;
 
     return (
       <SafeAreaView style={styles.wrap}>
@@ -200,6 +207,10 @@ class Menu extends Component {
               last
             />
 
+            <MenuItem
+              onPress={() => this.changeCity()}
+              title={changeCityTitle}
+            />
             <MenuItem
               onPress={() => openTerms()}
               title="Terms & Conditions"

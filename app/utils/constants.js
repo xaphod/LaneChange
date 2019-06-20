@@ -3,15 +3,6 @@ import { Linking } from 'react-native';
 
 export const photoPath = () => `${RNFS.DocumentDirectoryPath}/photo`;
 export const emailSubject = 'Mobility incident';
-export const emailToAddress = 'mobility@hamilton.ca';
-
-export const city = () => {
-  // danger: is used as firebase storage ref & firestore collection string (alphanumerics only)
-  if (__DEV__) {
-    return 'hamilton-testing';
-  }
-  return 'hamilton';
-};
 
 export const reportsRefName = () => {
   if (__DEV__) {
@@ -63,3 +54,10 @@ export const shareText = () => {
   const appUrl = 'https://solodigitalis.com/lanechange';
   return `I'm making our city safer with LaneChange! Grab the free app here: ${appUrl}`;
 };
+
+export const defaultCities = [
+  {
+    name: 'Hamilton',
+    email: 'mobility@hamilton.ca',
+  },
+];
