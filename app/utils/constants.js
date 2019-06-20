@@ -4,8 +4,21 @@ import { Linking } from 'react-native';
 export const photoPath = () => `${RNFS.DocumentDirectoryPath}/photo`;
 export const emailSubject = 'Mobility incident';
 export const emailToAddress = 'mobility@hamilton.ca';
-export const city = 'hamilton-testing'; // danger: is used as firebase storage ref & firestore collection string (alphanumerics only)
-export const reportsRefName = 'reports-testing';
+
+export const city = () => {
+  // danger: is used as firebase storage ref & firestore collection string (alphanumerics only)
+  if (__DEV__) {
+    return 'hamilton-testing';
+  }
+  return 'hamilton';
+};
+
+export const reportsRefName = () => {
+  if (__DEV__) {
+    return 'reports-testing';
+  }
+  return 'reports';
+};
 
 const tryUrl = async (url) => {
   const retval = await Linking.canOpenURL(url);

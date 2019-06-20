@@ -302,7 +302,7 @@ class Report extends Component {
       photo: undefined,
       location: undefined,
       imageURIOnDisk,
-      city,
+      city: city(),
     };
 
     if (location) {
