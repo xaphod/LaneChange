@@ -154,3 +154,27 @@ export const signInAnonymously = () => {
       console.log(`DEBUG App.js: ERROR signing in anonymously: ${err}`);
     });
 };
+
+export const getCities = async () => {
+  try {
+    const snapshot = await firebase
+      .firestore()
+      .collection('cities')
+      .get();
+
+    const cities = snapshot.docs.map((cityObj) => {
+      const { name, email } = cityObj.data();
+      const city = {
+        name,
+        email,
+      };
+      return city;
+    });
+
+    return cities;
+  } catch (e) {
+    console.log('ERROR in firebase/cities:');
+    console.log(e);
+    return undefined;
+  }
+};

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, Alert, Linking}  from 'react-native';
-import { emailToAddress, emailSubject } from 'app/utils/constants';
+import { emailSubject } from 'app/utils/constants';
+import { cityEmailAddress } from 'app/utils/cities';
 
 export const IOSPreferredMailClient = {
   NATIVE: 'native',
@@ -71,7 +72,7 @@ export const openEmail = async (report, preferredIOSClient) => {
 
   const body = `Mobility incident reported by LaneChange\n\nDate: ${date}\n\nAddress: ${address}\n\nPhoto: ${imageLink}${notesStr}`;
   let retval = true;
-  retval = await sendMail(emailToAddress, subject, body, preferredIOSClient)
+  retval = await sendMail(cityEmailAddress(), subject, body, preferredIOSClient)
     .catch((e) => {
       console.log('DEBUG emailReport: sendMail ERROR');
       console.log(e);
