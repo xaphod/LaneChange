@@ -11,6 +11,7 @@ export default () => {
         return {
           ...state,
           startScreenShown: true,
+          termsAlertShown: true,
         };
 
       default:

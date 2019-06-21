@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, Dimensions, Alert, Linking, Touchable
 import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 import DefaultButton from 'app/components/button';
-import getStartedPressed from 'app/utils/termsPopup';
+import showTermsAlert from 'app/utils/termsPopup';
 
 const styles = StyleSheet.create({
   container: {
@@ -78,10 +78,16 @@ class Start extends Component {
           <View style={styles.reportButton}>
             <DefaultButton
               title="Get Started"
-              onPress={() => getStartedPressed(() => {
-                this.props.navigateToReport();
-                this.props.navigation.navigate('Report');
-              })}
+              onPress={() => {
+                if (!this.props.ui.termsAlertShown) {
+                  showTermsAlert(() => {
+                    this.props.navigateToReport();
+                    this.props.navigation.navigate('Report');
+                  });
+                } else {
+                  this.props.navigation.navigate('Report');
+                }
+              }}
               solid
             />
           </View>
