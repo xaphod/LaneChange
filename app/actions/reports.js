@@ -11,7 +11,7 @@ export const createReport = (date, photo) => ({
   date,
 });
 
-const emailReportContinued = async (dispatch, emailAddress, report, navigation, iOSMailClient) => {
+const emailReportContinued = async (dispatch, emailAddress, report, iOSMailClient) => {
   let error;
   try {
     dispatch({
@@ -31,21 +31,20 @@ const emailReportContinued = async (dispatch, emailAddress, report, navigation, 
       type: Actions.ACTION_TYPE_EMAIL_REPORT,
       report,
       error,
-      navigation,
     });
   }
 };
 
-export const emailReport = (emailAddress, report, navigation, iOSMailClientIn) => async (dispatch) => {
+export const emailReport = (emailAddress, report, iOSMailClientIn) => async (dispatch) => {
   console.log('DEBUG emailReport action start');
   let iOSMailClient = iOSMailClientIn;
   if (Platform.OS !== 'ios') {
-    emailReportContinued(dispatch, emailAddress, report, navigation);
+    emailReportContinued(dispatch, emailAddress, report);
     return;
   }
 
   if (iOSMailClient) {
-    emailReportContinued(dispatch, emailAddress, report, navigation, iOSMailClient);
+    emailReportContinued(dispatch, emailAddress, report, iOSMailClient);
     return;
   }
 
@@ -78,13 +77,12 @@ export const emailReport = (emailAddress, report, navigation, iOSMailClientIn) =
       type: Actions.ACTION_TYPE_CHOSE_IOS_MAIL_CLIENT,
       iOSMailClient,
     });
-    emailReportContinued(dispatch, emailAddress, report, navigation, iOSMailClient);
+    emailReportContinued(dispatch, emailAddress, report, iOSMailClient);
   });
 };
 
-export const cancelReport = navigation => ({
+export const cancelReport = () => ({
   type: Actions.ACTION_TYPE_CANCEL_REPORT,
-  navigation,
 });
 
 export const expandInDraftReport = expand => ({
@@ -92,7 +90,7 @@ export const expandInDraftReport = expand => ({
   expand,
 });
 
-export const submitReport = (emailAddress, reportIn, navigation, iOSMailClient) => async (dispatch) => {
+export const submitReport = (emailAddress, reportIn, iOSMailClient) => async (dispatch) => {
   const report = reportIn;
   let error;
 
@@ -119,11 +117,10 @@ export const submitReport = (emailAddress, reportIn, navigation, iOSMailClient) 
       type: Actions.ACTION_TYPE_SUBMIT_REPORT,
       report,
       error,
-      navigation,
     });
 
     if (!error && report.docRef) {
-      dispatch(emailReport(emailAddress, report, navigation, iOSMailClient));
+      dispatch(emailReport(emailAddress, report, iOSMailClient));
     }
   }
 };

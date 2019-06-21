@@ -230,7 +230,7 @@ class Report extends Component {
       [
         {
           text: 'Discard',
-          onPress: () => this.props.cancelReport(this.props.navigation),
+          onPress: () => this.props.cancelReport(),
         },
         {
           text: 'Cancel',
@@ -303,7 +303,7 @@ class Report extends Component {
       this.setState({
         didError: undefined,
       }, () => {
-        this.props.emailReport(email, lastSubmit.report, this.props.navigation, reports.iOSMailClient);
+        this.props.emailReport(email, lastSubmit.report, reports.iOSMailClient);
       });
       return;
     }
@@ -332,7 +332,7 @@ class Report extends Component {
     this.setState({
       didError: undefined,
     }, () => {
-      this.props.submitReport(email, report, this.props.navigation, reports.iOSMailClient);
+      this.props.submitReport(email, report, reports.iOSMailClient);
     });
   };
 
@@ -465,10 +465,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  cancelReport: navigation => dispatch(cancelReport(navigation)),
-  submitReport: (emailAddress, report, navigation, iOSMailClient) => dispatch(submitReport(emailAddress, report, navigation, iOSMailClient)),
+  cancelReport: () => dispatch(cancelReport()),
+  submitReport: (emailAddress, report, iOSMailClient) => dispatch(submitReport(emailAddress, report, iOSMailClient)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
-  emailReport: (emailAddress, report, navigation, iOSMailClient) => dispatch(emailReport(emailAddress, report, navigation, iOSMailClient)),
+  emailReport: (emailAddress, report, iOSMailClient) => dispatch(emailReport(emailAddress, report, iOSMailClient)),
   expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
   photoProgress: () => dispatch(photoProgress()),
   photoTaken: photo => dispatch(photoTaken(photo)),

@@ -96,7 +96,8 @@ class HowItWorks extends Component {
             <DefaultButton
               title="Create a Report"
               onPress={() => {
-                this.props.navigateToReport(this.props.navigation);
+                this.props.navigateToReport();
+                this.props.navigation.navigate('Report');
               }}
               solid
             />
@@ -113,7 +114,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  navigateToReport: navigation => dispatch(navigateToReport(navigation)),
+  navigateToReport: () => dispatch(navigateToReport()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HowItWorks);
