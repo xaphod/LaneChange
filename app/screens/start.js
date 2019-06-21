@@ -3,8 +3,7 @@ import { Platform, StyleSheet, Text, View, Dimensions, Alert, Linking, Touchable
 import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 import DefaultButton from 'app/components/button';
-import { openTerms, openPrivacy } from 'app/utils/constants';
-import consolelog from 'app/utils/logging';
+import getStartedPressed from 'app/utils/termsPopup';
 
 const styles = StyleSheet.create({
   container: {
@@ -55,35 +54,6 @@ const logoShadow = require('app/assets/img/logoShadow.png');
 class Start extends Component {
   static navigationOptions = () => ({ header: null });
 
-  constructor(props) {
-    super(props);
-    this.getStartedPressed = this.getStartedPressed.bind(this);
-  }
-
-  getStartedPressed = () => {
-    Alert.alert(
-      'Almost There',
-      'When you use this app, it uploads data to our servers. We take your security & privacy seriously. By continuing to use this app you are agreeing to the Terms and Conditions and the Privacy Policy.',
-      [
-        {
-          text: 'Continue',
-          onPress: () => {
-            this.props.navigateToReport();
-            this.props.navigation.navigate('Report');
-          },
-        },
-        {
-          text: 'Terms and Conditions',
-          onPress: () => openTerms(),
-        },
-        {
-          text: 'Privacy Policy',
-          onPress: () => openPrivacy(),
-        },
-      ],
-    );
-  };
-
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -108,7 +78,10 @@ class Start extends Component {
           <View style={styles.reportButton}>
             <DefaultButton
               title="Get Started"
-              onPress={() => this.getStartedPressed()}
+              onPress={() => getStartedPressed(() => {
+                this.props.navigateToReport();
+                this.props.navigation.navigate('Report');
+              })}
               solid
             />
           </View>

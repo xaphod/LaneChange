@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, Button, Alert, Linking, Image, SafeAr
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
 import { navigateToReport } from 'app/actions/ui';
-import consolelog from 'app/utils/logging';
+import getStartedPressed from 'app/utils/termsPopup';
 
 const styles = StyleSheet.create({
   container: {
@@ -95,11 +95,11 @@ class HowItWorks extends Component {
           </View>
           <View style={styles.reportButton}>
             <DefaultButton
-              title="Create a Report"
-              onPress={() => {
+              title="Get Started"
+              onPress={() => getStartedPressed(() => {
                 this.props.navigateToReport();
                 this.props.navigation.navigate('Report');
-              }}
+              })}
               solid
             />
           </View>
