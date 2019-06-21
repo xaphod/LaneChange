@@ -4,6 +4,7 @@ import * as Actions from 'app/actions';
 import { uploadReport, deleteUserData } from 'app/utils/firebase';
 import { openEmail, IOSPreferredMailClient } from 'app/utils/mail';
 import { deletePhotosFromDisk } from 'app/utils/filesystem';
+import consolelog from 'app/utils/logging';
 
 export const createReport = (date, photo) => ({
   type: Actions.ACTION_TYPE_CREATE_REPORT,
@@ -24,7 +25,7 @@ const emailReportContinued = async (dispatch, emailAddress, report, iOSMailClien
       error = new Error('Could not open the created email. Please check that your device is configured to send email.');
     }
   } catch (e) {
-    console.log(`DEBUG emailReport: ERROR: ${e}`);
+    consolelog(`DEBUG emailReport: ERROR: ${e}`);
     error = e;
   } finally {
     dispatch({
@@ -36,7 +37,7 @@ const emailReportContinued = async (dispatch, emailAddress, report, iOSMailClien
 };
 
 export const emailReport = (emailAddress, report, iOSMailClientIn) => async (dispatch) => {
-  console.log('DEBUG emailReport action start');
+  consolelog('DEBUG emailReport action start');
   let iOSMailClient = iOSMailClientIn;
   if (Platform.OS !== 'ios') {
     emailReportContinued(dispatch, emailAddress, report);
@@ -106,11 +107,11 @@ export const submitReport = (emailAddress, reportIn, iOSMailClient) => async (di
     }).catch((e) => {
       throw e;
     });
-    console.log(`DEBUG submitReport: uploadReport successful. imageLink: ${firebaseImageURI}`);
+    consolelog(`DEBUG submitReport: uploadReport successful. imageLink: ${firebaseImageURI}`);
     report.imageLink = firebaseImageURI;
     report.docRef = docRef;
   } catch (e) {
-    console.log(`DEBUG submitReport: ERROR: ${e}`);
+    consolelog(`DEBUG submitReport: ERROR: ${e}`);
     error = e;
   } finally {
     dispatch({
@@ -138,8 +139,8 @@ export const deleteAllData = () => async (dispatch) => {
   let error;
   await deleteUserData()
     .catch((e) => {
-      console.log('DEBUG deleteAllData: caught error:');
-      console.log(e);
+      consolelog('DEBUG deleteAllData: caught error:');
+      consolelog(e);
       error = e;
     });
 

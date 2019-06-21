@@ -10,6 +10,7 @@ import { photoPath, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
 import { photoProgress, photoTaken } from 'app/actions/camera';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   container: {
@@ -285,7 +286,7 @@ class Report extends Component {
     const { draftReport, lastSubmit, inProgress } = reports;
 
     if (inProgress && inProgress.type) {
-      console.log('DEBUG createEmailPressed: DEBOUNCE');
+      consolelog('DEBUG createEmailPressed: DEBOUNCE');
       return;
     }
 
@@ -298,7 +299,7 @@ class Report extends Component {
       lastSubmit.report.id === draftReport.id &&
       lastSubmit.report.docRef
     ) {
-      console.log('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
+      consolelog('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
 
       this.setState({
         didError: undefined,
@@ -308,7 +309,7 @@ class Report extends Component {
       return;
     }
 
-    console.log('DEBUG createEmailPressed: submitting');
+    consolelog('DEBUG createEmailPressed: submitting');
     const {
       photo,
       location,
@@ -339,8 +340,8 @@ class Report extends Component {
   getLocation = async () => {
     const location = await getLocation()
       .catch((e) => {
-        console.log('DEBUG getLocation error:');
-        console.log(e);
+        consolelog('DEBUG getLocation error:');
+        consolelog(e);
       });
     this.props.expandInDraftReport({ location });
   };

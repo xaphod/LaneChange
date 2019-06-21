@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 import { expandInDraftReport } from 'app/actions/reports';
 import { photoPath } from 'app/utils/constants';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   container: {

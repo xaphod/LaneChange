@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, TouchableOpacity } from 'react-native';
 import { disabledColor } from 'app/utils/constants';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   button: {

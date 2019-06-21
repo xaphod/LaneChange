@@ -1,5 +1,6 @@
 import RNFS from 'react-native-fs';
 import { Linking } from 'react-native';
+import consolelog from 'app/utils/logging';
 
 export const photoPath = () => `${RNFS.DocumentDirectoryPath}/photo`;
 export const emailSubject = 'Mobility incident';
@@ -14,12 +15,12 @@ export const reportsRefName = () => {
 const tryUrl = async (url) => {
   const retval = await Linking.canOpenURL(url);
   if (!retval) {
-    console.log(`DEBUG tryUrl() canOpenURL failed for ${url}`);
+    consolelog(`DEBUG tryUrl() canOpenURL failed for ${url}`);
     return;
   }
   await Linking.openURL(url)
     .catch((err) => {
-      console.log(`DEBUG tryUrl() catch error: ${err}`);
+      consolelog(`DEBUG tryUrl() catch error: ${err}`);
     });
 };
 

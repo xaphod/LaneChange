@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View, ScrollView, Button, Alert, Linking, I
 import { connect } from 'react-redux';
 import { registerFirebaseAuthHandler } from 'app/utils/firebase';
 import { retrieveCities } from 'app/actions/cities';
+import consolelog from 'app/utils/logging';
 
 class Cities extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class Cities extends Component {
 
   retrieveCities = async () => {
     if (this.props.cities.retrievedCities || this.props.cities.retreivingCities) {
-      console.log('DEBUG cites/retrieveCities: no-op, already retrieved/retrieving');
+      consolelog('DEBUG cites/retrieveCities: no-op, already retrieved/retrieving');
       return;
     }
     this.props.retrieveCities();

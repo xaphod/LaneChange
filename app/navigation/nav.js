@@ -17,7 +17,7 @@ class Nav extends React.Component {
   //   BackHandler.addEventListener('hardwareBackPress', () => {
   //     const { dispatch, navigation, nav } = this.props;
   //     if (nav.routes.length === 1 && (nav.routes[0].routeName === 'Home')) {
-  //       console.log('DEBUG nav.js: back press ignored');
+  //       consolelog('DEBUG nav.js: back press ignored');
   //       return false;
   //     }
   //     dispatch({ type: 'Navigation/BACK' });

@@ -5,6 +5,7 @@ import RNFS from 'react-native-fs';
 import ImageResizer from 'react-native-image-resizer';
 import { photoPath } from 'app/utils/constants';
 import { randomString } from 'app/utils/string';
+import consolelog from 'app/utils/logging';
 
 const PendingView = () => (
   <View
@@ -39,14 +40,14 @@ export default class Camera extends Component {
     try {
       photo = await camera.takePictureAsync(options);
     } catch (e) {
-      console.log('DEBUG camera: takePicture ERROR:');
-      console.log(e);
+      consolelog('DEBUG camera: takePicture ERROR:');
+      consolelog(e);
       onPhotoTaken(undefined, new Error(`Could not take a photo. Error: ${e.message}`));
       return;
     }
     const { uri } = photo;
     if (!uri) {
-      console.log('DEBUG camera: takePicture has no URI, failed');
+      consolelog('DEBUG camera: takePicture has no URI, failed');
       onPhotoTaken(undefined, new Error('Could not take a photo. Please check that this app has permission to use the camera, and that he device has enough space to take a photo.'));
       return;
     }
@@ -58,7 +59,7 @@ export default class Camera extends Component {
     let failed = false;
     await RNFS.mkdir(photoPath(), { NSURLIsExcludedFromBackupKey: true })
       .catch((err) => {
-        console.log(`DEBUG camera: mkdir error: ${err}`);
+        consolelog(`DEBUG camera: mkdir error: ${err}`);
         onPhotoTaken(undefined, new Error('Could not take a photo: could not create a folder for the photos.'));
         failed = true;
       });
@@ -67,7 +68,7 @@ export default class Camera extends Component {
     const destPath = photoPath() + '/' + destFilename;
     await RNFS.moveFile(uri, destPath)
       .catch((err) => {
-        console.log(`DEBUG camera: move error: ${err}`);
+        consolelog(`DEBUG camera: move error: ${err}`);
         onPhotoTaken(undefined, new Error('Could not take a photo: could not move the photo into its folder.'));
         failed = true;
       });
@@ -75,8 +76,8 @@ export default class Camera extends Component {
 
     const response = await ImageResizer.createResizedImage(destPath, 2000, 2000, 'JPEG', 60)
       .catch((err) => {
-        console.log('DEBUG camera: resize ERROR:');
-        console.log(err);
+        consolelog('DEBUG camera: resize ERROR:');
+        consolelog(err);
         onPhotoTaken(undefined, new Error('Could not take a photo: there was an error resizing the photo.'));
         failed = true;
       });
@@ -85,8 +86,8 @@ export default class Camera extends Component {
     const destPathResized = photoPath() + '/' + destFilenameResized;
     await RNFS.moveFile(response.uri, destPathResized)
       .catch((err) => {
-        console.log('DEBUG camera: move2 ERROR:');
-        console.log(err);
+        consolelog('DEBUG camera: move2 ERROR:');
+        consolelog(err);
         onPhotoTaken(undefined, new Error('Could not take a photo: could not move the resized photo into its folder.'));
         failed = true;
       });

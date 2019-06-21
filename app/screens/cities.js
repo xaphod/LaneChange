@@ -5,6 +5,7 @@ import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
 import LoadingView from 'app/components/loadingview';
 import { setChosenCity } from 'app/actions/cities';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -71,8 +72,8 @@ class Cities extends Component {
     const { showLoading } = this.state;
     const { cities } = this.props.cities;
     const { chosenCity } = this.props.cities;
-    console.log('DEBUG cities screen: chosenCity is');
-    console.log(chosenCity);
+    consolelog('DEBUG cities screen: chosenCity is');
+    consolelog(chosenCity);
     const cityElements = cities.map((cityMapped, index) => {
       const city = JSON.parse(JSON.stringify(cityMapped));
       const { name } = city;

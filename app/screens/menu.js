@@ -7,6 +7,7 @@ import { openTerms, openPrivacy, openSolodigitalis, openSource, openCycleHamilto
 import { deleteAllData, deleteClear } from 'app/actions/reports';
 import LoadingView from 'app/components/loadingview';
 import { deletePhotosFromDisk } from 'app/utils/filesystem';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   wrap: {

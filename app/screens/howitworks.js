@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View, Button, Alert, Linking, Image, SafeAr
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
 import { navigateToReport } from 'app/actions/ui';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   container: {

@@ -3,6 +3,7 @@ import { Platform, ScrollView, StyleSheet, Text, View, Share, Alert, Linking, To
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
 import { shareText } from 'app/utils/constants';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   container: {
@@ -74,8 +75,8 @@ class Done extends Component {
   onShare = async () => {
     try {
       const result = await Share.share({ message: shareText() });
-      console.log('asdfasdfasdf');
-      console.log(result);
+      consolelog('asdfasdfasdf');
+      consolelog(result);
       if (result.action !== Share.dismissedAction) {
         this.props.navigation.pop();
       }

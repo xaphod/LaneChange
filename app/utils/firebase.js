@@ -1,6 +1,7 @@
 import firebase from 'react-native-firebase';
 import UUIDGenerator from 'react-native-uuid-generator';
 import { reportsRefName } from 'app/utils/constants';
+import consolelog from 'app/utils/logging';
 
 const registerReport = (report, firebaseImageURI) => {
   let user;
@@ -46,7 +47,7 @@ export const uploadReport = (report, progressCallback) => {
 
   return new Promise((resolve, reject) => {
     UUIDGenerator.getRandomUUID((uuid) => {
-      console.log(`DEBUG firebase/uploadReport(), uuid=${uuid}`);
+      consolelog(`DEBUG firebase/uploadReport(), uuid=${uuid}`);
 
       let refName = city;
       refName = refName.replace(/[^a-z0-9+]+/gi, '');
@@ -59,8 +60,8 @@ export const uploadReport = (report, progressCallback) => {
       });
 
       uploadTask.catch((error) => {
-        console.log('DEBUG firebase/uploadReport: ERROR:');
-        console.log(error);
+        consolelog('DEBUG firebase/uploadReport: ERROR:');
+        consolelog(error);
         reject(error);
       });
 
@@ -69,38 +70,38 @@ export const uploadReport = (report, progressCallback) => {
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('DEBUG firebase/uploadReport: Upload is ' + progress + '% done');
+        consolelog('DEBUG firebase/uploadReport: Upload is ' + progress + '% done');
         if (progress) {
           progressCallback(progress);
         }
       }, (error) => {
         // A full list of error codes is available at
         // https://firebase.google.com/docs/storage/web/handle-errors
-        console.log('DEBUG firebase/uploadReport: ERROR:');
-        console.log(error);
+        consolelog('DEBUG firebase/uploadReport: ERROR:');
+        consolelog(error);
         reject(error);
       }, () => {
         // completed successfully
-        console.log('DEBUG firebase/uploadReport: complete...');
+        consolelog('DEBUG firebase/uploadReport: complete...');
         firebaseImageRef
           .getDownloadURL()
           .then((firebaseImageURI) => {
-            console.log(`DEBUG firebase/uploadReport: upload done, url=${firebaseImageURI}`);
+            consolelog(`DEBUG firebase/uploadReport: upload done, url=${firebaseImageURI}`);
             registerReport(report, firebaseImageURI, resolve, reject)
               .then((docRef) => {
                 const { id } = docRef;
-                console.log(`DEBUG firebase/uploadReport: register done, ref id=${id}`);
+                consolelog(`DEBUG firebase/uploadReport: register done, ref id=${id}`);
                 resolve({ firebaseImageURI, docRef: id });
               })
               .catch((error) => {
-                console.log('DEBUG firebase/registerReport: ERROR:');
-                console.log(error);
+                consolelog('DEBUG firebase/registerReport: ERROR:');
+                consolelog(error);
                 reject(error);
               });
           })
           .catch((error) => {
-            console.log('DEBUG firebase/getDownloadURL: ERROR:');
-            console.log(error);
+            consolelog('DEBUG firebase/getDownloadURL: ERROR:');
+            consolelog(error);
             reject(error);
           });
       });
@@ -114,7 +115,7 @@ export const deleteUserData = async () => {
     throw new Error('No user is logged in.');
   }
   const { uid } = userObject;
-  console.log(`DEBUG deleteUserData for uid=${uid}`);
+  consolelog(`DEBUG deleteUserData for uid=${uid}`);
 
   const reportsRef = firebase.firestore().collection(reportsRefName());
   const reportsQuery = reportsRef.where('user', '==', uid);
@@ -149,10 +150,10 @@ export const deleteUserData = async () => {
 };
 
 const signInAnonymously = () => {
-  console.log('DEBUG signInAnonymously()');
+  consolelog('DEBUG signInAnonymously()');
   firebase.auth().signInAnonymously()
     .catch((err) => {
-      console.log(`DEBUG firebase: ERROR signing in anonymously: ${err}`);
+      consolelog(`DEBUG firebase: ERROR signing in anonymously: ${err}`);
     });
 };
 
@@ -172,12 +173,12 @@ export const getCities = async () => {
       return city;
     });
 
-    console.log('DEBUG firebase getCities returning:');
-    console.log(cities);
+    consolelog('DEBUG firebase getCities returning:');
+    consolelog(cities);
     return cities;
   } catch (e) {
-    console.log('ERROR in firebase/cities:');
-    console.log(e);
+    consolelog('ERROR in firebase/cities:');
+    consolelog(e);
     return undefined;
   }
 };
@@ -187,13 +188,13 @@ export const registerFirebaseAuthHandler = (onSignedIn) => {
     if (user) {
       // signed in
       if (user.isAnonymous) {
-        console.log(`DEBUG firebase: signed in anonymously as: ${user.uid}`);
+        consolelog(`DEBUG firebase: signed in anonymously as: ${user.uid}`);
       } else {
-        console.log(`DEBUG firebase: signed in to an actual account as: ${user.uid}`);
+        consolelog(`DEBUG firebase: signed in to an actual account as: ${user.uid}`);
       }
       onSignedIn(user);
     } else {
-      console.log('DEBUG firebase: no user, calling signInAnonymously()');
+      consolelog('DEBUG firebase: no user, calling signInAnonymously()');
       signInAnonymously();
     }
   });

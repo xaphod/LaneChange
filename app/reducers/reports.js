@@ -1,4 +1,5 @@
 import * as Actions from 'app/actions';
+import consolelog from 'app/utils/logging';
 
 export default () => {
   const initialState = {
@@ -12,7 +13,7 @@ export default () => {
     switch (action.type) {
       case Actions.ACTION_TYPE_CREATE_REPORT:
         id += 1;
-        console.log(`DEBUG Creating Report with ID=${id}`);
+        consolelog(`DEBUG Creating Report with ID=${id}`);
         return {
           ...state,
           id,

@@ -1,6 +1,7 @@
 import { REHYDRATE } from 'redux-persist';
 import * as Actions from 'app/actions';
 import { defaultCity } from 'app/utils/constants';
+import consolelog from 'app/utils/logging';
 
 export default () => {
   const initialState = {
@@ -24,11 +25,11 @@ export default () => {
           retreivingCities: false,
         };
         if (!state.chosenCity || !state.chosenCity.name || !state.chosenCity.email) {
-          console.warn('MAJOR PROBLEM (city reducer): hydrated chosenCity has no name/email! reverting to default...');
+          consolelog('MAJOR PROBLEM (city reducer): hydrated chosenCity has no name/email! reverting to default...');
           retval.chosenCity = defaultCity;
         }
-        console.log('DEBUG City reducer: rehydrated state is');
-        console.log(retval);
+        consolelog('DEBUG City reducer: rehydrated state is');
+        consolelog(retval);
         return retval;
       }
 
@@ -57,7 +58,7 @@ export default () => {
       case Actions.ACTION_TYPE_SET_CHOSENCITY:
       {
         if (!action.city) {
-          console.log('DEBUG City reducer: ERROR, must not set falsey city!');
+          consolelog('DEBUG City reducer: ERROR, must not set falsey city!');
           return state;
         }
 
@@ -67,8 +68,8 @@ export default () => {
         };
         const { name } = action.city;
         if (!name) {
-          console.log('DEBUG City reducer: NO CITY NAME!');
-          console.log(action.city);
+          consolelog('DEBUG City reducer: NO CITY NAME!');
+          consolelog(action.city);
           newState.chosenCity.name = 'unknown';
         }
         return newState;

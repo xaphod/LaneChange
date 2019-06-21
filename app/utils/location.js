@@ -1,5 +1,6 @@
 import RNLocation from 'react-native-location';
 import { googleMapsAPIKey } from 'app/utils/keys';
+import consolelog from 'app/utils/logging';
 
 const getAddressComponent = (address_components, componentName) => {
   return address_components.find(
@@ -18,12 +19,12 @@ export const reverseGeocode = async (latitude, longitude) => {
       throw e;
     });
 
-  console.log(`DEBUG reverseGeocode:`);
-  console.log(json);
+  consolelog(`DEBUG reverseGeocode:`);
+  consolelog(json);
   const { results } = json;
   const firstResult = results.find(() => true);
   if (!firstResult) {
-    console.log('DEBUG reverseGeocode: no results');
+    consolelog('DEBUG reverseGeocode: no results');
     return undefined;
   }
   const { formatted_address, address_components } = firstResult;
@@ -48,8 +49,8 @@ export const reverseGeocode = async (latitude, longitude) => {
     result.addressShort = `${streetNumber} ${route}, ${locality}`;
   }
 
-  console.log('DEBUG reverseGeocode result:');
-  console.log(result);
+  consolelog('DEBUG reverseGeocode result:');
+  consolelog(result);
   return result;
 };
 
@@ -69,19 +70,19 @@ export const getLocation = async () => {
     },
   }).catch(() => {});
   if (!granted) {
-    console.log('DEBUG getLocation: location permission NOT GRANTED');
+    consolelog('DEBUG getLocation: location permission NOT GRANTED');
     return undefined;
   }
 
   const latestLocation = await RNLocation.getLatestLocation({ timeout: 1500 })
     .catch((e) => {
-      console.log('DEBUG getLocation: ERROR getting location:');
-      console.log(e);
+      consolelog('DEBUG getLocation: ERROR getting location:');
+      consolelog(e);
       return undefined;
     });
 
   if (!latestLocation || !latestLocation.longitude || !latestLocation.latitude) {
-    console.log('DEBUG getLocation: NO location found');
+    consolelog('DEBUG getLocation: NO location found');
     return undefined;
   }
 
@@ -100,12 +101,12 @@ export const getLocation = async () => {
   */
   // TODO: test, potentially throw away if bad timestamp, or accuracy etc
 
-  console.log('DEBUG getLocation:doing reverse geocode of location:');
-  console.log(latestLocation);
+  consolelog('DEBUG getLocation:doing reverse geocode of location:');
+  consolelog(latestLocation);
   const address = await reverseGeocode(latestLocation.latitude, latestLocation.longitude)
     .catch((e) => {
-      console.log('Location.js reverseGeocode ERROR:');
-      console.log(e);
+      consolelog('Location.js reverseGeocode ERROR:');
+      consolelog(e);
     });
 
   if (address) {

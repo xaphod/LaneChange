@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 import DefaultButton from 'app/components/button';
 import { openTerms, openPrivacy } from 'app/utils/constants';
+import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
   container: {
