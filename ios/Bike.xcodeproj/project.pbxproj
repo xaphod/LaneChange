@@ -360,6 +360,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		18806620AEFC02E3169AE6E6 /* libPods-BikeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BikeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2208A16622BAD02E00756735 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "Bike/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		2208A1E022BD43AA00756735 /* Bike.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Bike.entitlements; path = Bike/Bike.entitlements; sourceTree = "<group>"; };
 		2241682922A6B9FF0061FEE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		29F1F4E90165D183B2885ED2 /* Pods-Bike-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bike-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Bike-tvOSTests/Pods-Bike-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* Bike-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bike-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -531,6 +532,7 @@
 		13B07FAE1A68108700A75B9A /* Bike */ = {
 			isa = PBXGroup;
 			children = (
+				2208A1E022BD43AA00756735 /* Bike.entitlements */,
 				2241682922A6B9FF0061FEE9 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -800,6 +802,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = V8U8V7848Z;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1461,6 +1468,7 @@
 			baseConfigurationReference = 52E406FC0DDA93D00EB05705 /* Pods-Bike.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Bike/Bike.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = V8U8V7848Z;
@@ -1487,6 +1495,7 @@
 			baseConfigurationReference = FACAF2D1F568D4D1C0688F8F /* Pods-Bike.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Bike/Bike.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V8U8V7848Z;
 				HEADER_SEARCH_PATHS = (
