@@ -12,7 +12,7 @@ const buildUrl = (toUnescaped, subjectUnescaped, bodyUnescaped, preferredIOSClie
   const to = encodeURIComponent(toUnescaped);
   const subject = encodeURIComponent(subjectUnescaped);
   let body = encodeURIComponent(bodyUnescaped);
-  const bodyNoNewLinesUnescaped = bodyUnescaped.replace(/\n/g, ' . . . ');
+  const bodyNoNewLinesUnescaped = bodyUnescaped.replace(/\n/g, '_____________________');
   consolelog(`DEBUG mail buildURL(): preferredIOSClient is ${preferredIOSClient}`);
 
   return Platform.select({
@@ -70,7 +70,7 @@ export const openEmail = async (emailAddress, report, preferredIOSClient) => {
     notesStr = `\n\nNotes: ${notes}`;
   }
 
-  const body = `Mobility incident reported by LaneChange\n\nDate: ${date}\n\nAddress: ${address}\n\nPhoto: ${imageLink}${notesStr}`;
+  const body = `Mobility incident reported by LaneChange\n\nDate: ${date}\n\nAddress: ${address}${notesStr}\n\nPhoto: ${imageLink}`;
   let retval = true;
   retval = await sendMail(emailAddress, subject, body, preferredIOSClient)
     .catch((e) => {
