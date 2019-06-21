@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#019864',
-    fontSize: 16,
+    fontSize: 18,
   },
   buttonStyleDisabled: {
     borderColor: disabledColor,
@@ -37,7 +37,7 @@ export default class DefaultButton extends Component {
     buttonStyleDisabled = {
       ...buttonStyleDisabled,
       ...styles.buttonStyleDisabled,
-    }
+    };
 
     const controlsDisabled = this.props.disabled;
 

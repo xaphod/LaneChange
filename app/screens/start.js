@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button, Alert, Linking, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, Alert, Linking, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 import DefaultButton from 'app/components/button';
@@ -22,16 +22,11 @@ const styles = StyleSheet.create({
     lineHeight: 38,
     color: '#fff',
     textAlign: 'center',
-    paddingHorizontal: 40,
-    paddingTop: 200,
-    zIndex: 2,
+    paddingHorizontal: 30,
+    marginTop: -120,
   },
   logo: {
-    position: 'absolute',
-    top: 60,
-    left: '50%',
-    marginLeft: -271,
-    zIndex: 1,
+    marginLeft: -185,
   },
   links: {
     flexDirection: 'row',
@@ -40,10 +35,15 @@ const styles = StyleSheet.create({
   },
   linkButton: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     textDecorationLine: 'underline',
     textDecorationStyle: 'solid',
     textDecorationColor: '#fff',
+  },
+  logoContainer: {
+    marginTop: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 
@@ -54,12 +54,17 @@ class Start extends Component {
   static navigationOptions = () => ({ header: null });
 
   render() {
+    const { width } = Dimensions.get('window');
+    // logo with shadow is 345 x 302: visual center should be 74 pixels from right of PNG
+
     return (
       <SafeAreaView style={styles.container}>
-
-        <Text style={styles.introText}>Lane Change makes it easy to inform City Hall of bike lane obstructions</Text>
-
-        <Image source={logoShadow} style={styles.logo} />
+        <View style={styles.logoContainer}>
+          <Image source={logoShadow} style={styles.logo} />
+        </View>
+        <Text style={styles.introText}>
+          LaneChange reports obstructed bike lanes & sidewalks to your city
+        </Text>
 
         <View style={styles.bottom}>
           <View style={styles.links}>
@@ -70,13 +75,6 @@ class Start extends Component {
             >
               <Text style={styles.linkButton}>How it Works</Text>
             </TouchableOpacity>
-
-            {/* <TouchableOpacity
-              style={styles.linkButton}
-              onPress={() => this.props.navigation.navigate('WhyItMatters')}
-            >
-              <Text style={styles.linkButton}>Why it Matters</Text>
-            </TouchableOpacity> */}
 
           </View>
           <View style={styles.reportButton}>

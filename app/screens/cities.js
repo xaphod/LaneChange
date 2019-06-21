@@ -35,7 +35,7 @@ const backArrowIcon = require('app/assets/img/backArrowIcon.png');
 
 class Cities extends Component {
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: 'Cities',
+    headerTitle: 'Choose your City',
     headerLeft: (
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity

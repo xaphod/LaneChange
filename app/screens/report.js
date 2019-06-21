@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   addNoteButtonText: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#019864',
     paddingLeft: 20,
   },
