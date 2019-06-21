@@ -73,15 +73,18 @@ class Cities extends Component {
     const chosenCity = getChosenCity();
     console.log('DEBUG cities screen: chosenCity is');
     console.log(chosenCity);
-    const cityElements = cityObjects.map((city, index) => {
+    const cityElements = cityObjects.map((cityMapped, index) => {
+      const city = JSON.parse(JSON.stringify(cityMapped));
       const { name } = city;
       let retval = (
         <MenuItem
           key={name}
           title={name}
           onPress={async () => {
-            await setChosenCity(JSON.parse(JSON.stringify(city)));
-            this.setState({ chosenCity: city });
+            await setChosenCity(city);
+            this.setState(
+              { chosenCity: city },
+            );
           }}
         />
       );
