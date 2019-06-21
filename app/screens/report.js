@@ -93,6 +93,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  cameraNotAuthorized: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const shutterButton = require('app/assets/img/shutterButton.png');
@@ -347,7 +352,7 @@ class Report extends Component {
   };
 
   render() {
-    const { showLoading } = this.state;
+    const { showLoading, cameraNotAuthorized } = this.state;
     const { reports } = this.props;
     const { draftReport } = reports;
     let imageURIOnDisk;
@@ -416,14 +421,23 @@ class Report extends Component {
             )}
           </View>
         )}
-        {!imageURIOnDisk && (
+        {!imageURIOnDisk && !cameraNotAuthorized && (
           <Camera
             style={styles.camera}
             shutter={shutter}
             onTakingPhoto={this.onTakingPhoto}
             onPhotoTaken={this.onPhotoTaken}
+            cameraNotAuthorized={() => this.setState({ cameraNotAuthorized: true })}
           />
         )}
+        {!imageURIOnDisk && cameraNotAuthorized && (
+          <View style={styles.cameraNotAuthorized}>
+            <Text>
+              Please authorize this app to use the camera.
+            </Text>
+          </View>
+        )}
+
         <View style={styles.report}>
           <View style={styles.reportMeta}>
             <Text style={dateStyle}>{dayText}</Text>

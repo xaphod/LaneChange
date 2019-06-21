@@ -121,6 +121,11 @@ export default class Camera extends Component {
           }}
         >
           {({ camera, status }) => {
+            if (status === 'NOT_AUTHORIZED') {
+              consolelog('Camera: NOT_AUTHORIZED');
+              this.props.cameraNotAuthorized();
+              return null;
+            }
             if (status !== 'READY') return <PendingView />;
             return (
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
