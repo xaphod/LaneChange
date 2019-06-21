@@ -9,13 +9,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#019864',
   },
+  scrollview: {
+    flex: 1,
+  },
   logoWrap: {
     alignItems: 'center',
     paddingVertical: 60,
   },
   reportButton: {
     padding: 20,
-    marginTop: 'auto',
   },
   stepWrap: {
     marginHorizontal: 30,
@@ -63,7 +65,7 @@ class HowItWorks extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView>
+        <ScrollView style={styles.scrollview}>
           <View style={styles.logoWrap}>
             <Image source={logo} style={styles.logo} />
           </View>
