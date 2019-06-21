@@ -17,7 +17,8 @@ export const cityEmailAddress = () => {
 export const cityName = () => {
   let { name } = chosenCity;
   if (!name) {
-    console.error('NO CITY!');
+    console.log('NO CITY!');
+    console.log(chosenCity);
     return 'unknown';
   }
   // danger: is used as firebase storage ref & firestore collection string (alphanumerics only)
@@ -31,33 +32,58 @@ export const cityName = () => {
 // ENTRY POINT
 export const retrieveCities = async () => {
   if (retrievedCities || retreivingCities) {
-    console.log('DEBUG populateCities: no-op, already retrieved/retrieving');
+    console.log('DEBUG retrieveCities: no-op, already retrieved/retrieving');
     return;
   }
 
   retreivingCities = true;
-  console.log('DEBUG populateCities: retrieving cities');
+  console.log('DEBUG retrieveCities: retrieving cities');
 
   try {
-    const storedChosenCity = await AsyncStorage.getItem(chosenCityKey);
-    if (storedChosenCity && chosenCity.name === defaultCity.name) { // only overwrite if default
-      console.log('DEBUG populateCities: loaded stored chosen city:');
+    const storedChosenCity = JSON.parse(await AsyncStorage.getItem(chosenCityKey));
+    if (storedChosenCity) {
+      console.log('DEBUG retrieveCities: loaded stored city:');
       console.log(storedChosenCity);
-      chosenCity = storedChosenCity;
+
+      if (chosenCity.name === defaultCity.name) { // only overwrite if default
+        chosenCity = storedChosenCity;
+      } else {
+        console.log('DEBUG retrieveCities: NOT using stored city as default is not chosen at the moment');
+      }
     }
 
     cities = await getCities();
     retrievedCities = true;
-    console.log('DEBUG populateCities: retrieved cities:');
+    console.log('DEBUG retrieveCities: retrieved cities:');
     console.log(cities);
   } catch (e) {
-    console.log('DEBUG populateCities ERROR:');
+    console.log('DEBUG retrieveCities ERROR:');
     console.log(e);
   } finally {
     retreivingCities = false;
   }
 };
 
-export const listCities = () => cities;
+export const listCities = () => {
+  console.log('listCities:');
+  console.log(cities);
+  return cities;
+};
 
 export const getChosenCity = () => chosenCity;
+
+export const setChosenCity = async (city) => {
+  try {
+    console.log('DEBUG setChosenCity: setting to');
+    console.log(city);
+    await AsyncStorage.setItem(chosenCityKey, JSON.stringify(city));
+  } catch (e) {
+    console.log('DEBUG setChosenCity ERROR:');
+    console.log(e);
+  } finally {
+    chosenCity = city;
+
+    console.log('setChosenCity, after - cities is:');
+    console.log(cities);
+  }
+};

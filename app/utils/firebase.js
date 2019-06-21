@@ -151,7 +151,7 @@ export const signInAnonymously = () => {
   console.log('DEBUG signInAnonymously()');
   firebase.auth().signInAnonymously()
     .catch((err) => {
-      console.log(`DEBUG App.js: ERROR signing in anonymously: ${err}`);
+      console.log(`DEBUG firebase: ERROR signing in anonymously: ${err}`);
     });
 };
 
@@ -163,7 +163,7 @@ export const getCities = async () => {
       .get();
 
     const cities = snapshot.docs.map((cityObj) => {
-      const { name, email } = cityObj.data();
+      const { name, email } = JSON.parse(JSON.stringify(cityObj.data()));
       const city = {
         name,
         email,
@@ -171,6 +171,8 @@ export const getCities = async () => {
       return city;
     });
 
+    console.log('DEBUG firebase getCities returning:');
+    console.log(cities);
     return cities;
   } catch (e) {
     console.log('ERROR in firebase/cities:');

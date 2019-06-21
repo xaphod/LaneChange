@@ -34,17 +34,16 @@ export default class MenuItem extends Component {
   render() {
     let menuItemStyle = styles.menuItem;
     const { last, selected } = this.props;
-    if (last) {
-      menuItemStyle = {
-        ...menuItemStyle,
-        ...styles.menuItemLast,
-      };
-    }
-
     if (selected) {
       menuItemStyle = {
         ...menuItemStyle,
         ...styles.selected,
+      };
+    }
+    if (last) {
+      menuItemStyle = {
+        ...menuItemStyle,
+        ...styles.menuItemLast,
       };
     }
 

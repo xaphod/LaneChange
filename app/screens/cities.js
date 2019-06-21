@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
 import LoadingView from 'app/components/loadingview';
-import { listCities, getChosenCity } from 'app/utils/cities';
+import { listCities, getChosenCity, setChosenCity } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -71,22 +71,25 @@ class Cities extends Component {
     const { showLoading } = this.state;
     const cityObjects = listCities();
     const chosenCity = getChosenCity();
-    const cities = cityObjects.map((city, index) => {
+    console.log('DEBUG cities screen: chosenCity is');
+    console.log(chosenCity);
+    const cityElements = cityObjects.map((city, index) => {
       const { name } = city;
-      const retval = (
+      let retval = (
         <MenuItem
           key={name}
           title={name}
-          onPress={() => {
-            // TODO
+          onPress={async () => {
+            await setChosenCity(JSON.parse(JSON.stringify(city)));
+            this.setState({ chosenCity: city });
           }}
         />
       );
       if (city.name === chosenCity.name) {
-        return React.cloneElement(retval, { selected: true });
+        retval = React.cloneElement(retval, { selected: true });
       }
       if (cityObjects.length - 1 === index) {
-        return React.cloneElement(retval, { last: true });
+        retval = React.cloneElement(retval, { last: true });
       }
       return retval;
     });
@@ -95,7 +98,7 @@ class Cities extends Component {
       <SafeAreaView style={styles.wrap}>
         <ScrollView style={styles.scrollview}>
           <View style={styles.container}>
-            {cities}
+            {cityElements}
 
             <View style={styles.version}>
               <Text style={styles.versionText}>Want your city added? Email us at</Text>
