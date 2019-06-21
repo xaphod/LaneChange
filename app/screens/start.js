@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View, Dimensions, Alert, Linking, Touchable
 import { connect } from 'react-redux';
 import { navigateToReport } from 'app/actions/ui';
 import DefaultButton from 'app/components/button';
+import { openTerms, openPrivacy } from 'app/utils/constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -53,10 +54,36 @@ const logoShadow = require('app/assets/img/logoShadow.png');
 class Start extends Component {
   static navigationOptions = () => ({ header: null });
 
-  render() {
-    const { width } = Dimensions.get('window');
-    // logo with shadow is 345 x 302: visual center should be 74 pixels from right of PNG
+  constructor(props) {
+    super(props);
+    this.getStartedPressed = this.getStartedPressed.bind(this);
+  }
 
+  getStartedPressed = () => {
+    Alert.alert(
+      'Almost There',
+      'When you use this app, it uploads data to our servers. We take your security & privacy seriously. By continuing to use this app you are agreeing to the Terms and Conditions and the Privacy Policy.',
+      [
+        {
+          text: 'Continue',
+          onPress: () => {
+            this.props.navigateToReport();
+            this.props.navigation.navigate('Report');
+          },
+        },
+        {
+          text: 'Terms and Conditions',
+          onPress: () => openTerms(),
+        },
+        {
+          text: 'Privacy Policy',
+          onPress: () => openPrivacy(),
+        },
+      ],
+    );
+  };
+
+  render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.logoContainer}>
@@ -79,10 +106,8 @@ class Start extends Component {
           </View>
           <View style={styles.reportButton}>
             <DefaultButton
-              title="Create a Report"
-              onPress={() => {
-                this.props.navigateToReport(this.props.navigation);
-              }}
+              title="Get Started"
+              onPress={() => this.getStartedPressed()}
               solid
             />
           </View>
@@ -99,7 +124,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  navigateToReport: navigation => dispatch(navigateToReport(navigation)),
+  navigateToReport: () => dispatch(navigateToReport()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Start);
