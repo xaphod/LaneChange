@@ -52,7 +52,7 @@ export const emailReport = (emailAddress, report, navigation, iOSMailClientIn) =
   ActionSheet.showActionSheetWithOptions({
     options: [
       'Cancel',
-      'Use Mail app',
+      'Use Mail app (recommended)',
       'Use Gmail app',
     ],
     cancelButtonIndex: 0,

@@ -175,7 +175,7 @@ class Menu extends Component {
     const { chosenCity } = cities;
     const { name } = chosenCity;
     const { showLoading } = this.state;
-    const changeCityTitle = `Change city (${name})...`;
+    const changeCityTitle = `Change city (${name})`;
 
     return (
       <SafeAreaView style={styles.wrap}>
@@ -198,7 +198,7 @@ class Menu extends Component {
             /> */}
             <MenuItem
               onPress={() => openCycleHamilton()}
-              title="About Cycle Hamilton"
+              title="Cycle Hamilton"
               icon={cycleIcon}
               last
             />

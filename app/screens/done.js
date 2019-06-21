@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Share, Alert, Linking, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View, Share, Alert, Linking, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
 import { shareText } from 'app/utils/constants';
@@ -11,19 +11,15 @@ const styles = StyleSheet.create({
   },
   logoWrap: {
     alignItems: 'center',
-    paddingVertical: 60,
+    marginBottom: 20,
   },
   button: {
-    padding: 20,
+    margin: 20,
     marginTop: 'auto',
   },
   logo: {
   },
   doneButton: {
-    position: 'absolute',
-    top: 60,
-    right: 20,
-    zIndex: 1,
   },
   doneButtonText: {
     fontSize: 16,
@@ -57,7 +53,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#4DB792',
     height: 1,
     marginVertical: 20,
-  }
+  },
+  buttonContainer: {
+    margin: 20,
+    marginRight: 30,
+    flexDirection: 'row',
+  },
 });
 
 const logo = require('app/assets/img/logo.png');
@@ -89,29 +90,34 @@ class Done extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <TouchableOpacity
-          style={styles.doneButton}
-          onPress={() => this.props.navigation.pop()}
-        >
-          <Text style={styles.doneButtonText}>Done</Text>
-        </TouchableOpacity>
-        <View style={styles.logoWrap}>
-          <Image source={logo} style={styles.logo} />
-        </View>
-        <View style={styles.doneWrap}>
-          <Text style={styles.doneHeader}>You did it!</Text>
-          <Text style={styles.doneSubHeader}>{numberOfSubmittedReportsStr}</Text>
-          <Text style={styles.doneSubHeader}>Keep up the good work!</Text>
-          <View style={styles.doneSpacer} />
-          <Text style={styles.doneText}>This report will help City Officials make better decisions about the future developments of our roads.</Text>
-        </View>
-        <View style={styles.button}>
-          <DefaultButton
-            title="Share"
-            onPress={() => this.onShare()}
-            solid
-          />
-        </View>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.buttonContainer}>
+            <View style={{ flex: 1 }} />
+            <TouchableOpacity
+              style={styles.doneButton}
+              onPress={() => this.props.navigation.pop()}
+            >
+              <Text style={styles.doneButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.logoWrap}>
+            <Image source={logo} style={styles.logo} />
+          </View>
+          <View style={styles.doneWrap}>
+            <Text style={styles.doneHeader}>You did it!</Text>
+            <Text style={styles.doneSubHeader}>{numberOfSubmittedReportsStr}</Text>
+            <Text style={styles.doneSubHeader}>Keep up the good work!</Text>
+            <View style={styles.doneSpacer} />
+            <Text style={styles.doneText}>This report will help city officials make better decisions about the future developments of our roads.</Text>
+          </View>
+          <View style={styles.button}>
+            <DefaultButton
+              title="Share LaneChange"
+              onPress={() => this.onShare()}
+              solid
+            />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }

@@ -9,15 +9,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#019864',
   },
-  scrollview: {
-    flex: 1,
-  },
   logoWrap: {
     alignItems: 'center',
-    paddingVertical: 60,
+    marginTop: 60,
+    marginBottom: 30,
   },
   reportButton: {
-    padding: 20,
+    margin: 20,
+    marginTop: 'auto',
   },
   stepWrap: {
     marginHorizontal: 30,
@@ -25,15 +24,15 @@ const styles = StyleSheet.create({
   },
   step: {
     flexDirection: 'row',
-    paddingBottom: 30,
-    marginBottom: 30,
+    paddingBottom: 20,
+    marginBottom: 20,
     borderBottomColor: '#4DB792',
     borderBottomWidth: 1,
   },
   stepLast: {
     flexDirection: 'row',
-    paddingBottom: 30,
-    marginBottom: 30,
+    paddingBottom: 0,
+    marginBottom: 0,
   },
   icon: {
     marginRight: 30,
@@ -47,6 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
+    marginBottom: 5,
   },
   stepText: {
     fontSize: 14,
@@ -65,7 +65,7 @@ class HowItWorks extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollview}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.logoWrap}>
             <Image source={logo} style={styles.logo} />
           </View>
@@ -74,7 +74,7 @@ class HowItWorks extends Component {
               <Image source={cameraIconTranslucent} style={styles.icon} />
               <View style={styles.stepTextWrap}>
                 <Text style={styles.stepHeader}>Take a Photo</Text>
-                <Text style={styles.stepText}>Use your location & add a note</Text>
+                <Text style={styles.stepText}>Add your location & a note</Text>
               </View>
             </View>
             <View style={styles.step}>
