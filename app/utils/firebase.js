@@ -3,10 +3,6 @@ import UUIDGenerator from 'react-native-uuid-generator';
 import { reportsRefName } from 'app/utils/constants';
 
 const registerReport = (report, firebaseImageURI) => {
-  // https://rnfirebase.io/docs/v5.x.x/firestore/transactions
-  // firebase.firestore().runTransaction(async (transaction) => {
-  // });
-
   let user;
   const userObject = firebase.auth().currentUser;
   if (userObject) {
@@ -52,7 +48,12 @@ export const uploadReport = (report, progressCallback) => {
     UUIDGenerator.getRandomUUID((uuid) => {
       console.log(`DEBUG firebase/uploadReport(), uuid=${uuid}`);
 
-      const firebaseImageRef = firebase.storage().ref(`${city}-images`).child(`${uuid}.jpg`);
+      let refName = city;
+      refName = refName.replace(/[^a-z0-9+]+/gi, '');
+      if (__DEV__) {
+        refName = `${refName}-testing`;
+      }
+      const firebaseImageRef = firebase.storage().ref(`${refName}-images`).child(`${uuid}.jpg`);
       const uploadTask = firebaseImageRef.putFile(imageURIOnDisk, {
         contentType: 'image/jpeg',
       });
@@ -147,7 +148,7 @@ export const deleteUserData = async () => {
   // signInAnonymously called by handler in App.js
 };
 
-export const signInAnonymously = () => {
+const signInAnonymously = () => {
   console.log('DEBUG signInAnonymously()');
   firebase.auth().signInAnonymously()
     .catch((err) => {
@@ -179,4 +180,21 @@ export const getCities = async () => {
     console.log(e);
     return undefined;
   }
+};
+
+export const registerFirebaseAuthHandler = (onSignedIn) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // signed in
+      if (user.isAnonymous) {
+        console.log(`DEBUG firebase: signed in anonymously as: ${user.uid}`);
+      } else {
+        console.log(`DEBUG firebase: signed in to an actual account as: ${user.uid}`);
+      }
+      onSignedIn(user);
+    } else {
+      console.log('DEBUG firebase: no user, calling signInAnonymously()');
+      signInAnonymously();
+    }
+  });
 };

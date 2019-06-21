@@ -12,3 +12,7 @@ export const ACTION_TYPE_CHOSE_IOS_MAIL_CLIENT = 'choseiOSMailClient';
 export const ACTION_TYPE_DELETE_PROGRESS = 'deleteProgress';
 export const ACTION_TYPE_DELETE_COMPLETE = 'deleteComplete';
 export const ACTION_TYPE_DELETE_CLEAR = 'deleteClear';
+export const ACTION_TYPE_RETRIEVING_CITIES = 'retrievingCities';
+export const ACTION_TYPE_RETRIEVING_CITIES_DONE = 'retrievingCitiesDone';
+export const ACTION_TYPE_RETRIEVED_CITIES = 'retrievedCities';
+export const ACTION_TYPE_SET_CHOSENCITY = 'setChosenCity';

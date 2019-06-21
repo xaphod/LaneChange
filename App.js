@@ -10,23 +10,25 @@ import {
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import Nav from 'app/navigation/nav';
 import createReportsReducer from 'app/reducers/reports';
 import createUIReducer from 'app/reducers/ui';
+import createCitiesReducer from 'app/reducers/cities';
 import createCameraReducer from 'app/reducers/camera';
-import firebase from 'react-native-firebase';
-import { signInAnonymously } from 'app/utils/firebase';
-import { retrieveCities } from 'app/utils/cities';
+import CitiesRenderless from 'app/components/cities';
 
 const persistConfig = {
   key: 'root',
   storage,
+  stateReconciler: autoMergeLevel2,
 };
 
 const appReducer = combineReducers({
   reports: createReportsReducer(),
   ui: createUIReducer(),
   camera: createCameraReducer(),
+  cities: createCitiesReducer(),
 });
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
@@ -44,25 +46,11 @@ const store = createStoreWithMiddleware(
 const persistor = persistStore(store);
 
 export default function App() {
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // signed in
-      if (user.isAnonymous) {
-        console.log(`DEBUG App.js: signed in anonymously as: ${user.uid}`);
-      } else {
-        console.log(`DEBUG App.js: signed in to an actual account as: ${user.uid}`);
-      }
-      retrieveCities();
-    } else {
-      console.log('DEBUG App.js: no user, calling signInAnonymously()');
-      signInAnonymously();
-    }
-  });
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Nav />
+        <CitiesRenderless />
       </PersistGate>
     </Provider>
   );

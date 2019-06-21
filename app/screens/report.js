@@ -10,7 +10,6 @@ import { photoPath, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
 import { photoProgress, photoTaken } from 'app/actions/camera';
-import { cityName } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   container: {
@@ -280,7 +279,9 @@ class Report extends Component {
   };
 
   createEmailPressed = () => {
-    const { reports } = this.props;
+    const { reports, cities } = this.props;
+    const { chosenCity } = cities;
+    const { name, email } = chosenCity;
     const { draftReport, lastSubmit, inProgress } = reports;
 
     if (inProgress && inProgress.type) {
@@ -294,7 +295,7 @@ class Report extends Component {
       lastSubmit.report.id &&
       draftReport &&
       draftReport.id &&
-      lastSubmit.report.id == draftReport.id &&
+      lastSubmit.report.id === draftReport.id &&
       lastSubmit.report.docRef
     ) {
       console.log('DEBUG createEmailPressed: seems this report has already been uploaded/submitted. Doing email...');
@@ -302,7 +303,7 @@ class Report extends Component {
       this.setState({
         didError: undefined,
       }, () => {
-        this.props.emailReport(lastSubmit.report, this.props.navigation, reports.iOSMailClient);
+        this.props.emailReport(email, lastSubmit.report, this.props.navigation, reports.iOSMailClient);
       });
       return;
     }
@@ -319,7 +320,7 @@ class Report extends Component {
       photo: undefined,
       location: undefined,
       imageURIOnDisk,
-      city: cityName(),
+      city: name,
     };
 
     if (location) {
@@ -331,7 +332,7 @@ class Report extends Component {
     this.setState({
       didError: undefined,
     }, () => {
-      this.props.submitReport(report, this.props.navigation, reports.iOSMailClient);
+      this.props.submitReport(email, report, this.props.navigation, reports.iOSMailClient);
     });
   };
 
@@ -460,13 +461,14 @@ const mapStateToProps = state => ({
   reports: state.reports,
   ui: state.ui,
   camera: state.camera,
+  cities: state.cities,
 });
 
 const mapDispatchToProps = dispatch => ({
   cancelReport: navigation => dispatch(cancelReport(navigation)),
-  submitReport: (report, navigation, iOSMailClient) => dispatch(submitReport(report, navigation, iOSMailClient)),
+  submitReport: (emailAddress, report, navigation, iOSMailClient) => dispatch(submitReport(emailAddress, report, navigation, iOSMailClient)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
-  emailReport: (report, navigation, iOSMailClient) => dispatch(emailReport(report, navigation, iOSMailClient)),
+  emailReport: (emailAddress, report, navigation, iOSMailClient) => dispatch(emailReport(emailAddress, report, navigation, iOSMailClient)),
   expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
   photoProgress: () => dispatch(photoProgress()),
   photoTaken: photo => dispatch(photoTaken(photo)),

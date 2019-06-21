@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
 import LoadingView from 'app/components/loadingview';
-import { listCities, getChosenCity, setChosenCity } from 'app/utils/cities';
+import { setChosenCity } from 'app/actions/cities';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -69,29 +69,24 @@ class Cities extends Component {
 
   render() {
     const { showLoading } = this.state;
-    const cityObjects = listCities();
-    const chosenCity = getChosenCity();
+    const { cities } = this.props.cities;
+    const { chosenCity } = this.props.cities;
     console.log('DEBUG cities screen: chosenCity is');
     console.log(chosenCity);
-    const cityElements = cityObjects.map((cityMapped, index) => {
+    const cityElements = cities.map((cityMapped, index) => {
       const city = JSON.parse(JSON.stringify(cityMapped));
       const { name } = city;
       let retval = (
         <MenuItem
           key={name}
           title={name}
-          onPress={async () => {
-            await setChosenCity(city);
-            this.setState(
-              { chosenCity: city },
-            );
-          }}
+          onPress={() => this.props.setChosenCity(city)}
         />
       );
       if (city.name === chosenCity.name) {
         retval = React.cloneElement(retval, { selected: true });
       }
-      if (cityObjects.length - 1 === index) {
+      if (cities.length - 1 === index) {
         retval = React.cloneElement(retval, { last: true });
       }
       return retval;
@@ -123,11 +118,11 @@ class Cities extends Component {
 }
 
 const mapStateToProps = state => ({
-  reports: state.reports,
-  ui: state.ui,
+  cities: state.cities,
 });
 
 const mapDispatchToProps = dispatch => ({
+  setChosenCity: city => dispatch(setChosenCity(city)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cities);

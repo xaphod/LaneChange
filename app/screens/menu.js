@@ -7,7 +7,6 @@ import { openTerms, openPrivacy, openSolodigitalis, openSource, openCycleHamilto
 import { deleteAllData, deleteClear } from 'app/actions/reports';
 import LoadingView from 'app/components/loadingview';
 import { deletePhotosFromDisk } from 'app/utils/filesystem';
-import { cityName } from 'app/utils/cities';
 
 const styles = StyleSheet.create({
   wrap: {
@@ -172,9 +171,11 @@ class Menu extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, cities } = this.props;
+    const { chosenCity } = cities;
+    const { name } = chosenCity;
     const { showLoading } = this.state;
-    const changeCityTitle = `Change city (${cityName()})...`;
+    const changeCityTitle = `Change city (${name})...`;
 
     return (
       <SafeAreaView style={styles.wrap}>
@@ -254,6 +255,7 @@ class Menu extends Component {
 const mapStateToProps = state => ({
   reports: state.reports,
   ui: state.ui,
+  cities: state.cities,
 });
 
 const mapDispatchToProps = dispatch => ({
