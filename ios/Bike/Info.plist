@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>googlegmail</string>
@@ -44,7 +44,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>To send a report you need to take a photo of what you are reporting.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>PLEASE READ: Your location must be added to the report for it to be usable. If you don't allow the app access to your location then you must manually enter the location of the photo. The app only accesses your location at the moment you take a photo for a report.</string>
+	<string>PLEASE READ: Your location must be added to the report for it to be usable. If you don&apos;t allow the app access to your location then you must manually enter the location of the photo. The app only accesses your location at the moment you take a photo for a report.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photos you take with the camera are saved to the Camera Roll</string>
 	<key>UILaunchStoryboardName</key>
