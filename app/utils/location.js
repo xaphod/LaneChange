@@ -48,6 +48,9 @@ export const reverseGeocode = async (latitude, longitude) => {
   if (streetNumber && route && locality) {
     result.addressShort = `${streetNumber} ${route}, ${locality}`;
   }
+  if (locality) {
+    result.city = locality;
+  }
 
   consolelog('DEBUG reverseGeocode result:');
   consolelog(result);
@@ -103,20 +106,14 @@ export const getLocation = async () => {
 
   consolelog('DEBUG getLocation:doing reverse geocode of location:');
   consolelog(latestLocation);
-  const address = await reverseGeocode(latestLocation.latitude, latestLocation.longitude)
+  const result = await reverseGeocode(latestLocation.latitude, latestLocation.longitude)
     .catch((e) => {
       consolelog('Location.js reverseGeocode ERROR:');
       consolelog(e);
     });
 
-  if (address) {
-    return {
-      ...latestLocation,
-      ...address,
-    };
-  }
-
   return {
     ...latestLocation,
+    ...result,
   };
 };

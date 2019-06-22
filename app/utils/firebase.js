@@ -17,6 +17,7 @@ const registerReport = (report, firebaseImageURI) => {
     lon,
     lat,
     city,
+    chosenCity,
   } = report;
 
   return firebase
@@ -26,9 +27,10 @@ const registerReport = (report, firebaseImageURI) => {
       date,
       notes,
       address,
+      addressCity: city,
       lon,
       lat,
-      city,
+      chosenCity,
       image: firebaseImageURI,
       user,
     });
@@ -38,10 +40,10 @@ export const uploadReport = (report, progressCallback) => {
   const {
     date,
     imageURIOnDisk,
-    city,
+    chosenCity,
   } = report;
 
-  if (!imageURIOnDisk || !date || !city) {
+  if (!imageURIOnDisk || !date || !chosenCity) {
     throw new Error('Firebase uploadReport: need imageURIOnDisk, city and date');
   }
 
@@ -49,7 +51,7 @@ export const uploadReport = (report, progressCallback) => {
     UUIDGenerator.getRandomUUID((uuid) => {
       consolelog(`DEBUG firebase/uploadReport(), uuid=${uuid}`);
 
-      let refName = city;
+      let refName = chosenCity;
       refName = refName.replace(/[^a-z0-9+]+/gi, '');
       if (__DEV__) {
         refName = `${refName}-testing`;

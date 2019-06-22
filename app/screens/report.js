@@ -326,13 +326,14 @@ class Report extends Component {
       photo: undefined,
       location: undefined,
       imageURIOnDisk,
-      city: name,
+      chosenCity: name,
     };
 
     if (location) {
       report.address = location.address;
       report.lon = location.longitude;
       report.lat = location.latitude;
+      report.city = location.city;
     }
 
     this.setState({
