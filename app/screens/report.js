@@ -11,6 +11,7 @@ import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
 import { photoProgress, photoTaken } from 'app/actions/camera';
 import consolelog from 'app/utils/logging';
+import { gotCity } from 'app/actions/cities';
 
 const styles = StyleSheet.create({
   container: {
@@ -344,12 +345,16 @@ class Report extends Component {
   };
 
   getLocation = async () => {
-    const location = await getLocation()
-      .catch((e) => {
-        consolelog('DEBUG getLocation error:');
-        consolelog(e);
-      });
-    this.props.expandInDraftReport({ location });
+    try {
+      const location = await getLocation();
+      this.props.expandInDraftReport({ location });
+      if (location && location.city) {
+        this.props.gotCity(location.city);
+      }
+    } catch (e) {
+      consolelog('DEBUG getLocation error:');
+      consolelog(e);
+    }
   };
 
   render() {
@@ -488,6 +493,7 @@ const mapDispatchToProps = dispatch => ({
   expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
   photoProgress: () => dispatch(photoProgress()),
   photoTaken: photo => dispatch(photoTaken(photo)),
+  gotCity: city => dispatch(gotCity(city)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

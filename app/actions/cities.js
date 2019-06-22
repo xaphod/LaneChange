@@ -28,3 +28,8 @@ export const setChosenCity = city => ({
   type: Actions.ACTION_TYPE_SET_CHOSENCITY,
   city,
 });
+
+export const gotCity = city => ({
+  type: Actions.ACTION_TYPE_GOTCITY,
+  city,
+});

@@ -2,13 +2,15 @@ import { REHYDRATE } from 'redux-persist';
 import * as Actions from 'app/actions';
 import consolelog from 'app/utils/logging';
 
+const unknownCity = {
+  name: 'Unknown',
+  email: '',
+};
+
 export default () => {
   const initialState = {
     cities: [],
-    chosenCity: {
-      name: 'Unknown',
-      email: '',
-    },
+    chosenCity: unknownCity,
     retrievedCities: false,
     retreivingCities: false,
   };
@@ -64,6 +66,35 @@ export default () => {
           ...state,
           chosenCity: action.city,
         };
+        return newState;
+      }
+
+      // do not override a user-selected city, ie. chosenCity that isn't unknownCity
+      case Actions.ACTION_TYPE_GOTCITY:
+      {
+        const { cities } = state;
+        if (
+          !cities ||
+          !action.city ||
+          !state.chosenCity ||
+          state.chosenCity.name !== unknownCity.name
+        ) {
+          return state;
+        }
+
+        const gotCityMatch = new RegExp(`^${action.city}$`, 'i');
+        const newState = {
+          ...state,
+        };
+        cities.some((city) => {
+          if (city.name && city.name.match(gotCityMatch)) {
+            consolelog('DEBUG cities reducer: gotCity MATCH:');
+            consolelog(city);
+            newState.chosenCity = city;
+            return true;
+          }
+          return false;
+        });
         return newState;
       }
 
