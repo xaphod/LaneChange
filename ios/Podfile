@@ -47,7 +47,7 @@ target 'Bike' do
   pod 'Firebase/RemoteConfig'
   pod 'Firebase/Storage'
 
-  pod 'react-native-camera', :git => 'https://github.com/xaphod/react-native-camera', :branch => 'bugfix/ios-crash-on-error' # '../node_modules/react-native-camera'
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
 

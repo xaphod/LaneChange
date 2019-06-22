@@ -1,1 +1,1 @@
-../../../react-native-camera/ios/RN/TextDetectorManager.h
+../../../../../node_modules/react-native-camera/ios/RN/TextDetectorManager.h

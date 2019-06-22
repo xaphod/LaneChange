@@ -101,8 +101,8 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
                             settings:(const Settings &)settings
                  credentialsProvider:
                      (CredentialsProvider *)credentialsProvider  // no passing ownership
-                        userExecutor:(std::unique_ptr<Executor>)userExecutor
-                         workerQueue:(std::unique_ptr<AsyncQueue>)queue NS_DESIGNATED_INITIALIZER;
+                        userExecutor:(std::shared_ptr<Executor>)userExecutor
+                         workerQueue:(std::shared_ptr<AsyncQueue>)queue NS_DESIGNATED_INITIALIZER;
 
 @property(nonatomic, assign, readonly) const DatabaseInfo *databaseInfo;
 @property(nonatomic, strong, readonly) FSTEventManager *eventManager;
@@ -122,11 +122,11 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
    * onto this queue. This ensures our internal data structures are never accessed from multiple
    * threads simultaneously.
    */
-  std::unique_ptr<AsyncQueue> _workerQueue;
+  std::shared_ptr<AsyncQueue> _workerQueue;
 
   std::unique_ptr<RemoteStore> _remoteStore;
 
-  std::unique_ptr<Executor> _userExecutor;
+  std::shared_ptr<Executor> _userExecutor;
   std::chrono::milliseconds _initialGcDelay;
   std::chrono::milliseconds _regularGcDelay;
   bool _gcHasRun;
@@ -135,20 +135,24 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
   DelayedOperation _lruCallback;
 }
 
-- (Executor *)userExecutor {
-  return _userExecutor.get();
+- (const std::shared_ptr<util::Executor> &)userExecutor {
+  return _userExecutor;
 }
 
-- (AsyncQueue *)workerQueue {
-  return _workerQueue.get();
+- (const std::shared_ptr<util::AsyncQueue> &)workerQueue {
+  return _workerQueue;
+}
+
+- (bool)isShutdown {
+  return _isShutdown;
 }
 
 + (instancetype)clientWithDatabaseInfo:(const DatabaseInfo &)databaseInfo
                               settings:(const Settings &)settings
                    credentialsProvider:
                        (CredentialsProvider *)credentialsProvider  // no passing ownership
-                          userExecutor:(std::unique_ptr<Executor>)userExecutor
-                           workerQueue:(std::unique_ptr<AsyncQueue>)workerQueue {
+                          userExecutor:(std::shared_ptr<Executor>)userExecutor
+                           workerQueue:(std::shared_ptr<AsyncQueue>)workerQueue {
   return [[FSTFirestoreClient alloc] initWithDatabaseInfo:databaseInfo
                                                  settings:settings
                                       credentialsProvider:credentialsProvider
@@ -160,8 +164,8 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
                             settings:(const Settings &)settings
                  credentialsProvider:
                      (CredentialsProvider *)credentialsProvider  // no passing ownership
-                        userExecutor:(std::unique_ptr<Executor>)userExecutor
-                         workerQueue:(std::unique_ptr<AsyncQueue>)workerQueue {
+                        userExecutor:(std::shared_ptr<Executor>)userExecutor
+                         workerQueue:(std::shared_ptr<AsyncQueue>)workerQueue {
   if (self = [super init]) {
     _databaseInfo = databaseInfo;
     _credentialsProvider = credentialsProvider;
@@ -215,7 +219,7 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
                                         documentsDirectory:[FSTLevelDB documentsDirectory]];
 
     FSTSerializerBeta *remoteSerializer =
-        [[FSTSerializerBeta alloc] initWithDatabaseID:&self.databaseInfo->database_id()];
+        [[FSTSerializerBeta alloc] initWithDatabaseID:self.databaseInfo->database_id()];
     FSTLocalSerializer *serializer =
         [[FSTLocalSerializer alloc] initWithRemoteSerializer:remoteSerializer];
     FSTLevelDB *ldb;
@@ -244,10 +248,10 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
   _localStore = [[FSTLocalStore alloc] initWithPersistence:_persistence initialUser:user];
 
   auto datastore =
-      std::make_shared<Datastore>(*self.databaseInfo, _workerQueue.get(), _credentialsProvider);
+      std::make_shared<Datastore>(*self.databaseInfo, _workerQueue, _credentialsProvider);
 
   _remoteStore = absl::make_unique<RemoteStore>(
-      _localStore, std::move(datastore), _workerQueue.get(),
+      _localStore, std::move(datastore), _workerQueue,
       [self](OnlineState onlineState) { [self.syncEngine applyChangedOnlineState:onlineState]; });
 
   _syncEngine = [[FSTSyncEngine alloc] initWithLocalStore:_localStore
@@ -441,7 +445,7 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
 
   _workerQueue->Enqueue([self, retries, update_callback, async_callback] {
     [self.syncEngine transactionWithRetries:retries
-                                workerQueue:_workerQueue.get()
+                                workerQueue:_workerQueue
                              updateCallback:std::move(update_callback)
                              resultCallback:std::move(async_callback)];
   });
@@ -451,8 +455,8 @@ static const std::chrono::milliseconds FSTLruGcRegularDelay = std::chrono::minut
   return &_databaseInfo;
 }
 
-- (const DatabaseId *)databaseID {
-  return &_databaseInfo.database_id();
+- (const DatabaseId &)databaseID {
+  return _databaseInfo.database_id();
 }
 
 @end

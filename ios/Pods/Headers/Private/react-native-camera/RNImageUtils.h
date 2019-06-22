@@ -1,1 +1,1 @@
-../../../react-native-camera/ios/RN/RNImageUtils.h
+../../../../../node_modules/react-native-camera/ios/RN/RNImageUtils.h
