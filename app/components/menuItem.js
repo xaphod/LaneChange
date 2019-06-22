@@ -54,9 +54,12 @@ export default class MenuItem extends Component {
       textStyle = { ...styles.menuItemText, ...this.props.textProps };
     }
 
-    const { icon } = this.props;
-    const { title } = this.props;
-    const { onPress } = this.props;
+    const {
+      icon,
+      title,
+      onPress,
+      noChevron,
+    } = this.props;
 
     return (
       <TouchableOpacity
@@ -70,7 +73,9 @@ export default class MenuItem extends Component {
         )
         }
         <Text style={textStyle}>{title}</Text>
-        <Image source={chevronIcon} style={styles.chevronIcon} />
+        {!noChevron &&
+          <Image source={chevronIcon} style={styles.chevronIcon} />
+        }
       </TouchableOpacity>
     );
   }

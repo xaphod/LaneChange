@@ -55,8 +55,3 @@ export const shareText = () => {
   const appUrl = 'https://solodigitalis.com/lanechange';
   return `I'm making our city safer with LaneChange! Grab the free app here: ${appUrl}`;
 };
-
-export const defaultCity = {
-  name: 'Hamilton',
-  email: 'mobility@hamilton.ca',
-};

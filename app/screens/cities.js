@@ -74,7 +74,8 @@ class Cities extends Component {
     const { chosenCity } = this.props.cities;
     consolelog('DEBUG cities screen: chosenCity is');
     consolelog(chosenCity);
-    const cityElements = cities.map((cityMapped, index) => {
+    let foundSelected = false;
+    let cityElements = cities.map((cityMapped, index) => {
       const city = JSON.parse(JSON.stringify(cityMapped));
       const { name } = city;
       let retval = (
@@ -85,13 +86,27 @@ class Cities extends Component {
         />
       );
       if (city.name === chosenCity.name) {
+        foundSelected = true;
         retval = React.cloneElement(retval, { selected: true });
       }
-      if (cities.length - 1 === index) {
+      if (cities.length - 1 === index && foundSelected) {
         retval = React.cloneElement(retval, { last: true });
       }
       return retval;
     });
+    if (!foundSelected) {
+      const unknownCity = (
+        <MenuItem
+          key={chosenCity.name}
+          title={chosenCity.name}
+          onPress={() => {}}
+          last
+          selected
+          noChevron
+        />
+      );
+      cityElements.push(unknownCity);
+    }
 
     return (
       <SafeAreaView style={styles.wrap}>
