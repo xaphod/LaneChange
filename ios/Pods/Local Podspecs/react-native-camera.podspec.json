@@ -1,18 +1,14 @@
 {
   "name": "react-native-camera",
-  "version": "2.9.0",
+  "version": "2.11.0",
   "summary": "A Camera component for React Native. Also reads barcodes.",
   "description": "A Camera component for React Native. Also reads barcodes.",
   "license": "MIT AND Apache-2.0 AND BSD-3-Clause",
-  "authors": {
-    "name": "Lochlan Wansbrough",
-    "email": "lochie@live.com",
-    "url": "http://lwansbrough.com"
-  },
+  "authors": "Lochlan Wansbrough <lochie@live.com> (http://lwansbrough.com)",
   "homepage": "https://github.com/react-native-community/react-native-camera",
   "source": {
     "git": "https://github.com/react-native-community/react-native-camera",
-    "tag": "v2.9.0"
+    "tag": "v2.11.0"
   },
   "requires_arc": true,
   "platforms": {

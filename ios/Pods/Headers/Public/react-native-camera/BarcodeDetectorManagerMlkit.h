@@ -1,1 +1,1 @@
-../../../../../node_modules/react-native-camera/ios/RN/BarcodeDetectorManagerMlkit.h
+../../../react-native-camera/ios/RN/BarcodeDetectorManagerMlkit.h

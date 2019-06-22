@@ -159,13 +159,13 @@ PODS:
   - Protobuf (3.7.0)
   - React (0.59.8):
     - React/Core (= 0.59.8)
-  - react-native-camera (2.9.0):
+  - react-native-camera (2.11.0):
     - React
-    - react-native-camera/RCT (= 2.9.0)
-    - react-native-camera/RN (= 2.9.0)
-  - react-native-camera/RCT (2.9.0):
+    - react-native-camera/RCT (= 2.11.0)
+    - react-native-camera/RN (= 2.11.0)
+  - react-native-camera/RCT (2.11.0):
     - React
-  - react-native-camera/RN (2.9.0):
+  - react-native-camera/RN (2.11.0):
     - React
   - react-native-google-maps (0.24.2):
     - Google-Maps-iOS-Utils (= 2.1.0)
@@ -252,7 +252,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
-  - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-camera (from `https://github.com/xaphod/react-native-camera`, branch `bugfix/ios-crash-on-error`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-location (from `../node_modules/react-native-location`)
@@ -314,7 +314,8 @@ EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
   react-native-camera:
-    :path: "../node_modules/react-native-camera"
+    :branch: bugfix/ios-crash-on-error
+    :git: https://github.com/xaphod/react-native-camera
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-resizer:
@@ -331,6 +332,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
+
+CHECKOUT OPTIONS:
+  react-native-camera:
+    :commit: 7ea241fa789072714121be8e7df791a672ba555c
+    :git: https://github.com/xaphod/react-native-camera
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -362,7 +368,7 @@ SPEC CHECKSUMS:
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   React: 76e6aa2b87d05eb6cccb6926d72685c9a07df152
-  react-native-camera: 437507c722cb682b8fa38513c177a304515a13d4
+  react-native-camera: 0d18706a9fd6d30ece4fa7c9c50fe36f484c54fa
   react-native-google-maps: 568cb03d0eae7fef93626f65d05be55642404ed4
   react-native-image-resizer: ecae22b577b0425cd7803eb8145243038dd4b6bd
   react-native-location: f7a466635cbe319df142a9fc5032c3439db484d5
@@ -372,6 +378,6 @@ SPEC CHECKSUMS:
   RNScreens: 720a9e6968beb73e8196239801e887d8401f86ed
   yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
 
-PODFILE CHECKSUM: 457637d0904e4dc7344aaeaad7e691f5ee4c46a2
+PODFILE CHECKSUM: 2f7c6c599ba4f01f294c1215c134710f48304c5e
 
 COCOAPODS: 1.7.1

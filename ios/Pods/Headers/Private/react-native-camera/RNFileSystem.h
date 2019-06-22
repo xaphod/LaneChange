@@ -1,1 +1,1 @@
-../../../../../node_modules/react-native-camera/ios/RN/RNFileSystem.h
+../../../react-native-camera/ios/RN/RNFileSystem.h
