@@ -1,0 +1,1 @@
+../../../FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_path.h

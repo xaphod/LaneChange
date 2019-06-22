@@ -1,0 +1,1 @@
+../../../FirebaseFirestore/Firestore/Source/Core/FSTEventManager.h

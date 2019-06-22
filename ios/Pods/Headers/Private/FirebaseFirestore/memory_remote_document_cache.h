@@ -1,0 +1,1 @@
+../../../FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_remote_document_cache.h

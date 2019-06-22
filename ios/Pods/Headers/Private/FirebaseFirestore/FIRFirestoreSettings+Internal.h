@@ -1,0 +1,1 @@
+../../../FirebaseFirestore/Firestore/Source/API/FIRFirestoreSettings+Internal.h
