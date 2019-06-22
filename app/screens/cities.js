@@ -18,16 +18,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f7f7f7',
-    paddingTop: 20,
     paddingBottom: 20,
   },
   version: {
     alignItems: 'center',
   },
   versionText: {
-    fontSize: 12,
-    lineHeight: 20,
-    color: '#979797',
+    fontSize: 14,
+    lineHeight: 24,
+    color: '#878787',
+  },
+  linkText: {
+    fontSize: 14,
+    lineHeight: 24,
+    color: '#019864',
   },
   headerButton: headerButtonStyle,
 });
@@ -120,7 +124,7 @@ class Cities extends Component {
                 Linking.openURL('mailto://lanechange@solodigitalis.com')
                   .catch(() => {});
               }}>
-                <Text style={styles.versionText}>lanechange@solodigitalis.com</Text>
+                <Text style={styles.linkText}>lanechange@solodigitalis.com</Text>
               </TouchableOpacity>
             </View>
           </View>

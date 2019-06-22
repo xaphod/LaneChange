@@ -20,23 +20,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f7f7f7',
-    paddingTop: 20,
     paddingBottom: 20,
   },
   version: {
     alignItems: 'center',
+    marginTop: -2,
   },
   versionText: {
-    fontSize: 12,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 22,
     color: '#979797',
-  },
-  solodigitalisButton: {
-    marginTop: 5,
-  },
-  solodigitalisButtonText: {
-    fontSize: 12,
-    color: '#019864',
   },
   headerButton: headerButtonStyle,
 });
@@ -220,7 +213,7 @@ class Menu extends Component {
 
             <MenuItem
               onPress={() => openSolodigitalis()}
-              title="Developer Info"
+              title="Solodigitalis"
             />
             <MenuItem
               onPress={() => openSource()}
