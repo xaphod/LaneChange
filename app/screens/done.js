@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   doneButtonText: {
     fontSize: 16,
     color: '#fff',
+    padding: 10,
   },
   doneWrap: {
     padding: 20,
@@ -56,8 +57,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   buttonContainer: {
-    margin: 20,
-    marginRight: 30,
+    margin: 10,
+    marginRight: 20,
     flexDirection: 'row',
   },
 });
