@@ -167,12 +167,7 @@ export const getCities = async () => {
       .get();
 
     const cities = snapshot.docs.map((cityObj) => {
-      const { name, email } = JSON.parse(JSON.stringify(cityObj.data()));
-      const city = {
-        name,
-        email,
-      };
-      return city;
+      return JSON.parse(JSON.stringify(cityObj.data()));
     });
 
     consolelog('DEBUG firebase getCities returning:');

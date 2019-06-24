@@ -35,8 +35,8 @@ export const reverseGeocode = async (latitude, longitude) => {
         route = component.short_name;
       }
       component = getAddressComponent(address_components, 'locality');
-      if (component && component.short_name) {
-        locality = component.short_name;
+      if (component && component.long_name) {
+        locality = component.long_name;
       }
     }
     const result = { address: formatted_address };

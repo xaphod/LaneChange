@@ -69,6 +69,7 @@ export default () => {
         return newState;
       }
 
+      // location provided a city, check if we can match it and choose a city automatically
       // do not override a user-selected city, ie. chosenCity that isn't unknownCity
       case Actions.ACTION_TYPE_GOTCITY:
       {
@@ -92,6 +93,17 @@ export default () => {
             consolelog(city);
             newState.chosenCity = city;
             return true;
+          }
+          if (city.otherNames) {
+            return city.otherNames.some((otherName) => {
+              if (otherName.match(gotCityMatch)) {
+                consolelog('DEBUG cities reducer: gotCity MATCH via otherNames:');
+                consolelog(city);
+                newState.chosenCity = city;
+                return true;
+              }
+              return false;
+            });
           }
           return false;
         });
