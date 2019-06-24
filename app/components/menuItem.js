@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
   },
+  menuItemRightText: {
+    color: '#000',
+    fontSize: 12,
+    marginLeft: 'auto',
+  },
   chevronIcon: {
     marginLeft: 'auto',
   },
@@ -47,11 +52,13 @@ export default class MenuItem extends Component {
       };
     }
 
-    let textStyle;
+    let textStyle, rightTextStyle;
     if (selected) {
       textStyle = { ...styles.menuItemText, color: '#fff', ...this.props.textProps };
+      rightTextStyle = { ...styles.menuItemRightText, color: '#fff', ...this.props.rightTextProps };
     } else {
       textStyle = { ...styles.menuItemText, ...this.props.textProps };
+      rightTextStyle = { ...styles.menuItemRightText, ...this.props.rightTextProps };
     }
 
     const {
@@ -59,6 +66,7 @@ export default class MenuItem extends Component {
       title,
       onPress,
       noChevron,
+      rightTitle,
     } = this.props;
 
     return (
@@ -70,12 +78,14 @@ export default class MenuItem extends Component {
       >
         {!!icon && (
           <Image source={icon} style={styles.menuItemIcon} />
-        )
-        }
+        )}
         <Text style={textStyle}>{title}</Text>
-        {!noChevron &&
+        {(!rightTitle && !noChevron) && (
           <Image source={chevronIcon} style={styles.chevronIcon} />
-        }
+        )}
+        {!!rightTitle && (
+          <Text style={rightTextStyle}>{rightTitle}</Text>
+        )}
       </TouchableOpacity>
     );
   }

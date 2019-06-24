@@ -81,12 +81,14 @@ class Cities extends Component {
     let foundSelected = false;
     let cityElements = cities.map((cityMapped, index) => {
       const city = JSON.parse(JSON.stringify(cityMapped));
-      const { name } = city;
+      const { name, email } = city;
       let retval = (
         <MenuItem
           key={name}
           title={name}
+          rightTitle={email}
           onPress={() => this.props.setChosenCity(city)}
+          noChevron
         />
       );
       if (city.name === chosenCity.name) {
