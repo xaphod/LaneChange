@@ -109,16 +109,21 @@ const moreDots = require('app/assets/img/moreDots.png');
 class Report extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'File a Report',
-    headerLeft: (
-      <View style={{ flexDirection: 'row' }}>
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={() => navigation.state.params.trashPressed()}
-        >
-          <Image source={trashIcon} />
-        </TouchableOpacity>
-      </View>
-    ),
+    headerLeft: () => {
+      const opacity = navigation.getParam('trashOpacity', 1.0);
+      const disabled = (opacity < 1.0);
+      return (
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity
+            style={styles.headerButton}
+            disabled={disabled}
+            onPress={() => navigation.state.params.trashPressed()}
+          >
+            <Image source={trashIcon} opacity={opacity} />
+          </TouchableOpacity>
+        </View>
+      );
+    },
     headerRight: (
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity
@@ -135,6 +140,7 @@ class Report extends Component {
     const { didError } = prevState;
     const { reports, camera } = nextProps;
     const { lastSubmit, draftReport } = reports;
+
     if ((reports && reports.inProgress) || (camera && camera.inProgress)) {
       return {
         ...prevState,
@@ -170,6 +176,7 @@ class Report extends Component {
         ],
       );
       newState.didError = true;
+      nextProps.navigation.setParams({ trashOpacity: 1.0 });
     }
     // DONE CASE
     else if (
@@ -185,6 +192,7 @@ class Report extends Component {
     ) {
       newState.doneForID = lastSubmit.report.id;
       nextProps.cancelReport();
+      nextProps.navigation.setParams({ trashOpacity: 0.2 });
       nextProps.navigation.navigate('Done');
     }
 
@@ -212,9 +220,13 @@ class Report extends Component {
   }
 
   componentDidMount() {
+    const { reports } = this.props;
+    const { draftReport } = reports;
+    const trashOpacity = draftReport ? 1.0 : 0.2;
     this.props.navigation.setParams({
       trashPressed: this.trashPressed,
       morePressed: this.morePressed,
+      trashOpacity,
     });
     const timer = setInterval(this.tick, 2000);
     this.setState({ timer });
@@ -237,7 +249,10 @@ class Report extends Component {
       [
         {
           text: 'Discard',
-          onPress: () => this.props.cancelReport(),
+          onPress: () => {
+            this.props.cancelReport();
+            this.props.navigation.setParams({ trashOpacity: 0.2 });
+          },
         },
         {
           text: 'Cancel',
@@ -256,6 +271,7 @@ class Report extends Component {
   };
 
   onPhotoTaken = (photo, error) => {
+    this.props.navigation.setParams({ trashOpacity: 1.0 });
     if (error) {
       const { message } = error;
       if (message) {
