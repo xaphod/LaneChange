@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   },
   stepText: {
     fontSize: 14,
+    lineHeight: 18,
     color: '#B3E0D0',
   },
 });
@@ -75,21 +76,21 @@ class HowItWorks extends Component {
               <Image source={cameraIconTranslucent} style={styles.icon} />
               <View style={styles.stepTextWrap}>
                 <Text style={styles.stepHeader}>Take a Photo</Text>
-                <Text style={styles.stepText}>Add your location & a note</Text>
+                <Text style={styles.stepText}>Add the location & a note (optional)</Text>
               </View>
             </View>
             <View style={styles.step}>
               <Image source={emailIconTranslucent} style={styles.icon} />
               <View style={styles.stepTextWrap}>
                 <Text style={styles.stepHeader}>Create an Email</Text>
-                <Text style={styles.stepText}>This will open your email app</Text>
+                <Text style={styles.stepText}>Your photo, location, and notes are uploaded to LaneChange, then your email app opens with everything filled out for you.</Text>
               </View>
             </View>
             <View style={styles.stepLast}>
               <Image source={sendIconTranslucent} style={styles.icon} />
               <View style={styles.stepTextWrap}>
                 <Text style={styles.stepHeader}>Send to City Hall</Text>
-                <Text style={styles.stepText}>Report your mobility incident by just tapping Send</Text>
+                <Text style={styles.stepText}>Use your email app to send the report!</Text>
               </View>
             </View>
           </View>
