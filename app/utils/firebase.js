@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import firebase from 'react-native-firebase';
 import UUIDGenerator from 'react-native-uuid-generator';
 import { reportsRefName } from 'app/utils/constants';
@@ -199,10 +200,12 @@ export const registerFirebaseAuthHandler = (onSignedIn) => {
 
 export const shortenLink = async (linkIn) => {
   try {
-    console.log(`firebase shortenLink, shortening ${linkIn}`);
-    const link = new firebase.links.DynamicLink(linkIn, 'https://lanechange.page.link')
-      .android.setPackageName('com.solodigitalis.bikeapp')
-      .ios.setBundleId('com.solodigitalis.bikeapp');
+    const domain = Platform.select({
+      ios: 'https://lanechange.page.link',
+      default: 'lanechange.page.link',
+    });
+    consolelog(`firebase shortenLink, shortening ${linkIn}, domain=${domain}`);
+    const link = new firebase.links.DynamicLink(linkIn, domain);
     const retval = await firebase.links().createShortDynamicLink(link, 'UNGUESSABLE');
     return retval;
   } catch (e) {

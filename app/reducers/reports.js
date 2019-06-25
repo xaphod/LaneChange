@@ -107,6 +107,7 @@ export default () => {
 
       case Actions.ACTION_TYPE_CANCEL_REPORT:
       {
+        consolelog('Reports reducer: cancel_report');
         return {
           ...state,
           draftReport: undefined,

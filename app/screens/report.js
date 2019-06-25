@@ -190,6 +190,7 @@ class Report extends Component {
         prevState.doneForID !== lastSubmit.report.id
       )
     ) {
+      consolelog('Reports: DONE case');
       newState.doneForID = lastSubmit.report.id;
       nextProps.cancelReport();
       nextProps.navigation.setParams({ trashOpacity: 0.2 });
