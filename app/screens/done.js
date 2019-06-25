@@ -5,6 +5,7 @@ import DefaultButton from 'app/components/button';
 import { shareTextAppLink } from 'app/utils/constants';
 import consolelog from 'app/utils/logging';
 import { shortenLink } from 'app/utils/firebase';
+import LoadingView from 'app/components/loadingview';
 
 const styles = StyleSheet.create({
   container: {
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     fontSize: 24,
+    lineHeight: 34,
   },
   doneText: {
     textAlign: 'center',
@@ -72,6 +74,8 @@ class Done extends Component {
   constructor(props) {
     super(props);
     this.onShare = this.onShare.bind(this);
+    this.state = {
+    };
   }
 
   onShare = async () => {
@@ -79,20 +83,23 @@ class Done extends Component {
       const { reports } = this.props;
       const { lastSubmit } = reports;
       let result;
+      this.setState({ showLoading: true });
       if (lastSubmit && lastSubmit.report && lastSubmit.report.imageLink) {
-        // TODO: in progress UI for network request
         consolelog('onShare - calling shortenLink');
         const shortLink = await shortenLink(lastSubmit.report.imageLink);
-        const text = `I used LaneChange to send a mobility report to city hall.\n${shortLink}`;
+        const text = `Reported to city hall with LaneChange:\n${shortLink}`;
         consolelog(`onShare - text=${text}`);
         result = await Share.share({ message: text });
       } else {
         result = await Share.share({ message: shareTextAppLink() });
       }
+      this.setState({ showLoading: false });
       if (result.action !== Share.dismissedAction) {
         this.props.navigation.pop();
       }
-    } catch (e) {}
+    } catch (e) {
+      this.setState({ showLoading: false });
+    }
   };
 
   render() {
@@ -100,6 +107,7 @@ class Done extends Component {
     const { lastSubmit } = reports;
     const { report } = lastSubmit;
     const numberOfSubmittedReportsStr = `You've sent ${report.id} reports.`;
+    const { showLoading } = this.state;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -131,6 +139,9 @@ class Done extends Component {
             />
           </View>
         </ScrollView>
+        {!!showLoading && (
+          <LoadingView />
+        )}
       </SafeAreaView>
     );
   }
