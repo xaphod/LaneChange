@@ -1,3 +1,4 @@
+import { REHYDRATE } from 'redux-persist';
 import * as Actions from 'app/actions';
 import consolelog from 'app/utils/logging';
 
@@ -11,6 +12,19 @@ export default () => {
     let { id } = state;
 
     switch (action.type) {
+      case REHYDRATE:
+      { // ACHTUNG: if you implement REHYDRATE you are responsible for doing ALL of it
+        if (!action.payload || !action.payload.reports) {
+          return state;
+        }
+        const retval = {
+          ...state, // initialState above
+          ...action.payload.reports,
+          inProgress: undefined,
+        };
+        return retval;
+      }
+
       case Actions.ACTION_TYPE_CREATE_REPORT:
         id += 1;
         consolelog(`DEBUG Creating Report with ID=${id}`);
