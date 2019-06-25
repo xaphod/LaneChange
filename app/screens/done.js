@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, View, Share, Alert, Linking, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
-import { shareText } from 'app/utils/constants';
+import { shareTextAppLink } from 'app/utils/constants';
 import consolelog from 'app/utils/logging';
+import { shortenLink } from 'app/utils/firebase';
 
 const styles = StyleSheet.create({
   container: {
@@ -75,13 +76,23 @@ class Done extends Component {
 
   onShare = async () => {
     try {
-      const result = await Share.share({ message: shareText() });
-      consolelog('asdfasdfasdf');
-      consolelog(result);
+      const { reports } = this.props;
+      const { lastSubmit } = reports;
+      let result;
+      if (lastSubmit && lastSubmit.report && lastSubmit.report.imageLink) {
+        // TODO: in progress UI for network request
+        consolelog('onShare - calling shortenLink');
+        const shortLink = await shortenLink(lastSubmit.report.imageLink);
+        const text = `I used LaneChange to send a mobility report to city hall.\n${shortLink}`;
+        consolelog(`onShare - text=${text}`);
+        result = await Share.share({ message: text });
+      } else {
+        result = await Share.share({ message: shareTextAppLink() });
+      }
       if (result.action !== Share.dismissedAction) {
         this.props.navigation.pop();
       }
-    } catch (e) { }
+    } catch (e) {}
   };
 
   render() {
@@ -114,7 +125,7 @@ class Done extends Component {
           </View>
           <View style={styles.button}>
             <DefaultButton
-              title="Share LaneChange"
+              title="Share this report"
               onPress={() => this.onShare()}
               solid
             />

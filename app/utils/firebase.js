@@ -196,3 +196,18 @@ export const registerFirebaseAuthHandler = (onSignedIn) => {
     }
   });
 };
+
+export const shortenLink = async (linkIn) => {
+  try {
+    console.log(`firebase shortenLink, shortening ${linkIn}`);
+    const link = new firebase.links.DynamicLink(linkIn, 'https://lanechange.page.link')
+      .android.setPackageName('com.solodigitalis.bikeapp')
+      .ios.setBundleId('com.solodigitalis.bikeapp');
+    const retval = await firebase.links().createShortDynamicLink(link, 'UNGUESSABLE');
+    return retval;
+  } catch (e) {
+    consolelog('ERROR in firebase/shortenLink:');
+    consolelog(e);
+    return undefined;
+  }
+};

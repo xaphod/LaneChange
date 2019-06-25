@@ -46,6 +46,7 @@ target 'Bike' do
   pod 'Firebase/Auth'
   pod 'Firebase/RemoteConfig'
   pod 'Firebase/Storage'
+  pod 'Firebase/DynamicLinks'
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 

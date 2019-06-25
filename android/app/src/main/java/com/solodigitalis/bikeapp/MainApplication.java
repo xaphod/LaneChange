@@ -62,6 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
               new RNFirebaseCrashlyticsPackage(),
               new RNFirebaseRemoteConfigPackage(),
               new RNFirebaseStoragePackage(),
+              new RNFirebaseLinksPackage(),
               new RNGestureHandlerPackage(),
               new MapsPackage()
       );
