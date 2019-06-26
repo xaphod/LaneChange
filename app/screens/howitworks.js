@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
   logoWrap: {
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: 40,
     marginBottom: 30,
   },
   reportButton: {
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
   stepWrap: {
     marginHorizontal: 30,
     paddingTop: 20,
+    marginBottom: 30,
   },
   step: {
     flexDirection: 'row',
