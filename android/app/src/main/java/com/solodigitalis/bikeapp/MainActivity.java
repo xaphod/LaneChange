@@ -1,9 +1,14 @@
 package com.solodigitalis.bikeapp;
 
+import android.os.Bundle;
+
+import com.crashlytics.android.Crashlytics;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends ReactActivity {
 
@@ -24,5 +29,11 @@ public class MainActivity extends ReactActivity {
                 return new RNGestureHandlerEnabledRootView(MainActivity.this);
             }
         };
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
     }
 }

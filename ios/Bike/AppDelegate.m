@@ -20,6 +20,7 @@
 {
 //  [GMSServices provideAPIKey:@"apikeyhere"]; // google maps
   [FIRApp configure];
+  [Fabric with:@[[Crashlytics class]]];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Bike"
