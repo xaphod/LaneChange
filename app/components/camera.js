@@ -67,12 +67,9 @@ export default class Camera extends Component {
 
     // save to camera roll. Could grab the URI to the asset here, currently unused.
     await CameraRoll.saveToCameraRoll(uri)
-      .catch((err) => {
-        consolelog(`DEBUG camera: save to camera roll error: ${err}`);
-        onPhotoTaken(undefined, new Error('Could not take a photo: could not save the photo to the Camera Roll.'));
-        failed = true;
+      .catch((err) => { // not a failure: user might not want them saved to camera roll
+        consolelog(`DEBUG camera: save to camera roll failed, continuing: ${err}`);
       });
-    if (failed) { return; }
 
     const response = await ImageResizer.createResizedImage(uri, 2000, 2000, 'JPEG', 60)
       .catch((err) => {
