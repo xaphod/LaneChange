@@ -27,6 +27,10 @@ export default class Camera extends Component {
     this.takePicture = this.takePicture.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
+  }
+
   takePicture = async (camera) => {
     const { onPhotoTaken, onTakingPhoto } = this.props;
 
@@ -101,6 +105,7 @@ export default class Camera extends Component {
   };
 
   render() {
+    consolelog('Camera RENDER');
     const children = this.props.children;
     return (
       <View style={styles.container}>
