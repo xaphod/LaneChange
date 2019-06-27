@@ -26,6 +26,9 @@ export default mainNavigator = initialRouteName => createStackNavigator({
   Cities: {
     screen: Screens.Cities,
   },
+  TextSetting: {
+    screen: Screens.TextSetting,
+  },
 }, {
   initialRouteName,
   // mode: 'modal',

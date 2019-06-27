@@ -17,3 +17,4 @@ export const ACTION_TYPE_RETRIEVING_CITIES_DONE = 'retrievingCitiesDone';
 export const ACTION_TYPE_RETRIEVED_CITIES = 'retrievedCities';
 export const ACTION_TYPE_SET_CHOSENCITY = 'setChosenCity';
 export const ACTION_TYPE_GOTCITY = 'gotCity';
+export const ACTION_TYPE_SET_SHARETEXT = 'setShareText';

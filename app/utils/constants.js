@@ -55,3 +55,5 @@ export const shareTextAppLink = () => {
   const appUrl = 'https://solodigitalis.com/lanechange';
   return `I'm making our city safer with LaneChange! Grab the free app here: ${appUrl}`;
 };
+
+export const defaultShareText = 'Reported to city hall with #LaneChangeApp';

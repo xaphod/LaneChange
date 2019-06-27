@@ -5,6 +5,7 @@ import { headerButtonStyle } from 'app/navigation/headerStyle';
 import MenuItem from 'app/components/menuItem';
 import { openTerms, openPrivacy, openSolodigitalis, openSource, openCycleHamilton } from 'app/utils/constants';
 import { deleteAllData, deleteClear } from 'app/actions/reports';
+import { setShareText } from 'app/actions/ui';
 import LoadingView from 'app/components/loadingview';
 import consolelog from 'app/utils/logging';
 
@@ -136,7 +137,7 @@ class Menu extends Component {
   }
 
   render() {
-    const { navigation, cities } = this.props;
+    const { navigation, cities, setShareText } = this.props;
     const { chosenCity } = cities;
     const { name } = chosenCity;
     const { showLoading } = this.state;
@@ -172,6 +173,21 @@ class Menu extends Component {
               onPress={() => this.props.navigation.navigate('Cities')}
               title={changeCityTitle}
             />
+            <MenuItem
+              onPress={() => this.props.navigation.navigate(
+                'TextSetting',
+                {
+                  onChange: text => setShareText(text),
+                  backPressed: () => navigation.pop(),
+                  headerTitle: 'Share Text',
+                  topText: 'This is the text that is used when you hit the Share button. The link to the photo is added to the end.',
+                  value: () => this.props.ui.shareText,
+                },
+              )}
+              title="Change share text"
+              last
+            />
+
             <MenuItem
               onPress={() => openTerms()}
               title="Terms & Conditions"
@@ -222,6 +238,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   deleteUserData: () => dispatch(deleteAllData()),
   deleteClear: () => dispatch(deleteClear()),
+  setShareText: text => dispatch(setShareText(text)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

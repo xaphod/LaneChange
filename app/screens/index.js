@@ -5,6 +5,7 @@ import Notes from './notes';
 import Report from './report';
 import Done from './done';
 import Cities from './cities';
+import TextSetting from './textSetting';
 
 export {
   Start,
@@ -14,4 +15,5 @@ export {
   Report,
   Done,
   Cities,
+  TextSetting,
 };

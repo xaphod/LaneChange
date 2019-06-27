@@ -91,14 +91,15 @@ class Done extends Component {
 
   onShare = async () => {
     try {
-      const { reports } = this.props;
+      const { reports, ui } = this.props;
+      const { shareText } = ui;
       const { lastSubmit } = reports;
       let result;
       this.setState({ showLoading: true });
       if (lastSubmit && lastSubmit.report && lastSubmit.report.imageLink) {
         consolelog('onShare - calling shortenLink');
         const shortLink = await shortenLink(lastSubmit.report.imageLink);
-        const text = `Reported to city hall with LaneChange:\n${shortLink}`;
+        const text = `${shareText}\n${shortLink}`;
         consolelog(`onShare - text=${text}`);
         result = await Share.share({ message: text });
       } else {
