@@ -1,5 +1,6 @@
 import ActionSheet from 'react-native-action-sheet';
 import { Platform } from 'react-native';
+import RNFS from 'react-native-fs';
 import * as Actions from 'app/actions';
 import { uploadReport, deleteUserData } from 'app/utils/firebase';
 import { openEmail, IOSPreferredMailClient } from 'app/utils/mail';
@@ -111,9 +112,15 @@ export const submitReport = (emailAddress, reportIn, iOSMailClient) => async (di
     report.imageLink = firebaseImageURI;
     report.docRef = docRef;
   } catch (e) {
-    consolelog(`DEBUG submitReport: ERROR: ${e}`);
+    consolelog(`DEBUG submitReport: ERROR: ${e.message}`);
     error = e;
   } finally {
+    const { imageURIOnDisk } = report;
+    await RNFS.unlink(imageURIOnDisk)
+      .catch((err) => {
+        consolelog(`DEBUG submitReport: ERROR deleting imageURIOnDisk: ${err.message}`);
+      });
+
     dispatch({
       type: Actions.ACTION_TYPE_SUBMIT_REPORT,
       report,

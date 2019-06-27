@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, CameraRoll } from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import RNFS from 'react-native-fs';
 import ImageResizer from 'react-native-image-resizer';
+import RNFS from 'react-native-fs';
 import { photoPath } from 'app/utils/constants';
 import { randomString } from 'app/utils/string';
 import consolelog from 'app/utils/logging';
@@ -65,17 +65,8 @@ export default class Camera extends Component {
       });
     if (failed) { return; }
 
-    const destPath = photoPath() + '/' + destFilename;
-    await RNFS.moveFile(uri, destPath)
-      .catch((err) => {
-        consolelog(`DEBUG camera: move error: ${err}`);
-        onPhotoTaken(undefined, new Error('Could not take a photo: could not move the photo into its folder.'));
-        failed = true;
-      });
-    if (failed) { return; }
-
     // save to camera roll. Could grab the URI to the asset here, currently unused.
-    await CameraRoll.saveToCameraRoll(destPath)
+    await CameraRoll.saveToCameraRoll(uri)
       .catch((err) => {
         consolelog(`DEBUG camera: save to camera roll error: ${err}`);
         onPhotoTaken(undefined, new Error('Could not take a photo: could not save the photo to the Camera Roll.'));
@@ -83,7 +74,7 @@ export default class Camera extends Component {
       });
     if (failed) { return; }
 
-    const response = await ImageResizer.createResizedImage(destPath, 2000, 2000, 'JPEG', 60)
+    const response = await ImageResizer.createResizedImage(uri, 2000, 2000, 'JPEG', 60)
       .catch((err) => {
         consolelog('DEBUG camera: resize ERROR:');
         consolelog(err);
@@ -91,6 +82,11 @@ export default class Camera extends Component {
         failed = true;
       });
     if (failed) { return; }
+
+    await RNFS.unlink(uri)
+      .catch((err) => { // not a failure
+        consolelog(`DEBUG camera: could not delete full-sized photo: ${err}`);
+      });
 
     const destPathResized = photoPath() + '/' + destFilenameResized;
     await RNFS.moveFile(response.uri, destPathResized)
