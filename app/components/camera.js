@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, CameraRoll } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import RNFS from 'react-native-fs';
 import ImageResizer from 'react-native-image-resizer';
@@ -70,6 +70,15 @@ export default class Camera extends Component {
       .catch((err) => {
         consolelog(`DEBUG camera: move error: ${err}`);
         onPhotoTaken(undefined, new Error('Could not take a photo: could not move the photo into its folder.'));
+        failed = true;
+      });
+    if (failed) { return; }
+
+    // save to camera roll. Could grab the URI to the asset here, currently unused.
+    await CameraRoll.saveToCameraRoll(destPath)
+      .catch((err) => {
+        consolelog(`DEBUG camera: save to camera roll error: ${err}`);
+        onPhotoTaken(undefined, new Error('Could not take a photo: could not save the photo to the Camera Roll.'));
         failed = true;
       });
     if (failed) { return; }
