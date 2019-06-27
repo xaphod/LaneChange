@@ -6,7 +6,6 @@ import MenuItem from 'app/components/menuItem';
 import { openTerms, openPrivacy, openSolodigitalis, openSource, openCycleHamilton } from 'app/utils/constants';
 import { deleteAllData, deleteClear } from 'app/actions/reports';
 import LoadingView from 'app/components/loadingview';
-import { deletePhotosFromDisk } from 'app/utils/filesystem';
 import consolelog from 'app/utils/logging';
 
 const styles = StyleSheet.create({
@@ -106,7 +105,6 @@ class Menu extends Component {
 
     this.backPressed = this.backPressed.bind(this);
     this.deleteUserData = this.deleteUserData.bind(this);
-    this.deletePhotos = this.deletePhotos.bind(this);
   }
 
   componentDidMount() {
@@ -127,33 +125,6 @@ class Menu extends Component {
         {
           text: '💣 NUKE FROM ORBIT 💥',
           onPress: () => this.props.deleteUserData(),
-          style: 'destructive',
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-      ],
-    );
-  }
-
-  deletePhotos = async () => {
-    Alert.alert(
-      'Delete local copies of photos?',
-      'This will delete the local copies of the photos you have taken. The photos will still be available via the reports you have sent.',
-      [
-        {
-          text: 'Delete photos',
-          onPress: () => {
-            this.setState({
-              inProgress: true,
-            }, async () => {
-              await deletePhotosFromDisk();
-              this.setState({
-                inProgress: undefined,
-              });
-            });
-          },
           style: 'destructive',
         },
         {
@@ -221,10 +192,6 @@ class Menu extends Component {
               last
             />
 
-            <MenuItem
-              onPress={() => this.deletePhotos()}
-              title="Delete local photos..."
-            />
             <MenuItem
               onPress={() => this.deleteUserData()}
               title="Delete my data..."
