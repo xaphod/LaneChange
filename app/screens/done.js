@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, View, Share, Alert, Linking, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { AppState, ScrollView, StyleSheet, Text, View, Share, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import DefaultButton from 'app/components/button';
 import { shareTextAppLink } from 'app/utils/constants';
@@ -75,7 +75,18 @@ class Done extends Component {
     super(props);
     this.onShare = this.onShare.bind(this);
     this.state = {
+      appState: AppState.currentState,
+      dateShown: JSON.stringify(new Date()),
     };
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   onShare = async () => {
@@ -100,6 +111,27 @@ class Done extends Component {
     } catch (e) {
       this.setState({ showLoading: false });
     }
+  };
+
+  _handleAppStateChange = (nextAppState) => {
+    const { appState, dateShown } = this.state;
+    const { navigation } = this.props;
+    this.setState(
+      { appState: nextAppState },
+      () => {
+        if (
+          appState.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          const dateShownObj = new Date(JSON.parse(dateShown));
+          const secondsSinceShown = Math.floor(Date.now() / 1000) - Math.floor(dateShownObj / 1000);
+          consolelog(`App has come to the foreground! secondsSinceshown:${secondsSinceShown}`);
+          if (secondsSinceShown > 180) {
+            navigation.pop();
+          }
+        }
+      },
+    );
   };
 
   render() {
