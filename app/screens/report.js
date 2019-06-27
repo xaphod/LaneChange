@@ -251,7 +251,7 @@ class Report extends Component {
         {
           text: 'Discard',
           onPress: () => {
-            this.props.cancelReport();
+            this.props.cancelReport(true);
             this.props.navigation.setParams({ trashOpacity: 0.2 });
           },
         },
@@ -503,7 +503,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  cancelReport: () => dispatch(cancelReport()),
+  cancelReport: isTrash => dispatch(cancelReport(isTrash)),
   submitReport: (emailAddress, report, iOSMailClient) => dispatch(submitReport(emailAddress, report, iOSMailClient)),
   createReport: (date, photo) => dispatch(createReport(date, photo)),
   emailReport: (emailAddress, report, iOSMailClient) => dispatch(emailReport(emailAddress, report, iOSMailClient)),

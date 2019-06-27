@@ -83,9 +83,15 @@ export const emailReport = (emailAddress, report, iOSMailClientIn) => async (dis
   });
 };
 
-export const cancelReport = () => ({
-  type: Actions.ACTION_TYPE_CANCEL_REPORT,
-});
+export const cancelReport = (isTrash = false) => {
+  if (isTrash) {
+    deletePhotosFromDisk();
+  }
+  return {
+    type: Actions.ACTION_TYPE_CANCEL_REPORT,
+    isTrash,
+  };
+};
 
 export const expandInDraftReport = expand => ({
   type: Actions.ACTION_TYPE_EXPAND_IN_DRAFTREPORT,

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Photos you take with the camera are saved to the Camera Roll</string>
+	<string>PLEASE READ: If you want the photos that you take with this app saved to your camera roll, then allow access. If you don&apos;t, touch &quot;Don&apos;t Allow&quot;.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -54,7 +54,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>PLEASE READ: Your location must be added to the report for it to be usable. If you don&apos;t allow the app access to your location then you must manually enter the location of the photo. The app only accesses your location at the moment you take a photo for a report.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photos you take with the camera are saved to the Camera Roll</string>
+	<string>PLEASE READ: If you want the photos that you take with this app saved to your camera roll, then allow access. If you don&apos;t, touch &quot;Don&apos;t Allow&quot;.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>
 	<key>UIRequiredDeviceCapabilities</key>
