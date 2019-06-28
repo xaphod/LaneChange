@@ -13,12 +13,17 @@ const PendingView = () => (
   <View
     style={{
       flex: 1,
-      backgroundColor: 'black',
+      backgroundColor: 'white',
       justifyContent: 'center',
       alignItems: 'center',
     }}
   >
-    <Text>The app needs permission to use your camera.</Text>
+    <Text style={{ fontSize: 14 }}>
+      Loading...
+    </Text>
+    <Text style={{ fontSize: 10 }}>
+      If the camera does not load, please make sure this app has permission to use the camera.
+    </Text>
   </View>
 );
 
