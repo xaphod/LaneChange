@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, Linking, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { submitReport, cancelReport, createReport, emailReport, expandInDraftReport } from 'app/actions/reports';
+import { submitReport, cancelReport, createReport, emailReport } from 'app/actions/reports';
 import DefaultButton from 'app/components/button';
 import Camera from 'app/components/camera';
 import LoadingView from 'app/components/loadingview';
 import { photoPath, disabledColor } from 'app/utils/constants';
 import { IOSPreferredMailClient } from 'app/utils/mail';
 import { getLocation } from 'app/utils/location';
-import { photoProgress, photoTaken } from 'app/actions/camera';
+import { photoProgress, photoTakingFinished } from 'app/actions/camera';
 import consolelog from 'app/utils/logging';
 import { gotCity } from 'app/actions/cities';
 
@@ -141,19 +141,27 @@ class Report extends Component {
     const { lastSubmit, draftReport } = reports;
 
     if ((reports && reports.inProgress) || (camera && camera.inProgress)) {
-      return {
+      const retval = {
         ...prevState,
         showLoading: true,
+        showPhotoFromURIWhileProcessing: undefined,
       };
+      if (camera && camera.inProgress && camera.inProgress.uri) {
+        retval.showLoading = false;
+        retval.showPhotoFromURIWhileProcessing = camera.inProgress.uri;
+      }
+      return retval;
     }
     if (!lastSubmit || !lastSubmit.report) {
       return {
         ...prevState,
         showLoading: undefined,
+        showPhotoFromURIWhileProcessing: undefined,
       };
     }
     const { error } = lastSubmit;
     const newState = prevState;
+    newState.showPhotoFromURIWhileProcessing = undefined;
 
     // ERROR CASE
     if (
@@ -213,7 +221,7 @@ class Report extends Component {
     this.trashPressed = this.trashPressed.bind(this);
     this.morePressed = this.morePressed.bind(this);
     this.createEmailPressed = this.createEmailPressed.bind(this);
-    this.onTakingPhoto = this.onTakingPhoto.bind(this);
+    this.onTakingPhotoPreviewAvailable = this.onTakingPhotoPreviewAvailable.bind(this);
     this.onPhotoTaken = this.onPhotoTaken.bind(this);
     this.getLocation = this.getLocation.bind(this);
     this.tick = this.tick.bind(this);
@@ -266,8 +274,8 @@ class Report extends Component {
     this.props.navigation.navigate('Menu');
   }
 
-  onTakingPhoto = () => {
-    this.props.photoProgress();
+  onTakingPhotoPreviewAvailable = (uri) => {
+    this.props.photoProgress(uri);
   };
 
   onPhotoTaken = (photo, error) => {
@@ -285,7 +293,7 @@ class Report extends Component {
           ],
         );
       }
-      this.props.photoTaken();
+      this.props.photoTakingFinished();
       return;
     }
 
@@ -296,9 +304,16 @@ class Report extends Component {
     // exif: returns an exif map of the image if required.
     // pictureOrientation: (number) the orientation of the picture
     // deviceOrientation: (number) the orientation of the device
-    this.props.createReport(Date(), photo);
-    this.getLocation();
-    this.props.photoTaken();
+    this.getLocation()
+      .then((location) => {
+        this.props.createReport(Date(), photo, location);
+        this.props.photoTakingFinished();
+      })
+      .catch((e) => {
+        consolelog(`DEBUG Report getLocation.catch: ${e.message}`);
+        this.props.createReport(Date(), photo);
+        this.props.photoTakingFinished();
+      });
   };
 
   createEmailPressed = () => {
@@ -363,18 +378,19 @@ class Report extends Component {
   getLocation = async () => {
     try {
       const location = await getLocation();
-      this.props.expandInDraftReport({ location });
       if (location && location.city) {
         this.props.gotCity(location.city);
       }
+      return location;
     } catch (e) {
       consolelog('DEBUG getLocation error:');
       consolelog(e);
+      return undefined;
     }
   };
 
   render() {
-    const { showLoading, cameraNotAuthorized } = this.state;
+    const { showLoading, cameraNotAuthorized, showPhotoFromURIWhileProcessing } = this.state;
     const { reports } = this.props;
     const { draftReport } = reports;
     let imageURIOnDisk;
@@ -385,6 +401,9 @@ class Report extends Component {
       ...styles.text,
       color: disabledColor,
     };
+    let createEmailTitle = 'Create Email';
+    let controlsDisabled = false;
+
     if (draftReport && draftReport.photo) {
       const { photo, date, location, notes } = draftReport;
       const { filename } = photo;
@@ -409,6 +428,10 @@ class Report extends Component {
           notesText += '\u2026';
         }
       }
+    } else if (showPhotoFromURIWhileProcessing) {
+      imageURIOnDisk = showPhotoFromURIWhileProcessing;
+      createEmailTitle = 'Please wait...';
+      controlsDisabled = true;
     }
 
     if (!dateObj) {
@@ -418,7 +441,6 @@ class Report extends Component {
     const dayText = dateObj.toLocaleDateString('default', { weekday: 'short', month: 'long', year: 'numeric', day: 'numeric' });
     const timeText = dateObj.toLocaleTimeString('default', { hour: 'numeric', minute: 'numeric' });
 
-    let controlsDisabled = false;
     if (!draftReport) {
       controlsDisabled = true;
     }
@@ -445,7 +467,7 @@ class Report extends Component {
           <Camera
             style={styles.camera}
             shutter={!showLoading}
-            onTakingPhoto={this.onTakingPhoto}
+            onTakingPhotoPreviewAvailable={this.onTakingPhotoPreviewAvailable}
             onPhotoTaken={this.onPhotoTaken}
             cameraNotAuthorized={() => this.setState({ cameraNotAuthorized: true })}
           />
@@ -478,7 +500,7 @@ class Report extends Component {
               <Text style={styles.addNoteChevron}>&gt;</Text>
             </TouchableOpacity>
             <DefaultButton
-              title="Create Email"
+              title={createEmailTitle}
               onPress={() => this.createEmailPressed()}
               disabled={controlsDisabled}
             />
@@ -502,11 +524,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   cancelReport: isTrash => dispatch(cancelReport(isTrash)),
   submitReport: (emailAddress, report, iOSMailClient) => dispatch(submitReport(emailAddress, report, iOSMailClient)),
-  createReport: (date, photo) => dispatch(createReport(date, photo)),
+  createReport: (date, photo, location) => dispatch(createReport(date, photo, location)),
   emailReport: (emailAddress, report, iOSMailClient) => dispatch(emailReport(emailAddress, report, iOSMailClient)),
-  expandInDraftReport: expand => dispatch(expandInDraftReport(expand)),
-  photoProgress: () => dispatch(photoProgress()),
-  photoTaken: photo => dispatch(photoTaken(photo)),
+  photoProgress: uri => dispatch(photoProgress(uri)),
+  photoTakingFinished: () => dispatch(photoTakingFinished()),
   gotCity: city => dispatch(gotCity(city)),
 });
 

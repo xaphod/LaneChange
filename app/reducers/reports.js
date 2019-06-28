@@ -35,6 +35,7 @@ export default () => {
             photo: action.photo,
             date: action.date,
             id,
+            location: action.location,
           },
           inProgress: undefined,
         };

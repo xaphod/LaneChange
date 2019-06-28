@@ -26,15 +26,15 @@ export default () => {
           ...state,
           inProgress: {
             type: 'photo',
+            uri: action.uri,
           },
         };
       }
 
-      case Actions.ACTION_TYPE_PHOTO_TAKEN:
+      case Actions.ACTION_TYPE_PHOTO_TAKING_FINISHED:
       {
         return {
           ...state,
-          photo: action.photo,
           inProgress: undefined,
         };
       }

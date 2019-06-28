@@ -7,10 +7,11 @@ import { openEmail, IOSPreferredMailClient } from 'app/utils/mail';
 import { deletePhotosFromDisk } from 'app/utils/filesystem';
 import consolelog from 'app/utils/logging';
 
-export const createReport = (date, photo) => ({
+export const createReport = (date, photo, location) => ({
   type: Actions.ACTION_TYPE_CREATE_REPORT,
   photo,
   date,
+  location,
 });
 
 const emailReportContinued = async (dispatch, emailAddress, report, iOSMailClient) => {

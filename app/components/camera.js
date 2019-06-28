@@ -39,13 +39,10 @@ export default class Camera extends Component {
   }
 
   takePicture = async (camera) => {
-    const { onPhotoTaken, onTakingPhoto } = this.props;
-
-    onTakingPhoto();
-
+    const { onPhotoTaken, onTakingPhotoPreviewAvailable } = this.props;
     const options = {
       quality: 0.8,
-      // pauseAfterCapture: true,
+      pauseAfterCapture: true,
     };
     let photo = null;
     try {
@@ -62,6 +59,7 @@ export default class Camera extends Component {
       onPhotoTaken(undefined, new Error('Could not take a photo. Please check that this app has permission to use the camera, and that he device has enough space to take a photo.'));
       return;
     }
+    onTakingPhotoPreviewAvailable(uri);
 
     const str = randomString(8);
     const destFilename = `photo-${str}.jpg`;
