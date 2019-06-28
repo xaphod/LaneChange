@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const shutterButton = require('app/assets/img/shutterButton.png');
 const notesIcon = require('app/assets/img/notesIcon.png');
 const trashIcon = require('app/assets/img/trashIcon.png');
 const moreDots = require('app/assets/img/moreDots.png');
@@ -424,8 +423,6 @@ class Report extends Component {
       controlsDisabled = true;
     }
 
-    const shutter = showLoading ? (<View />) : (<Image source={shutterButton} />);
-
     return (
       <SafeAreaView style={styles.container}>
         {!!imageURIOnDisk && (
@@ -447,7 +444,7 @@ class Report extends Component {
         {!imageURIOnDisk && !cameraNotAuthorized && (
           <Camera
             style={styles.camera}
-            shutter={shutter}
+            shutter={!showLoading}
             onTakingPhoto={this.onTakingPhoto}
             onPhotoTaken={this.onPhotoTaken}
             cameraNotAuthorized={() => this.setState({ cameraNotAuthorized: true })}

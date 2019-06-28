@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, CameraRoll } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, CameraRoll, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import ImageResizer from 'react-native-image-resizer';
 import RNFS from 'react-native-fs';
 import { photoPath } from 'app/utils/constants';
 import { randomString } from 'app/utils/string';
 import consolelog from 'app/utils/logging';
+
+const shutterButton = require('app/assets/img/shutterButton.png');
 
 const PendingView = () => (
   <View
@@ -28,7 +30,7 @@ export default class Camera extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return false;
+    return this.props.shutter !== nextProps.shutter;
   }
 
   takePicture = async (camera) => {
@@ -107,6 +109,9 @@ export default class Camera extends Component {
   render() {
     consolelog('Camera RENDER');
     const children = this.props.children;
+    const { shutter } = this.props;
+    const shutterElement = shutter ? (<Image source={shutterButton} />) : (<View />);
+
     return (
       <View style={styles.container}>
         <RNCamera
@@ -151,7 +156,7 @@ export default class Camera extends Component {
                   }
                   style={styles.capture}
                 >
-                  {this.props.shutter}
+                  {shutterElement}
                 </TouchableOpacity>
               </View>
             );
