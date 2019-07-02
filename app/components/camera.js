@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, CameraRoll, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import ImageResizer from 'react-native-image-resizer';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import RNFS from 'react-native-fs';
 import { photoPath } from 'app/utils/constants';
 import { randomString } from 'app/utils/string';
@@ -47,6 +48,11 @@ export default class Camera extends Component {
     let photo = null;
     try {
       photo = await camera.takePictureAsync(options);
+      const hapticOptions = {
+        enableVibrateFallback: false,
+        ignoreAndroidSystemSettings: false,
+      };
+      ReactNativeHapticFeedback.trigger('impactMedium', hapticOptions);
     } catch (e) {
       consolelog('DEBUG camera: takePicture ERROR:');
       consolelog(e);
@@ -146,7 +152,7 @@ export default class Camera extends Component {
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                 {children}
                 <TouchableOpacity
-                  onPress={
+                  onPressIn={
                     () => {
                       this.takePicture(camera)
                         .catch((e) => { // unhandled/unknown error case

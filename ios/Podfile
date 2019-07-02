@@ -60,6 +60,8 @@ target 'Bike' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'react-native-haptic-feedback', :path => '../node_modules/react-native-haptic-feedback'
+
   target 'BikeTests' do
     inherit! :search_paths
     # Pods for testing

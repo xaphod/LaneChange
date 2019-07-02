@@ -178,6 +178,8 @@ PODS:
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 2.5.0)
     - React
+  - react-native-haptic-feedback (1.8.0):
+    - React
   - react-native-image-resizer (1.0.1):
     - React
   - react-native-location (2.2.1):
@@ -262,6 +264,7 @@ DEPENDENCIES:
   - GoogleMaps
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
+  - react-native-haptic-feedback (from `../node_modules/react-native-haptic-feedback`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-location (from `../node_modules/react-native-location`)
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -327,6 +330,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-haptic-feedback:
+    :path: "../node_modules/react-native-haptic-feedback"
   react-native-image-resizer:
     :path: "../node_modules/react-native-image-resizer"
   react-native-location:
@@ -376,6 +381,7 @@ SPEC CHECKSUMS:
   React: 76e6aa2b87d05eb6cccb6926d72685c9a07df152
   react-native-camera: 37580137d13b0f2fabd631e4217eb11f0e4d5764
   react-native-google-maps: 568cb03d0eae7fef93626f65d05be55642404ed4
+  react-native-haptic-feedback: 1eb699eb89f477d7997b84eb709842da0f171d91
   react-native-image-resizer: ecae22b577b0425cd7803eb8145243038dd4b6bd
   react-native-location: f7a466635cbe319df142a9fc5032c3439db484d5
   react-native-maps: 0316ed017dbb64b33b227751fa810e2454fcfa39
@@ -384,6 +390,6 @@ SPEC CHECKSUMS:
   RNScreens: 720a9e6968beb73e8196239801e887d8401f86ed
   yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
 
-PODFILE CHECKSUM: 638a69f465c96c9c59cdb675f8603729ece9f72b
+PODFILE CHECKSUM: 9ae87108d6187c3bbec230de0b15d026177e7e68
 
 COCOAPODS: 1.7.1

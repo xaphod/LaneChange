@@ -173,6 +173,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-haptic-feedback')
     implementation project(':react-native-action-sheet')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-image-resizer')
