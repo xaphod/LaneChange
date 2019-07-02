@@ -8,7 +8,37 @@ import { photoPath } from 'app/utils/constants';
 import { randomString } from 'app/utils/string';
 import consolelog from 'app/utils/logging';
 
+let unmounted = false;
 const shutterButton = require('app/assets/img/shutterButton.png');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  capture: {
+    flex: 0,
+    alignSelf: 'center',
+    margin: 20,
+  },
+  takingPhoto: {
+    width: '100%',
+    height: '100%',
+    borderWidth: 2,
+    borderColor: '#fffd37',
+  },
+  takingPhotoInner: {
+    backgroundColor: '#000',
+    opacity: 0.4,
+    flex: 1,
+  },
+});
 
 const PendingView = () => (
   <View
@@ -31,12 +61,20 @@ const PendingView = () => (
 export default class Camera extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      takingPhoto: false,
+    };
 
     this.takePicture = this.takePicture.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.shutter !== nextProps.shutter;
+    return this.props.shutter !== nextProps.shutter ||
+      this.state.takingPhoto !== nextState.takingPhoto;
+  }
+
+  componentWillUnmount() {
+    unmounted = true;
   }
 
   takePicture = async (camera) => {
@@ -46,29 +84,38 @@ export default class Camera extends Component {
       pauseAfterCapture: true,
     };
     let photo = null;
+    let uri;
     try {
-      photo = await camera.takePictureAsync(options);
       const hapticOptions = {
         enableVibrateFallback: false,
         ignoreAndroidSystemSettings: false,
       };
       ReactNativeHapticFeedback.trigger('impactMedium', hapticOptions);
+
+      photo = await camera.takePictureAsync(options);
+      uri = photo.uri;
+      if (!uri) {
+        consolelog('DEBUG camera: takePicture has no URI, failed');
+        this.setState({ takingPhoto: false }, () => {
+          onPhotoTaken(undefined, new Error('Could not take a photo. Please check that this app has permission to use the camera, and that he device has enough space to take a photo.'));
+        });
+        return;
+      }
+      onTakingPhotoPreviewAvailable(uri);
     } catch (e) {
       consolelog('DEBUG camera: takePicture ERROR:');
       consolelog(e);
-      onPhotoTaken(undefined, new Error(`Could not take a photo. Error: ${e.message}`));
+      this.setState({ takingPhoto: false }, () => {
+        onPhotoTaken(undefined, new Error(`Could not take a photo. Error: ${e.message}`));
+      });
       return;
+    } finally {
+      if (!unmounted) {
+        this.setState({ takingPhoto: false });
+      }
     }
-    const { uri } = photo;
-    if (!uri) {
-      consolelog('DEBUG camera: takePicture has no URI, failed');
-      onPhotoTaken(undefined, new Error('Could not take a photo. Please check that this app has permission to use the camera, and that he device has enough space to take a photo.'));
-      return;
-    }
-    onTakingPhotoPreviewAvailable(uri);
 
     const str = randomString(8);
-    const destFilename = `photo-${str}.jpg`;
     const destFilenameResized = `photo-${str}-resized.jpg`;
 
     let failed = false;
@@ -119,7 +166,8 @@ export default class Camera extends Component {
     consolelog('Camera RENDER');
     const children = this.props.children;
     const { shutter } = this.props;
-    const shutterElement = shutter ? (<Image source={shutterButton} />) : (<View />);
+    const { takingPhoto } = this.state;
+    const shutterElement = (shutter && !takingPhoto) ? (<Image source={shutterButton} />) : (<View />);
 
     return (
       <View style={styles.container}>
@@ -148,19 +196,32 @@ export default class Camera extends Component {
               return null;
             }
             if (status !== 'READY') return <PendingView />;
+            if (takingPhoto) {
+              return (
+                <View style={styles.takingPhoto}>
+                  <View style={styles.takingPhotoInner} />
+                </View>
+              );
+            }
+
             return (
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                 {children}
                 <TouchableOpacity
                   onPressIn={
                     () => {
-                      this.takePicture(camera)
+                      this.setState({
+                        takingPhoto: true,
+                      }, () => {
+                        this.takePicture(camera)
                         .catch((e) => { // unhandled/unknown error case
+                          this.setState({ takingPhoto: false });
                           const { onPhotoTaken } = this.props;
                           if (onPhotoTaken && e.message) {
                             onPhotoTaken(undefined, new Error(`Could not take a photo. Error: ${e.message}`));
                           }
                         });
+                      });
                     }
                   }
                   style={styles.capture}
@@ -175,21 +236,3 @@ export default class Camera extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  capture: {
-    flex: 0,
-    alignSelf: 'center',
-    margin: 20,
-  },
-});
