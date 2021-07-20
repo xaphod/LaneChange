@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "react": "16.8.3",
-    "react-native": "0.59.10",
+    "react-native": "0.62.3",
     "react-native-action-sheet": "^2.2.0",
     "react-native-camera": "^2.11.0",
     "react-native-cli": "^2.0.1",
